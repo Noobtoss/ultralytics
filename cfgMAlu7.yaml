@@ -7,7 +7,7 @@ mode: train  # (str) YOLO mode, i.e. train, val, predict, export, track, benchma
 # Train settings -------------------------------------------------------------------------------------------------------
 semmel_flag: 7
 semmel_prob: 0.01
-model: yolov8l.pt # (str, optional) path to model file, i.e. yolov8n.pt, yolov8n.yaml
+model: yolov8m.pt # (str, optional) path to model file, i.e. yolov8n.pt, yolov8n.yaml
 data: ../semmelv2/datasets/semmel/yoloSetups/semmel38.yaml # path to data file, i.e. i.e. coco128.yaml
 epochs: 150  # (int) number of epochs to train for
 patience: 50  # (int) epochs to wait for no observable improvement for early stopping of training

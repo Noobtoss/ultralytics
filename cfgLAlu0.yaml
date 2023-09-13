@@ -5,7 +5,7 @@ task: detect  # (str) YOLO task, i.e. detect, segment, classify, pose
 mode: train  # (str) YOLO mode, i.e. train, val, predict, export, track, benchmark
 
 # Train settings -------------------------------------------------------------------------------------------------------
-semmel_flag: 7
+semmel_flag: 0
 semmel_prob: 0.01
 model: yolov8l.pt # (str, optional) path to model file, i.e. yolov8n.pt, yolov8n.yaml
 data: ../semmelv2/datasets/semmel/yoloSetups/semmel38.yaml # path to data file, i.e. i.e. coco128.yaml
