@@ -649,6 +649,8 @@ class Albumentations:
         self.transform = None
         self.transform_pre = None
         prefix = colorstr('albumentations: ')
+
+        import albumentations as A
         try:
             import albumentations as A
             check_version(A.__version__, '1.0.3', hard=True)  # version requirement
@@ -663,6 +665,11 @@ class Albumentations:
                     A.RandomBrightnessContrast(p=0.0),
                     A.RandomGamma(p=0.0),
                     A.ImageCompression(quality_lower=75, p=0.0)]  # transforms
+
+                self.transform = A.Compose(T, bbox_params=A.BboxParams(format='yolo', label_fields=['class_labels']))
+
+            if hyp.semmel_flag == 1:
+                T = [A.Blur(p=0.0)]
 
                 self.transform = A.Compose(T, bbox_params=A.BboxParams(format='yolo', label_fields=['class_labels']))
 
