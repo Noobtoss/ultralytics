@@ -56,7 +56,7 @@ pip install -r requirements.txt
 pip install -qe . 
 
 if [ $epochs != "None" ]; then
-	srun yolo train cfg=$cfg mode=train data=$data project=runs/$run_name-$SLURM_JOB_ID name=train epochs=$epochs
+	srun yolo train cfg=$cfg mode=train data=$data project=runs/´run_name-$SLURM_JOB_ID name=train epochs=$epochs
 else	
 	srun yolo train cfg=$cfg mode=train data=$data project=runs/$run_name-$SLURM_JOB_ID name=train
 fi
