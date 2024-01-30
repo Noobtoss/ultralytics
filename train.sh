@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=yolov8        # Kurzname des Jobs
 #SBATCH --output=R-%j.out
-#SBATCH --partition=p1
+#SBATCH --partition=p2
 #SBATCH --qos=gpuultimate
 #SBATCH --gres=gpu:1
 #SBATCH --nodes=1                # Anzahl Knoten
@@ -11,7 +11,7 @@
 
 batch=None
 epochs=None
-data=../semmelv2/datasets/semmel/yoloSetups/semmel38.yaml
+data=../semmel/datasets/yolo/v1/yoloSetups/semmel38.yaml
 cfg=cfgLAlu7.yaml
 name=None
 

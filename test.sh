@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=yolov8        # Kurzname des Jobs
 #SBATCH --output=T-%j.out
-#SBATCH --partition=p1
+#SBATCH --partition=p2
 #SBATCH --qos=gpuultimate
 #SBATCH --gres=gpu:1
 #SBATCH --nodes=1                # Anzahl Knoten
