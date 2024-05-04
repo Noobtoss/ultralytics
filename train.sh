@@ -11,8 +11,9 @@
 
 batch=None
 epochs=None
-data=../semmel/datasets/yolo/v1/yoloSetups/semmel38.yaml
+data=datasets/v2/yoloSetups/semmel38.yaml
 cfg=cfgLAlu7.yaml
+cfg=
 name=None
 
 while [ $# -gt 0 ]; do
