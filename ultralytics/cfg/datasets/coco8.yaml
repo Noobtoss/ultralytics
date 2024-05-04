@@ -15,33 +15,33 @@ test: # test images (optional)
 
 # Classes
 names:
-  0: person
-  1: bicycle
-  2: car
-  3: motorcycle
-  4: airplane
-  5: bus
-  6: train
-  7: truck
-  8: boat
-  9: traffic light
-  10: fire hydrant
-  11: stop sign
-  12: parking meter
-  13: bench
-  14: bird
-  15: cat
-  16: dog
-  17: horse
-  18: sheep
-  19: cow
-  20: elephant
-  21: bear
-  22: zebra
-  23: giraffe
-  24: backpack
-  25: umbrella
-  26: handbag
+  0: apfeltasche
+  1: baguette
+  2: baguettesemmel
+  3: bauernbrot
+  4: dinkelsemmel
+  5: doppelback
+  6: floesserbrot
+  7: fruechteschiffchenErdbeer
+  8: kirschtasche
+  9: kuerbiskernsemmel
+  10: laugenstangeSchinkenKaese
+  11: mehrkornStange
+  12: mohnschnecke
+  13: nussschnecke
+  14: panneGusto
+  15: quarktasche
+  16: quarktasche
+  17: salzstange
+  18: schinkenKaeseStange
+  19: schokocroissant
+  20: sonnenblumensemmel
+  21: vanillehoernchen
+  22: pfefferbrezel
+  23: krapfen
+  24: schokokrapfen
+  25: vanillekrapfen
+  26: unknown
   27: tie
   28: suitcase
   29: frisbee
