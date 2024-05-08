@@ -9,7 +9,7 @@ semmel_flag: 7
 semmel_prob: 0.05
 model: yolov8x.pt  # path to model file, i.e. yolov8n.pt, yolov8n.yaml
 data: ../datasets/semmel/yoloSetups/semmel38.yaml # path to data file, i.e. i.e. coco128.yaml
-epochs: 150  # number of epochs to train for
+epochs: 200  # number of epochs to train for
 patience: 50  # epochs to wait for no observable improvement for early stopping of training
 batch: 8  # number of images per batch (-1 for AutoBatch)
 imgsz: [1920, 1080]  # size of input images as integer or w,h
