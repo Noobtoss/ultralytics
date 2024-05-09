@@ -12,7 +12,7 @@ data: ../datasets/semmel/yoloSetups/semmel38.yaml # path to data file, i.e. i.e.
 epochs: 200  # number of epochs to train for
 patience: 50  # epochs to wait for no observable improvement for early stopping of training
 batch: 8  # number of images per batch (-1 for AutoBatch)
-imgsz: [1920, 1080]  # size of input images as integer or w,h
+imgsz: 1280 # [1920, 1080]  # size of input images as integer or w,h
 save: True # (bool) save train checkpoints and predict results
 save_period: -1 # (int) Save checkpoint every x epochs (disabled if < 1)
 cache: True # (bool) True/ram, disk or False. Use cache for data loading
