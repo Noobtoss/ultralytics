@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=yolov8        # Kurzname des Jobs
+#SBATCH --job-name=yolo        # Kurzname des Jobs
 #SBATCH --output=T-%j.out
 #SBATCH --partition=p2
 #SBATCH --qos=gpuultimate
@@ -57,7 +57,7 @@ module purge
 module load python/anaconda3
 eval "$(conda shell.bash hook)"
 
-conda activate yolov8
+conda activate yolo
 pip install -r requirements.txt
 pip install -qe . 
 

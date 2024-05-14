@@ -7,7 +7,7 @@ mode: train  # YOLO mode, i.e. train, val, predict, export
 # Train settings -------------------------------------------------------------------------------------------------------
 semmel_flag: 7
 semmel_prob: 0.01
-model: yolov8l.pt  # path to model file, i.e. yolov8n.pt, yolov8n.yaml
+model: yolov9e.pt  # path to model file, i.e. yolov8n.pt, yolov8n.yaml
 data: ../datasets/semmel/yoloSetups/semmel38.yaml # path to data file, i.e. i.e. coco128.yaml
 epochs: 150  # number of epochs to train for
 patience: 50  # epochs to wait for no observable improvement for early stopping of training
@@ -15,7 +15,7 @@ batch: 32  # number of images per batch (-1 for AutoBatch)
 imgsz: 640  # size of input images as integer or w,h
 save: True # (bool) save train checkpoints and predict results
 save_period: -1 # (int) Save checkpoint every x epochs (disabled if < 1)
-cache: True # (bool) True/ram, disk or False. Use cache for data loading
+cache: True # (bool) True/ram, disk or False. Use cache for data loading&
 device: # (int | str | list, optional) device to run on, i.e. cuda device=0 or device=0,1,2,3 or device=cpu
 workers: 8 # (int) number of worker threads for data loading (per RANK if DDP)
 project: # (str, optional) project name
