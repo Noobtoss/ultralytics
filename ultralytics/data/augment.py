@@ -869,12 +869,16 @@ class Albumentations:
     compression.
     """
 
-    def __init__(self, p=1.0, hyp=None):
+    def __init__(self, p=1.0):
         """Initialize the transform object for YOLO bbox formatted params."""
         self.p = p
         self.transform = None
         self.transform_pre = None
         prefix = colorstr("albumentations: ")
+
+
+        hyp.semmel_flag = 7
+        hyp.semmel_prob = 0.01
 
         try:
             import albumentations as A
@@ -1188,7 +1192,7 @@ def v8_transforms(dataset, imgsz, hyp, stretch=False):
         [
             pre_transform,
             MixUp(dataset, pre_transform=pre_transform, p=hyp.mixup),
-            Albumentations(p=1.0, hyp=hyp),
+            Albumentations(p=1.0),
             RandomHSV(hgain=hyp.hsv_h, sgain=hyp.hsv_s, vgain=hyp.hsv_v),
             RandomFlip(direction="vertical", p=hyp.flipud),
             RandomFlip(direction="horizontal", p=hyp.fliplr, flip_idx=flip_idx),
