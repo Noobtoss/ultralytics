@@ -877,8 +877,8 @@ class Albumentations:
         prefix = colorstr("albumentations: ")
 
 
-        hyp.semmel_flag = 7
-        hyp.semmel_prob = 0.01
+        semmel_flag = 7
+        semmel_prob = 0.01
 
         try:
             import albumentations as A
@@ -886,12 +886,12 @@ class Albumentations:
             check_version(A.__version__, "1.0.3", hard=True)  # version requirement
             # hyp.semmel_flag # 0=standAug 1=noAug 2=selectAug 3=selectAug+ 4=standAugSelectAug+scaleAug 5=scaleAug 6=Dropout 7=Dropout+standAug
 
-            if hyp.semmel_flag == 0:
+            if semmel_flag == 0:
                 T = [
-                    A.Blur(p=hyp.semmel_prob),
-                    A.MedianBlur(p=hyp.semmel_prob),
-                    A.ToGray(p=hyp.semmel_prob),
-                    A.CLAHE(p=hyp.semmel_prob),
+                    A.Blur(p=semmel_prob),
+                    A.MedianBlur(p=semmel_prob),
+                    A.ToGray(p=semmel_prob),
+                    A.CLAHE(p=semmel_prob),
                     A.RandomBrightnessContrast(p=0.0),
                     A.RandomGamma(p=0.0),
                     A.ImageCompression(quality_lower=75, p=0.0),
@@ -899,12 +899,12 @@ class Albumentations:
 
                 self.transform = A.Compose(T, bbox_params=A.BboxParams(format="yolo", label_fields=["class_labels"]))
 
-            if hyp.semmel_flag == 1:
+            if semmel_flag == 1:
                 T = [A.Blur(p=0.0)]
 
                 self.transform = A.Compose(T, bbox_params=A.BboxParams(format="yolo", label_fields=["class_labels"]))
 
-            if hyp.semmel_flag == 7:
+            if semmel_flag == 7:
                 T_pre = [
                     A.CoarseDropout(
                         max_holes=50,
@@ -914,12 +914,12 @@ class Albumentations:
                         min_height=0.01,
                         min_width=0.01,
                         fill_value=0,
-                        p=hyp.semmel_prob * 4,
+                        p=semmel_prob * 4,
                     )
                 ]
 
                 T = [
-                    A.PixelDropout(dropout_prob=0.05, per_channel=False, drop_value=0, p=hyp.semmel_prob * 4),
+                    A.PixelDropout(dropout_prob=0.05, per_channel=False, drop_value=0, p=semmel_prob * 4),
                     A.ShiftScaleRotate(
                         shift_limit=0.0,
                         scale_limit=(-0.4, 0.1),
@@ -927,7 +927,7 @@ class Albumentations:
                         interpolation=1,
                         border_mode=0,
                         rotate_method="ellipse",
-                        p=hyp.semmel_prob * 4,
+                        p=semmel_prob * 4,
                     ),
                     A.ShiftScaleRotate(
                         shift_limit=0.0,
@@ -938,10 +938,10 @@ class Albumentations:
                         rotate_method="ellipse",
                         p=hyp.semmel_prob * 4,
                     ),
-                    A.Blur(p=hyp.semmel_prob),
-                    A.MedianBlur(p=hyp.semmel_prob),
-                    A.ToGray(p=hyp.semmel_prob),
-                    A.CLAHE(p=hyp.semmel_prob),
+                    A.Blur(p=semmel_prob),
+                    A.MedianBlur(p=semmel_prob),
+                    A.ToGray(p=semmel_prob),
+                    A.CLAHE(p=semmel_prob),
                     A.RandomBrightnessContrast(p=0.0),
                     A.RandomGamma(p=0.0),
                     A.ImageCompression(quality_lower=75, p=0.0),
