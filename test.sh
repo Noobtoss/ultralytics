@@ -57,7 +57,7 @@ module purge
 module load python/anaconda3
 eval "$(conda shell.bash hook)"
 
-conda activate yolo
+conda activate ultralytics
 pip install -r requirements.txt
 pip install -qe . 
 
