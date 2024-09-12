@@ -22,7 +22,7 @@ DATA=$2
 RUN_NAME="$BASE_DIR/runs/$(basename "${CONFIG%.*}")-$(basename "${DATA%.*}" | tr '[:upper:]' '[:lower:]')-$SLURM_JOB_ID"
 echo $RUN_NAME
 
-srun yolo train cfg=$CONFIG mode=train data=$DATA project=$RUN_NAME name=train
+srun yolo train cfg=$BASE_DIR/$CONFIG mode=train data=$BASE_DIR/$DATA project=$RUN_NAME name=train
 
 echo finished training
 
@@ -30,17 +30,17 @@ for FILENAME in `echo $data | sed "s/.yaml/*.yaml/"`; do
   VAL_NAME=$(basename "${filename}" | sed "s/^${data%.*}//" | sed 's/\.[^.]*$//' | tr '[:upper:]' '[:lower:]')
 
   if [[ $val_name == *"val"* ]]; then
-      srun yolo val cfg=$CONFIG mode=val data=$FILENAME project=$RUN_NAME name=$VAL_NAME"Best" model=$RUN_NAME/train/weights/best.pt split=val
-      srun yolo val cfg=$CONFIG mode=val data=$FILENAME project=$RUN_NAME name=$VAL_NAME"Last" model=$RUN_NAME/train/weights/last.pt split=val
+      srun yolo val cfg=$BASE_DIR/$CONFIG mode=val data=$BASE_DIR/$FILENAME project=$RUN_NAME name=$VAL_NAME"Best" model=$RUN_NAME/train/weights/best.pt split=val
+      srun yolo val cfg=$BASE_DIR/$CONFIG mode=val data=$BASE_DIR/$FILENAME project=$RUN_NAME name=$VAL_NAME"Last" model=$RUN_NAME/train/weights/last.pt split=val
   elif [[ $val_name == *"test"* ]]; then
-      srun yolo val cfg=$CONFIG mode=val data=$FILENAME project=$RUN_NAME name=$VAL_NAME"Best" model=$RUN_NAME/train/weights/best.pt split=test
-      srun yolo val cfg=$CONFIG mode=val data=$FILENAME project=$RUN_NAME name=$VAL_NAME"Last" model=$RUN_NAME/train/weights/last.pt split=test
+      srun yolo val cfg=$BASE_DIR/$CONFIG mode=val data=$BASE_DIR/$FILENAME project=$RUN_NAME name=$VAL_NAME"Best" model=$RUN_NAME/train/weights/best.pt split=test
+      srun yolo val cfg=$BASE_DIR/$CONFIG mode=val data=$BASE_DIR/$FILENAME project=$RUN_NAME name=$VAL_NAME"Last" model=$RUN_NAME/train/weights/last.pt split=test
   else
-      srun yolo val cfg=$CONFIG mode=val data=$FILENAME project=$RUN_NAME name=val"Best" model=$RUN_NAME/train/weights/best.pt split=val
-      srun yolo val cfg=$CONFIG mode=val data=$FILENAME project=$RUN_NAME name=val"Last" model=$RUN_NAME/train/weights/last.pt split=val
+      srun yolo val cfg=$BASE_DIR/$CONFIG mode=val data=$BASE_DIR/$FILENAME project=$RUN_NAME name=val"Best" model=$RUN_NAME/train/weights/best.pt split=val
+      srun yolo val cfg=$BASE_DIR/$CONFIG mode=val data=$BASE_DIR/$FILENAME project=$RUN_NAME name=val"Last" model=$RUN_NAME/train/weights/last.pt split=val
 
-      srun yolo val cfg=$CONFIG mode=val data=$FILENAME project=$RUN_NAME name=test"Best" model=$RUN_NAME/train/weights/best.pt split=test
-      srun yolo val cfg=$CONFIG mode=val data=$FILENAME project=$RUN_NAME name=test"Last" model=$RUN_NAME/train/weights/last.pt split=test
+      srun yolo val cfg=$BASE_DIR/$CONFIG mode=val data=$BASE_DIR/$FILENAME project=$RUN_NAME name=test"Best" model=$RUN_NAME/train/weights/best.pt split=test
+      srun yolo val cfg=$BASE_DIR/$CONFIG mode=val data=$BASE_DIR/$FILENAME project=$RUN_NAME name=test"Last" model=$RUN_NAME/train/weights/last.pt split=test
   fi
 
 done

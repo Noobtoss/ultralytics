@@ -24,5 +24,5 @@ TASK="test" # "val" # "train" # "detect"
 RUN_NAME="$BASE_DIR/runs/$(basename "${CONFIG%.*}")-$(basename "${DATA%.*}" | tr '[:upper:]' '[:lower:]')-$SLURM_JOB_ID"
 echo $RUN_NAME
 
-srun yolo val cfg=$CONFIG mode=val data=$DATA project=runs name=$RUN_NAME/$TASK model=$MODEL split=$TASK
+srun yolo val cfg=$BASE_DIR/$CONFIG mode=val data=$BASE_DIR/$DATA project=runs name=$RUN_NAME/$TASK model=$BASE_DIR/$MODEL split=$TASK
 # if TASK=="detect" srun yolo predict cfg=$CONFIG mode=predict source=$DATA project=runs name=$RUN_NAME/$TASK model=$MODEL
