@@ -1903,6 +1903,133 @@ class Albumentations:
 
         return labels
 
+Semmel = True
+if Semmel == True:
+    class Albumentations:
+        """
+        Albumentations transformations.
+
+        Optional, uninstall package to disable. Applies Blur, Median Blur, convert to grayscale, Contrast Limited Adaptive
+        Histogram Equalization, random change of brightness and contrast, RandomGamma and lowering of image quality by
+        compression.
+        """
+
+        def __init__(self, p=1.0):
+            """Initialize the transform object for YOLO bbox formatted params."""
+            self.p = p
+            self.transform = None
+            self.transform_pre = None
+            prefix = colorstr("albumentations: ")
+
+            semmel_flag = 7
+            semmel_prob = 0.01
+
+            try:
+                import albumentations as A
+
+                check_version(A.__version__, "1.0.3", hard=True)  # version requirement
+                # hyp.semmel_flag # 0=standAug 1=noAug 2=selectAug 3=selectAug+ 4=standAugSelectAug+scaleAug 5=scaleAug 6=Dropout 7=Dropout+standAug
+
+                if semmel_flag == 0:
+                    T = [
+                        A.Blur(p=semmel_prob),
+                        A.MedianBlur(p=semmel_prob),
+                        A.ToGray(p=semmel_prob),
+                        A.CLAHE(p=semmel_prob),
+                        A.RandomBrightnessContrast(p=0.0),
+                        A.RandomGamma(p=0.0),
+                        A.ImageCompression(quality_lower=75, p=0.0),
+                    ]  # transforms
+
+                    self.transform = A.Compose(T,
+                                               bbox_params=A.BboxParams(format="yolo", label_fields=["class_labels"]))
+
+                if semmel_flag == 1:
+                    T = [A.Blur(p=0.0)]
+
+                    self.transform = A.Compose(T,
+                                               bbox_params=A.BboxParams(format="yolo", label_fields=["class_labels"]))
+
+                if semmel_flag == 7:
+                    T_pre = [
+                        A.CoarseDropout(
+                            max_holes=50,
+                            max_height=0.1,
+                            max_width=0.1,
+                            min_holes=10,
+                            min_height=0.01,
+                            min_width=0.01,
+                            fill_value=0,
+                            p=semmel_prob * 4,
+                        )
+                    ]
+
+                    T = [
+                        A.PixelDropout(dropout_prob=0.05, per_channel=False, drop_value=0, p=semmel_prob * 4),
+                        A.ShiftScaleRotate(
+                            shift_limit=0.0,
+                            scale_limit=(-0.4, 0.1),
+                            rotate_limit=0,
+                            interpolation=1,
+                            border_mode=0,
+                            rotate_method="ellipse",
+                            p=semmel_prob * 4,
+                        ),
+                        A.ShiftScaleRotate(
+                            shift_limit=0.0,
+                            scale_limit=0.2,
+                            rotate_limit=45,
+                            interpolation=1,
+                            border_mode=0,
+                            rotate_method="ellipse",
+                            p=hyp.semmel_prob * 4,
+                        ),
+                        A.Blur(p=semmel_prob),
+                        A.MedianBlur(p=semmel_prob),
+                        A.ToGray(p=semmel_prob),
+                        A.CLAHE(p=semmel_prob),
+                        A.RandomBrightnessContrast(p=0.0),
+                        A.RandomGamma(p=0.0),
+                        A.ImageCompression(quality_lower=75, p=0.0),
+                    ]
+
+                    self.transform_pre = A.Compose(T_pre)
+                    self.transform = A.Compose(
+                        T, bbox_params=A.BboxParams(format="yolo", min_area=100, label_fields=["class_labels"])
+                    )
+
+                LOGGER.info(prefix + ", ".join(f"{x}".replace("always_apply=False, ", "") for x in T if x.p))
+            except ImportError:  # package not installed, skip
+                pass
+            except Exception as e:
+                LOGGER.info(f"{prefix}{e}")
+
+        def __call__(self, labels):
+            """Generates object detections and returns a dictionary with detection results."""
+            cls = labels["cls"]
+            if len(cls):
+                im = labels["img"]
+                labels["instances"].convert_bbox("xywh")
+                labels["instances"].normalize(*im.shape[:2][::-1])
+                bboxes = labels["instances"].bboxes
+                # TODO: add supports of segments and keypoints
+                if random.random() < self.p:
+                    if self.transform_pre:
+                        new = self.transform_pre(image=im)  # transformed
+                        im = new["image"]
+                    if self.transform:
+                        if isinstance(self.transform, list):
+                            new = random.choice(self.transform)(image=im, bboxes=bboxes, class_labels=cls)  # Semmel
+                        else:
+                            new = self.transform(image=im, bboxes=bboxes, class_labels=cls)  # Semmel
+                        if len(new["class_labels"]) > 0:  # skip update if no bbox in new im
+                            labels["img"] = new["image"]
+                            labels["cls"] = np.array(new["class_labels"])
+                            bboxes = np.array(new["bboxes"], dtype=np.float32)
+                labels["instances"].update(bboxes=bboxes)
+            return labels
+
+
 
 class Format:
     """
