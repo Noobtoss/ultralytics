@@ -19,11 +19,11 @@ conda activate env_ultralytics
 BASE_DIR=/nfs/scratch/staff/schmittth/sync/ultralytics
 CONFIG=$1
 DATA=$2
-EPOCHS=$3
-SEED=${4:-0}
+EPOCHS=${3:100}
+SEED=${4:-4040}
 RUN_NAME="$BASE_DIR/runs/$(basename "${CONFIG%.*}")-$(basename "${DATA%.*}" | tr '[:upper:]' '[:lower:]')-$SLURM_JOB_ID"
 
-srun yolo train cfg=$BASE_DIR/$CONFIG mode=train data=$BASE_DIR/$DATA project=$RUN_NAME name=train epochs=$EPOCHS seed=$SEED
+srun yolo train cfg=$BASE_DIR/$CONFIG mode=train data=$BASE_DIR/$DATA project=$RUN_NAME name=$SEED_train epochs=$EPOCHS seed=$SEED
 
-srun yolo val cfg=$BASE_DIR/$CONFIG mode=val data=$BASE_DIR/$DATA project=$RUN_NAME name=val_best model=$RUN_NAME/train/weights/best.pt split=val
-srun yolo val cfg=$BASE_DIR/$CONFIG mode=val data=$BASE_DIR/$DATA project=$RUN_NAME name=val_last model=$RUN_NAME/train/weights/last.pt split=val
+srun yolo val cfg=$BASE_DIR/$CONFIG mode=val data=$BASE_DIR/$DATA project=$RUN_NAME name=$SEED_val_best model=$RUN_NAME/train/weights/best.pt split=val
+srun yolo val cfg=$BASE_DIR/$CONFIG mode=val data=$BASE_DIR/$DATA project=$RUN_NAME name=$SEED_val_last model=$RUN_NAME/train/weights/last.pt split=val
