@@ -19,10 +19,15 @@ conda activate env_ultralytics
 
 BASE_DIR=/nfs/scratch/staff/schmittth/sync/ultralytics
 
-CONFIGS=(configs/cfgv11Coco.yaml)
-DATAS=(datasets/coco/coco00.yaml, datasets/coco/coco01.yaml, datasets/coco/coco02.yaml, datasets/coco/coco03.yaml)
-EPOCHSS=(96, 200, 200, 200)
-SEEDS=(6666,1313,8888,4040)
+# CONFIGS=(configs/cfgv11Coco.yaml)
+# DATAS=(datasets/coco/coco00.yaml, datasets/coco/coco01.yaml, datasets/coco/coco02.yaml, datasets/coco/coco03.yaml)
+# EPOCHSS=(96, 200, 200, 200)
+# SEEDS=(6666,1313,8888,4040)
+
+CONFIGS=(configs/cfgv11Semmel.yaml)
+DATAS=(datasets/semmel/04/semmel61.yaml, datasets/04/semmel64.yaml, datasets/04/semmel65.yaml)
+EPOCHSS=(200, 200, 200)
+SEEDS=(6666)
 
 NUM_CONFIGS=${#CONFIGS[@]}
 NUM_DATAS=${#DATAS[@]}
