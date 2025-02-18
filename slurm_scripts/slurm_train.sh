@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=yolo        # Kurzname des Jobs
-#SBATCH --output=R-%j.out
+#SBATCH --output=logs/R-%j.out
 #SBATCH --partition=p2
 #SBATCH --qos=gpuultimate
 #SBATCH --gres=gpu:1
