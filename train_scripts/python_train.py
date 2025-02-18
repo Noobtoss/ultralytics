@@ -9,8 +9,13 @@ from ultralytics import YOLO
 
 # === Configuration ===
 MODEL = ["models/yolo11x.pt"]
-DATA = ["datasets/semmel/04/semmel61.yaml", "datasets/semmel/04/semmel64.yaml", "datasets/semmel/04/semmel65.yaml"]
-EPOCHS = [20, 20, 20]
+DATA = ["datasets/semmel/04/semmel61.yaml",
+        "datasets/semmel/04/semmel64.yaml",
+        "datasets/semmel/04/semmel65.yaml",
+        "datasets/semmel/04/semmel66.yaml",
+        "datasets/semmel/04/semmel67.yaml",
+        "datasets/semmel/04/semmel68.yaml"]
+EPOCHS = [200, 200, 200, 200, 200, 200]
 SEEDS = [6666]
 
 def training(config: Namespace):
@@ -29,7 +34,7 @@ def evaluation(config: Namespace) -> None:
 
     evaluation_results = {}
 
-    results = model.val(**vars(eval_config), exist_ok=True)
+    results = model.val(**vars(eval_config), split="test", exist_ok=True)
     evaluation_results["test-full"] = {
         "mAP50-95": results.box.map,
         "mAP50": results.box.map50,
@@ -49,8 +54,9 @@ def evaluation(config: Namespace) -> None:
             yaml.dump(data, file, default_flow_style=False)
 
         eval_config.data=tmp_file_name
-        eval_config.name=os.path.join(eval_config.name, f"test-{set_name}")
-        results = model.val(**vars(eval_config))
+        eval_config.name = os.path.join(eval_config.name, f"test-{set_name}")
+        results = model.val(**vars(eval_config), split="test")
+        eval_config.name = os.path.dirname(eval_config.name)
         evaluation_results[set_name] = {
             "mAP50": results.box.map50,
             "mAP75": results.box.map75,

@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=yolo_array    # Kurzname des Jobs
-#SBATCH --array=1-3%2            # 3 Jobs total running 2 at a time
+#SBATCH --array=1-6%2            # 3 Jobs total running 2 at a time
 #SBATCH --output=logs/R-%j-%02a.out
 #SBATCH --partition=p2
 #SBATCH --qos=gpuultimate
