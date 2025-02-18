@@ -21,9 +21,11 @@ CONFIG=$1
 DATA=$2
 EPOCHS=${3:100}
 SEED=${4:-4040}
-RUN_NAME="$BASE_DIR/runs/$(basename "${CONFIG%.*}")-$(basename "${DATA%.*}" | tr '[:upper:]' '[:lower:]')-$SLURM_JOB_ID"
+# RUN_NAME="$BASE_DIR/runs/$(basename "${CONFIG%.*}")-$(basename "${DATA%.*}" | tr '[:upper:]' '[:lower:]')-$SLURM_JOB_ID"
+PROJECT="$(basename "${CONFIG%.*}")-$(basename "${DATA%.*}" | tr '[:upper:]' '[:lower:]')"
+NAME="seed-${SEED}_job-${SLURM_JOB_ID}"
 
-srun yolo train cfg=$BASE_DIR/$CONFIG mode=train data=$BASE_DIR/$DATA project=$RUN_NAME name=$SEED_train epochs=$EPOCHS seed=$SEED
+srun yolo train cfg=$BASE_DIR/$CONFIG mode=train data=$BASE_DIR/$DATA project=$RUN_NAME name=$NAME epochs=$EPOCHS seed=$SEED
 
-srun yolo val cfg=$BASE_DIR/$CONFIG mode=val data=$BASE_DIR/$DATA project=$RUN_NAME name=$SEED_test_best model=$RUN_NAME/train/weights/best.pt split=test
-srun yolo val cfg=$BASE_DIR/$CONFIG mode=val data=$BASE_DIR/$DATA project=$RUN_NAME name=$SEED_test_last model=$RUN_NAME/train/weights/last.pt split=test
+srun yolo val cfg=$BASE_DIR/$CONFIG mode=val data=$BASE_DIR/$DATA project=$PROJECT name=$NAME_test_best model=$RUN_NAME/train/weights/best.pt split=test
+srun yolo val cfg=$BASE_DIR/$CONFIG mode=val data=$BASE_DIR/$DATA project=$PROJECT name=$NAME_test_last model=$RUN_NAME/train/weights/last.pt split=test

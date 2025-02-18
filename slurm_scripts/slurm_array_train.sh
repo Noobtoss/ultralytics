@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=yolo_array    # Kurzname des Jobs
-#SBATCH --array=1-16%2           # 16 Jobs total running 2 at a time
+#SBATCH --array=1-3%2            # 3 Jobs total running 2 at a time
 #SBATCH --output=R-%j-%02a.out
 #SBATCH --partition=p2
 #SBATCH --qos=gpuultimate
@@ -20,20 +20,20 @@ conda activate env_ultralytics
 BASE_DIR=/nfs/scratch/staff/schmittth/sync/ultralytics
 
 # CONFIGS=(configs/cfgv11Coco.yaml)
-# DATAS=(datasets/coco/coco00.yaml, datasets/coco/coco01.yaml, datasets/coco/coco02.yaml, datasets/coco/coco03.yaml)
-# EPOCHSS=(96, 200, 200, 200)
-# SEEDS=(6666,1313,8888,4040)
+# DATAS=(datasets/coco/coco00.yaml datasets/coco/coco01.yaml datasets/coco/coco02.yaml datasets/coco/coco03.yaml)
+# EPOCHSS=(96 200 200 200)
+# SEEDS=(6666 1313 88884040)
 
-CONFIGS=(configs/cfgv11Semmel.yaml)
-DATAS=(datasets/semmel/04/semmel61.yaml, datasets/04/semmel64.yaml, datasets/04/semmel65.yaml)
-EPOCHSS=(200, 200, 200)
+CONFIGS=(configs/cfgv11XSemmel.yaml)
+DATAS=(datasets/semmel/04/semmel61.yaml datasets/semmel/04/semmel64.yaml datasets/semmel/04/semmel65.yaml)
+EPOCHSS=(200 200 200)
 SEEDS=(6666)
 
 NUM_CONFIGS=${#CONFIGS[@]}
 NUM_DATAS=${#DATAS[@]}
 NUM_SEEDS=${#SEEDS[@]}
 
-INDEX=$SLURM_ARRAY_TASK_ID
+INDEX=$((SLURM_ARRAY_TASK_ID - 1))
 CONFIG_INDEX=$(( INDEX / (NUM_DATAS * NUM_SEEDS) ))
 DATA_INDEX=$(( (INDEX / NUM_SEEDS) % NUM_DATAS ))
 SEED_INDEX=$(( INDEX % NUM_SEEDS ))
@@ -43,9 +43,15 @@ DATA=${DATAS[$DATA_INDEX]}
 EPOCHS=${EPOCHSS[$DATA_INDEX]}
 SEED=${SEEDS[$SEED_INDEX]}
 
-RUN_NAME="$BASE_DIR/runs/$(basename "${CONFIG%.*}")-$(basename "${DATA%.*}" | tr '[:upper:]' '[:lower:]')-$SLURM_JOB_ID"
+# RUN_NAME="$BASE_DIR/runs/$(basename "${CONFIG%.*}")-$(basename "${DATA%.*}" | tr '[:upper:]' '[:lower:]')-$SLURM_JOB_ID"
+PROJECT="$(basename "${CONFIG%.*}")-$(basename "${DATA%.*}" | tr '[:upper:]' '[:lower:]')"
+NAME="seed-${SEED}_job-${SLURM_JOB_ID}"
+echo NAME
+echo $NAME
 
-srun yolo train cfg=$BASE_DIR/$CONFIG mode=train data=$BASE_DIR/$DATA project=$RUN_NAME name=$SEED_train epochs=$EPOCHS seed=$SEED
+srun yolo train cfg=$BASE_DIR/$CONFIG mode=train data=$BASE_DIR/$DATA project=$PROJECT name=$NAME epochs=$EPOCHS seed=$SEED
 
-srun yolo val cfg=$BASE_DIR/$CONFIG mode=val data=$BASE_DIR/$DATA project=$RUN_NAME name=$SEED_test_best model=$RUN_NAME/train/weights/best.pt split=test
-srun yolo val cfg=$BASE_DIR/$CONFIG mode=val data=$BASE_DIR/$DATA project=$RUN_NAME name=$SEED_test_last model=$RUN_NAME/train/weights/last.pt split=test
+# srun yolo train cfg=$BASE_DIR/$CONFIG mode=train data=$BASE_DIR/$DATA project=$PROJECT name=$NAME epochs=$EPOCHS seed=$SEED
+
+# srun yolo val cfg=$BASE_DIR/$CONFIG mode=val data=$BASE_DIR/$DATA project=$PROJECT name=$NAME_test_best model=$RUN_NAME/train/weights/best.pt split=test
+# srun yolo val cfg=$BASE_DIR/$CONFIG mode=val data=$BASE_DIR/$DATA project=$PROJECT name=$NAME_test_last model=$RUN_NAME/train/weights/last.pt split=test
