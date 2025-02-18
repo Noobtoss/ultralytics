@@ -94,7 +94,7 @@ def parse_config(model: str, data:str, epochs:int, seed:int) -> Namespace:
     config.train_config.data = data
     config.train_config.epochs = epochs
     config.train_config.seed = seed
-    config.train_config.project = (f"runs-{os.path.splitext(os.path.basename(model))[0]}-"
+    config.train_config.project = (f"runs/{os.path.splitext(os.path.basename(model))[0]}-"
                                    f"{os.path.splitext(os.path.basename(data))[0].lower()}")
     config.train_config.name = f"{seed}-{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}"
     return config
