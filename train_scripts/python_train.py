@@ -6,7 +6,6 @@ import yaml
 import pandas as pd
 from ultralytics import YOLO
 
-
 # === Configuration ===
 MODEL = ["models/yolo11x.pt"]
 DATA = ["datasets/semmel/04/semmel61.yaml",
@@ -17,6 +16,15 @@ DATA = ["datasets/semmel/04/semmel61.yaml",
         "datasets/semmel/04/semmel68.yaml"]
 EPOCHS = [200, 200, 200, 200, 200, 200]
 SEEDS = [6666]
+
+# === Configuration ===
+MODEL = ["models/yolo11x.pt"]
+DATA = ["datasets/semmel/04/semmel66.yaml",
+        "datasets/semmel/04/semmel67.yaml",
+        "datasets/semmel/04/semmel68.yaml"]
+EPOCHS = [100, 100, 100]
+SEEDS = [886666, 881313, 888888, 884040, 881919]
+
 
 def training(config: Namespace):
     model = YOLO(config.model)
@@ -36,9 +44,8 @@ def evaluation(config: Namespace) -> None:
 
     results = model.val(**vars(eval_config), split="test", exist_ok=True)
     evaluation_results["test-full"] = {
-        "mAP50-95": results.box.map,
         "mAP50": results.box.map50,
-        "mAP75": results.box.map75
+        "mAP50-95": results.box.map,
     }
 
     test_sets = data_cfg.get("test", {})
@@ -64,7 +71,7 @@ def evaluation(config: Namespace) -> None:
         }
         os.remove(tmp_file_name)
     df = pd.DataFrame.from_dict(evaluation_results, orient='index')
-    df.to_csv(os.path.join(results_dir, "evaluations.csv"))
+    df.to_csv(os.path.join(results_dir, "evaluation.csv"))
     return
 
 def parse_args() -> Namespace:
