@@ -25,6 +25,13 @@ DATA = ["datasets/semmel/04/semmel66.yaml",
 EPOCHS = [100, 100, 100]
 SEEDS = [886666, 881313, 888888, 884040, 881919]
 
+# === Configuration ===
+MODEL = ["models/yolo11x.pt"]
+DATA = ["datasets/semmel/03/semmel69.yaml",
+        "datasets/semmel/03/semmel70.yaml"]
+EPOCHS = [300, 300]
+SEEDS = [886666, 881313, 888888, 884040, 881919]
+
 
 def training(config: Namespace):
     model = YOLO(config.model)
@@ -87,9 +94,11 @@ def parse_index(index: int) -> tuple[str, str, int, int]:
 
     # Calculate indices based on id (mimicking SLURM_ARRAY_TASK_ID logic)
     index = index - 1  # Zero-based index (SLURM_ARRAY_TASK_ID is 1-based)
-    config_index = index // (num_datas * num_seeds)
-    data_index = (index // num_seeds) % num_datas
-    seed_index = index % num_seeds
+
+    # Reversed calculation: Seed first
+    seed_index = index % num_seeds  # Calculate seed first
+    data_index = (index // num_seeds) % num_datas  # Calculate data second
+    config_index = index // (num_seeds * num_datas)  # Calculate model last
 
     # Get the corresponding configuration values
     model = MODEL[config_index]
@@ -97,7 +106,7 @@ def parse_index(index: int) -> tuple[str, str, int, int]:
     epochs = EPOCHS[data_index]  # Assuming epochs vary per dataset
     seed = SEEDS[seed_index]
 
-    print(f"Model: {model}, Data: {data}, Epochs: {epochs}, Seed: {seed}")
+    print(f"Seed: {seed}, Model: {model}, Data: {data}, Epochs: {epochs}")
     return model, data, epochs, seed
 
 def parse_config(model: str, data:str, epochs:int, seed:int) -> Namespace:
