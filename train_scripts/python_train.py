@@ -26,7 +26,7 @@ EPOCHS = [100, 100, 100]
 SEEDS = [886666, 881313, 888888, 884040, 881919]
 
 # === Configuration ===
-MODEL = ["models/yolo11x.pt"]
+MODEL = ["models/yolov8x.pt"]
 DATA = ["datasets/semmel/03/semmel69.yaml",
         "datasets/semmel/03/semmel70.yaml"]
 EPOCHS = [300, 300]
@@ -119,6 +119,8 @@ def parse_config(model: str, data:str, epochs:int, seed:int) -> Namespace:
     config.train_config.project = (f"runs/{os.path.splitext(os.path.basename(model))[0]}-"
                                    f"{os.path.splitext(os.path.basename(data))[0].lower()}")
     config.train_config.name = f"{seed}-{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}"
+    config.train_config.imgsz = 1280
+
     return config
 
 def main():
