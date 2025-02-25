@@ -45,9 +45,7 @@ SEED=${SEEDS[$SEED_INDEX]}
 
 # RUN_NAME="$BASE_DIR/runs/$(basename "${CONFIG%.*}")-$(basename "${DATA%.*}" | tr '[:upper:]' '[:lower:]')-$SLURM_JOB_ID"
 PROJECT="$(basename "${CONFIG%.*}")-$(basename "${DATA%.*}" | tr '[:upper:]' '[:lower:]')"
-NAME="seed-${SEED}_job-${SLURM_JOB_ID}"
-echo NAME
-echo $NAME
+NAME="${SEED}-${SLURM_JOB_ID}"
 
 srun yolo train cfg=$BASE_DIR/$CONFIG mode=train data=$BASE_DIR/$DATA project=$PROJECT name=$NAME epochs=$EPOCHS seed=$SEED
 
