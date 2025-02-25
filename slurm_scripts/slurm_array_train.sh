@@ -21,12 +21,12 @@ BASE_DIR=/nfs/scratch/staff/schmittth/sync/ultralytics
 
 # CONFIGS=(configs/cfgv11Coco.yaml)
 # DATAS=(datasets/coco/coco00.yaml datasets/coco/coco01.yaml datasets/coco/coco02.yaml datasets/coco/coco03.yaml)
-# EPOCHSS=(96 200 200 200)
+# EPOCHS=(96 200 200 200)
 # SEEDS=(6666 1313 8888 4040)
 
 CONFIGS=(configs/cfgv11XSemmel.yaml)
 DATAS=(datasets/semmel/04/semmel61.yaml datasets/semmel/04/semmel64.yaml datasets/semmel/04/semmel65.yaml)
-EPOCHSS=(200 200 200)
+EPOCHS=(200 200 200)
 SEEDS=(6666)
 
 NUM_CONFIGS=${#CONFIGS[@]}
@@ -40,11 +40,11 @@ SEED_INDEX=$(( INDEX % NUM_SEEDS ))
 
 CONFIG=${CONFIGS[$CONFIG_INDEX]}
 DATA=${DATAS[$DATA_INDEX]}
-EPOCHS=${EPOCHSS[$DATA_INDEX]}
+EPOCHS=${EPOCHS[$DATA_INDEX]}
 SEED=${SEEDS[$SEED_INDEX]}
 
 # RUN_NAME="$BASE_DIR/runs/$(basename "${CONFIG%.*}")-$(basename "${DATA%.*}" | tr '[:upper:]' '[:lower:]')-$SLURM_JOB_ID"
-PROJECT="$(basename "${CONFIG%.*}")-$(basename "${DATA%.*}" | tr '[:upper:]' '[:lower:]')"
+PROJECT="runs/$(basename "${CONFIG%.*}")-$(basename "${DATA%.*}" | tr '[:upper:]' '[:lower:]')"
 NAME="${SEED}-${SLURM_JOB_ID}"
 
 srun yolo train cfg=$BASE_DIR/$CONFIG mode=train data=$BASE_DIR/$DATA project=$PROJECT name=$NAME epochs=$EPOCHS seed=$SEED
