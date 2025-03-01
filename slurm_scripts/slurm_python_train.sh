@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=yolo_array    # Kurzname des Jobs
-#SBATCH --array=1-10%2            # 3 Jobs total running 2 at a time
+#SBATCH --array=1-10%3            # 3 Jobs total running 2 at a time
 #SBATCH --output=logs/R-%j.out
 #SBATCH --partition=p2
 #SBATCH --qos=gpuultimate
@@ -15,7 +15,7 @@ module load python/anaconda3
 eval "$(conda shell.bash hook)"
 export WANDB_API_KEY=95177947f5f36556806da90ea7a0bf93ed857d58
 
-conda activate env_ultralytics
+conda activate venv_ultralytics
 
 BASE_DIR=/nfs/scratch/staff/schmittth/sync/ultralytics
 
