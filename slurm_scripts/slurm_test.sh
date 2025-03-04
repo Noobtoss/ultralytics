@@ -14,7 +14,7 @@ module load python/anaconda3
 eval "$(conda shell.bash hook)"
 export WANDB_API_KEY=95177947f5f36556806da90ea7a0bf93ed857d58
 
-conda activate venv_ultralytics
+conda activate conda_ultralytics
 
 BASE_DIR=/nfs/scratch/staff/schmittth/sync/ultralytics
 CONFIG=$1
