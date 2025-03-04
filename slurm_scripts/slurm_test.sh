@@ -22,8 +22,8 @@ DATA=$2
 MODEL=$3
 TASK="test" # "val" # "train" # "detect"
 # RUN_NAME="$BASE_DIR/runs/$(basename "${CONFIG%.*}")-$(basename "${DATA%.*}" | tr '[:upper:]' '[:lower:]')-$SLURM_JOB_ID"
-PROJECT="runs/$(basename "${CONFIG%.*}")-$(basename "${DATA%.*}" | tr '[:upper:]' '[:lower:]')"
-NAME="${SEED}-${SLURM_JOB_ID}"
+PROJECT="runs"
+NAME="$(basename "${CONFIG%.*}")-$(basename "${DATA%.*}" | tr '[:upper:]' '[:lower:]')-${SEED}-${SLURM_JOB_ID}"
 
 srun yolo val cfg=$BASE_DIR/$CONFIG mode=val data=$BASE_DIR/$DATA project=$PROJECT name=$NAME model=$BASE_DIR/$MODEL split=$TASK
 # if TASK=="detect"

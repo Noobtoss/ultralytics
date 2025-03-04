@@ -22,8 +22,8 @@ DATA=$2
 EPOCHS=${3:-100}
 SEED=${4:-4040}
 # RUN_NAME="$BASE_DIR/runs/$(basename "${CONFIG%.*}")-$(basename "${DATA%.*}" | tr '[:upper:]' '[:lower:]')-$SLURM_JOB_ID"
-PROJECT="runs/$(basename "${CONFIG%.*}")-$(basename "${DATA%.*}" | tr '[:upper:]' '[:lower:]')"
-NAME="${SEED}-${SLURM_JOB_ID}"
+PROJECT="runs"
+NAME="$(basename "${CONFIG%.*}")-$(basename "${DATA%.*}" | tr '[:upper:]' '[:lower:]')-${SEED}-${SLURM_JOB_ID}"
 
 echo $BASE_DIR/$CONFIG
 echo $BASE_DIR/$DATA

@@ -32,6 +32,12 @@ DATA = ["datasets/semmel/03/semmel69.yaml",
 EPOCHS = [300, 300]
 SEEDS = [886666, 881313, 888888, 884040, 881919]
 
+# === Configuration ===
+MODEL = ["yolo11x.yaml"]
+DATA = ["datasets/coco/coco05.yaml",
+        "datasets/coco/coco06.yaml"]
+EPOCHS = [80, 80]
+SEEDS = [886666, 881313, 888888, 884040]
 
 def training(config: Namespace):
     model = YOLO(config.model)
@@ -116,9 +122,10 @@ def parse_config(model: str, data:str, epochs:int, seed:int) -> Namespace:
     config.train_config.data = data
     config.train_config.epochs = epochs
     config.train_config.seed = seed
-    config.train_config.project = (f"runs/{os.path.splitext(os.path.basename(model))[0]}-"
-                                   f"{os.path.splitext(os.path.basename(data))[0].lower()}")
-    config.train_config.name = f"{seed}-{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}"
+    config.train_config.project = "runs"
+    config.train_config.name = (f"{os.path.splitext(os.path.basename(model))[0]}-"
+                                f"{os.path.splitext(os.path.basename(data))[0].lower()}-"
+                                f"{seed}-{datetime.now().strftime('%Y-%m-%d_%H-%M')}")
     config.train_config.imgsz = 1280
 
     return config
