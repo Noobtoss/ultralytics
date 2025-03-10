@@ -7,37 +7,62 @@ import pandas as pd
 from ultralytics import YOLO
 
 # === Configuration ===
-MODEL = ["models/yolo11x.pt"]
+MODEL = "models/yolo11x.pt"
 DATA = ["datasets/semmel/04/semmel61.yaml",
         "datasets/semmel/04/semmel64.yaml",
         "datasets/semmel/04/semmel65.yaml",
         "datasets/semmel/04/semmel66.yaml",
         "datasets/semmel/04/semmel67.yaml",
         "datasets/semmel/04/semmel68.yaml"]
-EPOCHS = [200, 200, 200, 200, 200, 200]
-SEEDS = [6666]
+EPOCHS = 200
+SEEDS = 6666
+IMGSZ = 640
 
 # === Configuration ===
-MODEL = ["models/yolo11x.pt"]
+MODEL = "models/yolo11x.pt"
 DATA = ["datasets/semmel/04/semmel66.yaml",
         "datasets/semmel/04/semmel67.yaml",
         "datasets/semmel/04/semmel68.yaml"]
-EPOCHS = [100, 100, 100]
+EPOCHS = 100
 SEEDS = [886666, 881313, 888888, 884040, 881919]
+IMGSZ = 640
 
 # === Configuration ===
-MODEL = ["models/yolov8x.pt"]
+MODEL = "models/yolov8x.pt"
 DATA = ["datasets/semmel/03/semmel69.yaml",
         "datasets/semmel/03/semmel70.yaml"]
-EPOCHS = [300, 300]
+EPOCHS = 300
 SEEDS = [886666, 881313, 888888, 884040, 881919]
+IMGSZ = 640
 
 # === Configuration ===
-MODEL = ["yolo11x.yaml"]
+MODEL = "yolo11x.yaml"
 DATA = ["datasets/coco/coco05.yaml",
         "datasets/coco/coco06.yaml"]
-EPOCHS = [80, 80]
+EPOCHS = 80
 SEEDS = [886666, 881313, 888888, 884040]
+IMGSZ = 640
+
+# === Configuration ===
+MODEL = "yolo11x.yaml"
+DATA = ["datasets/semmel/machine/semmel75.yaml",
+        "datasets/semmel/machine/semmel76.yaml",
+        "datasets/semmel/machine/semmel77.yaml",
+        "datasets/semmel/machine/semmel78.yaml"]
+EPOCHS = 100
+SEEDS = 6666
+IMGSZ = 1280
+
+# === Configuration ===
+MODEL = "yolo11x.yaml"
+DATA = ["datasets/semmel/04/semmel61.yaml",
+        "datasets/semmel/04/semmel80.yaml",
+        "datasets/semmel/04/semmel81.yaml",
+        "datasets/semmel/04/semmel82.yaml",
+        "datasets/semmel/04/semmel83.yaml"]
+EPOCHS = 1
+SEEDS = 6666
+IMGSZ = 1280
 
 def training(config: Namespace):
     model = YOLO(config.model)
@@ -94,46 +119,47 @@ def parse_args() -> Namespace:
     return args
 
 def parse_index(index: int) -> tuple[str, str, int, int]:
-    num_models = len(MODEL)
-    num_datas = len(DATA)
-    num_seeds = len(SEEDS)
+    num_models = len(MODEL) if isinstance(MODEL, list) else 1
+    num_datas = len(DATA) if isinstance(DATA, list) else 1
+    num_seeds = len(SEEDS) if isinstance(SEEDS, list) else 1
 
     # Calculate indices based on id (mimicking SLURM_ARRAY_TASK_ID logic)
     index = index - 1  # Zero-based index (SLURM_ARRAY_TASK_ID is 1-based)
 
     # Reversed calculation: Seed first
-    seed_index = index % num_seeds  # Calculate seed first
+    model_index = index // (num_seeds * num_datas)  # Calculate model last
     data_index = (index // num_seeds) % num_datas  # Calculate data second
-    config_index = index // (num_seeds * num_datas)  # Calculate model last
+    seed_index = index % num_seeds  # Calculate seed first
 
     # Get the corresponding configuration values
-    model = MODEL[config_index]
-    data = DATA[data_index]
-    epochs = EPOCHS[data_index]  # Assuming epochs vary per dataset
-    seed = SEEDS[seed_index]
+    model = MODEL[model_index] if isinstance(MODEL, list) else MODEL
+    data = DATA[data_index]  if isinstance(DATA, list) else DATA
+    epochs = EPOCHS[data_index] if isinstance(EPOCHS, list) else EPOCHS
+    imgsz = IMGSZ[data_index] if isinstance(IMGSZ, list) else IMGSZ
+    seed = SEEDS[seed_index] if isinstance(SEEDS, list) else SEEDS
 
     print(f"Seed: {seed}, Model: {model}, Data: {data}, Epochs: {epochs}")
-    return model, data, epochs, seed
+    return model, data, epochs, imgsz, seed
 
-def parse_config(model: str, data:str, epochs:int, seed:int) -> Namespace:
+def parse_config(model: str, data:str, epochs:int, imgsz:int, seed:int) -> Namespace:
     config = argparse.Namespace()
     config.model = model
     config.train_config = argparse.Namespace()
     config.train_config.data = data
     config.train_config.epochs = epochs
+    config.train_config.imgsz = imgsz
     config.train_config.seed = seed
     config.train_config.project = "runs"
     config.train_config.name = (f"{os.path.splitext(os.path.basename(model))[0]}-"
                                 f"{os.path.splitext(os.path.basename(data))[0].lower()}-"
                                 f"{seed}-{datetime.now().strftime('%Y-%m-%d_%H-%M')}")
-    config.train_config.imgsz = 1280
 
     return config
 
 def main():
     args = parse_args()
-    model, data, epochs, seed = parse_index(args.index)
-    config = parse_config(model, data, epochs, seed)
+    model, data, epochs, imgsz, seed = parse_index(args.index)
+    config = parse_config(model, data, epochs, imgsz, seed)
     training(config)
     evaluation(config)
 
