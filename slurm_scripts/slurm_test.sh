@@ -17,6 +17,7 @@ conda activate conda_ultralytics
 
 yolo settings wandb=True
 export WANDB_API_KEY=95177947f5f36556806da90ea7a0bf93ed857d58
+export WANDB_DIR=/nfs/scratch/staff/schmittth/.cache
 
 BASE_DIR=/nfs/scratch/staff/schmittth/sync/ultralytics
 CONFIG=$1
