@@ -5,6 +5,7 @@ from argparse import Namespace
 import yaml
 import pandas as pd
 from ultralytics import YOLO
+from typing import Any
 
 # === Configuration ===
 MODEL = "models/yolo11x.pt"
@@ -60,8 +61,8 @@ DATA = ["datasets/semmel/04/semmel61.yaml",
         "datasets/semmel/04/semmel81.yaml",
         "datasets/semmel/04/semmel82.yaml",
         "datasets/semmel/04/semmel83.yaml"]
-EPOCHS = 1
-SEEDS = 6666
+EPOCHS = 100
+SEEDS = [886666, 881313, 888888, 884040]
 IMGSZ = 1280
 
 def training(config: Namespace):
@@ -118,7 +119,7 @@ def parse_args() -> Namespace:
     args = parser.parse_args()
     return args
 
-def parse_index(index: int) -> tuple[str, str, int, int]:
+def parse_index(index: int) -> dict[str, Any]:
     num_models = len(MODEL) if isinstance(MODEL, list) else 1
     num_datas = len(DATA) if isinstance(DATA, list) else 1
     num_seeds = len(SEEDS) if isinstance(SEEDS, list) else 1
@@ -138,17 +139,26 @@ def parse_index(index: int) -> tuple[str, str, int, int]:
     imgsz = IMGSZ[data_index] if isinstance(IMGSZ, list) else IMGSZ
     seed = SEEDS[seed_index] if isinstance(SEEDS, list) else SEEDS
 
-    print(f"Seed: {seed}, Model: {model}, Data: {data}, Epochs: {epochs}")
-    return model, data, epochs, imgsz, seed
+    config_dict = {
+        "model": model,
+        "data": data,
+        "epochs": epochs,
+        "imgsz": imgsz,
+        "seed": seed
+    }
 
-def parse_config(model: str, data:str, epochs:int, imgsz:int, seed:int) -> Namespace:
+    print(config_dict)
+    return config_dict
+
+def parse_config(config_dict: dict[str, Any]) -> Namespace:
     config = argparse.Namespace()
+    model = config_dict.pop("model")
+    data = config_dict["data"]
+    seed = config_dict["seed"]
     config.model = model
     config.train_config = argparse.Namespace()
-    config.train_config.data = data
-    config.train_config.epochs = epochs
-    config.train_config.imgsz = imgsz
-    config.train_config.seed = seed
+    for key, value in config_dict.items():
+        setattr(config.train_config, key, value)
     config.train_config.project = "runs"
     config.train_config.name = (f"{os.path.splitext(os.path.basename(model))[0]}-"
                                 f"{os.path.splitext(os.path.basename(data))[0].lower()}-"
@@ -158,8 +168,8 @@ def parse_config(model: str, data:str, epochs:int, imgsz:int, seed:int) -> Names
 
 def main():
     args = parse_args()
-    model, data, epochs, imgsz, seed = parse_index(args.index)
-    config = parse_config(model, data, epochs, imgsz, seed)
+    config_dict = parse_index(args.index)
+    config = parse_config(config_dict)
     training(config)
     evaluation(config)
 
