@@ -13,9 +13,11 @@
 module purge
 module load python/anaconda3
 eval "$(conda shell.bash hook)"
-export WANDB_API_KEY=95177947f5f36556806da90ea7a0bf93ed857d58
 
 conda activate conda_ultralytics
+
+yolo settings wandb=True
+export WANDB_API_KEY=95177947f5f36556806da90ea7a0bf93ed857d58
 
 BASE_DIR=/nfs/scratch/staff/schmittth/sync/ultralytics
 
