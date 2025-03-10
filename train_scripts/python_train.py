@@ -127,17 +127,16 @@ def parse_index(index: int) -> dict[str, Any]:
     # Calculate indices based on id (mimicking SLURM_ARRAY_TASK_ID logic)
     index = index - 1  # Zero-based index (SLURM_ARRAY_TASK_ID is 1-based)
 
-    # Reversed calculation: Seed first
-    model_index = index // (num_seeds * num_datas)  # Calculate model last
-    data_index = (index // num_seeds) % num_datas  # Calculate data second
-    seed_index = index % num_seeds  # Calculate seed first
+    model_index = index // (num_seeds * num_datas)
+    seed_index = (index // num_datas) % num_seeds
+    data_index = index % num_datas
 
     # Get the corresponding configuration values
     model = MODEL[model_index] if isinstance(MODEL, list) else MODEL
+    seed = SEEDS[seed_index] if isinstance(SEEDS, list) else SEEDS
     data = DATA[data_index]  if isinstance(DATA, list) else DATA
     epochs = EPOCHS[data_index] if isinstance(EPOCHS, list) else EPOCHS
     imgsz = IMGSZ[data_index] if isinstance(IMGSZ, list) else IMGSZ
-    seed = SEEDS[seed_index] if isinstance(SEEDS, list) else SEEDS
 
     config_dict = {
         "model": model,
