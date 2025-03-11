@@ -56,7 +56,7 @@ IMGSZ = 1280
 
 # === Configuration ===
 MODEL = "yolo11x.yaml"
-DATA = ["datasets/semmel/04/semmel61.yaml",
+DATA = ["datasets/semmel/04/semmel65.yaml",
         "datasets/semmel/04/semmel80.yaml",
         "datasets/semmel/04/semmel81.yaml",
         "datasets/semmel/04/semmel82.yaml",
