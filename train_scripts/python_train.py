@@ -65,6 +65,17 @@ EPOCHS = 100
 SEEDS = [886666, 881313, 888888, 884040]
 IMGSZ = 1280
 
+# === Configuration ===
+MODEL = "yolo11x.yaml"
+DATA =  ["datasets/coco/coco05.yaml",
+         "datasets/coco/coco06.yaml",
+         "datasets/coco/coco07.yaml",
+         "datasets/coco/coco08.yaml",
+         "datasets/coco/coco09.yaml"]
+EPOCHS = 70
+SEEDS = 6666
+IMGSZ = 640
+
 def training(config: Namespace):
     model = YOLO(config.model)
     train_config = config.train_config
