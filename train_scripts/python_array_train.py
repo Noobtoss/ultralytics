@@ -76,23 +76,23 @@ EPOCHS = 70
 SEEDS = 6666
 IMGSZ = 640
 
-def training(config: Namespace):
-    model = YOLO(config.model)
-    train_config = config.train_config
-    model.train(**vars(train_config))
+def training(cfg: Namespace):
+    model = YOLO(cfg.model)
+    train_cfg = cfg.train_cfg
+    model.train(**vars(train_cfg))
 
-def evaluation(config: Namespace) -> None:
-    eval_config = config.train_config
-    with open(eval_config.data, "r") as f:
+def evaluation(cfg: Namespace) -> None:
+    eval_cfg = cfg.train_cfg
+    with open(eval_cfg.data, "r") as f:
         data_cfg = yaml.safe_load(f)
 
-    results_dir = str(os.path.join(eval_config.project, eval_config.name))
+    results_dir = str(os.path.join(eval_cfg.project, eval_cfg.name))
     last_model_path = f"{results_dir}/weights/last.pt"
     model = YOLO(last_model_path)
 
     evaluation_results = {}
 
-    results = model.val(**vars(eval_config), split="test", exist_ok=True)
+    results = model.val(**vars(eval_cfg), split="test", exist_ok=True)
     evaluation_results["test-full"] = {
         "mAP50": results.box.map50,
         "mAP50-95": results.box.map,
@@ -110,10 +110,10 @@ def evaluation(config: Namespace) -> None:
                     "names": data_cfg["names"]}
             yaml.dump(data, file, default_flow_style=False)
 
-        eval_config.data=tmp_file_name
-        eval_config.name = os.path.join(eval_config.name, f"test-{set_name}")
-        results = model.val(**vars(eval_config), split="test")
-        eval_config.name = os.path.dirname(eval_config.name)
+        eval_cfg.data=tmp_file_name
+        eval_cfg.name = os.path.join(eval_cfg.name, f"test-{set_name}")
+        results = model.val(**vars(eval_cfg), split="test")
+        eval_cfg.name = os.path.dirname(eval_cfg.name)
         evaluation_results[set_name] = {
             "mAP50": results.box.map50,
             "mAP75": results.box.map75,
@@ -149,7 +149,7 @@ def parse_index(index: int) -> dict[str, Any]:
     epochs = EPOCHS[data_index] if isinstance(EPOCHS, list) else EPOCHS
     imgsz = IMGSZ[data_index] if isinstance(IMGSZ, list) else IMGSZ
 
-    config_dict = {
+    cfg_dict = {
         "model": model,
         "data": data,
         "epochs": epochs,
@@ -157,31 +157,31 @@ def parse_index(index: int) -> dict[str, Any]:
         "seed": seed
     }
 
-    print(config_dict)
-    return config_dict
+    print(cfg_dict)
+    return cfg_dict
 
-def parse_config(config_dict: dict[str, Any]) -> Namespace:
-    config = argparse.Namespace()
-    model = config_dict.pop("model")
-    data = config_dict["data"]
-    seed = config_dict["seed"]
-    config.model = model
-    config.train_config = argparse.Namespace()
-    for key, value in config_dict.items():
-        setattr(config.train_config, key, value)
-    config.train_config.project = "runs"
-    config.train_config.name = (f"{os.path.splitext(os.path.basename(model))[0]}-"
+def parse_cfg(cfg_dict: dict[str, Any]) -> Namespace:
+    cfg = argparse.Namespace()
+    model = cfg_dict.pop("model")
+    data = cfg_dict["data"]
+    seed = cfg_dict["seed"]
+    cfg.model = model
+    cfg.train_cfg = argparse.Namespace()
+    for key, value in cfg_dict.items():
+        setattr(cfg.train_cfg, key, value)
+    cfg.train_cfg.project = "runs"
+    cfg.train_cfg.name = (f"{os.path.splitext(os.path.basename(model))[0]}-"
                                 f"{os.path.splitext(os.path.basename(data))[0].lower()}-"
                                 f"{seed}-{datetime.now().strftime('%Y-%m-%d_%H-%M')}")
 
-    return config
+    return cfg
 
 def main():
     args = parse_args()
-    config_dict = parse_index(args.index)
-    config = parse_config(config_dict)
-    training(config)
-    evaluation(config)
+    cfg_dict = parse_index(args.index)
+    cfg = parse_cfg(cfg_dict)
+    training(cfg)
+    evaluation(cfg)
 
 if __name__ == '__main__':
     main()

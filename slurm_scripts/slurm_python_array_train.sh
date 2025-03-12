@@ -24,4 +24,4 @@ export WANDB_DIR=/nfs/scratch/staff/schmittth/.cache
 
 BASE_DIR=/nfs/scratch/staff/schmittth/sync/ultralytics
 
-python $BASE_DIR/train_scripts/python_train.py --index $SLURM_ARRAY_TASK_ID
+python $BASE_DIR/train_scripts/python_array_train.py --index $SLURM_ARRAY_TASK_ID
