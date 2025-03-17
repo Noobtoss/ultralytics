@@ -45,7 +45,7 @@ SEEDS = [886666, 881313, 888888, 884040]
 IMGSZ = 640
 
 # === Configuration ===
-MODEL = "yolo11x.yaml"
+MODEL = "models/yolo11x.pt"
 DATA = ["datasets/semmel/machine/semmel75.yaml",
         "datasets/semmel/machine/semmel76.yaml",
         "datasets/semmel/machine/semmel77.yaml",
@@ -55,7 +55,7 @@ SEEDS = 6666
 IMGSZ = 1280
 
 # === Configuration ===
-MODEL = "yolo11x.yaml"
+MODEL = "models/yolo11x.pt"
 DATA = ["datasets/semmel/04/semmel65.yaml",
         "datasets/semmel/04/semmel80.yaml",
         "datasets/semmel/04/semmel81.yaml",
@@ -76,9 +76,21 @@ EPOCHS = 70
 SEEDS = 6666
 IMGSZ = 640
 
+# === Configuration ===
+# MODEL = "models/yolo11x.pt"
+# DATA = ["datasets/semmel/machine/semmel75.yaml",
+#         "datasets/semmel/machine/semmel76.yaml",
+#         "datasets/semmel/machine/semmel77.yaml",
+#         "datasets/semmel/machine/semmel78.yaml"]
+# EPOCHS = 100
+# SEEDS = 6666
+# IMGSZ = 1280
+
 def training(cfg: Namespace):
     model = YOLO(cfg.model)
     train_cfg = cfg.train_cfg
+    train_cfg.save_period = 10
+    # train_cfg.time = 42
     model.train(**vars(train_cfg))
 
 def evaluation(cfg: Namespace) -> None:

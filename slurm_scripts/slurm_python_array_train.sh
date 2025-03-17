@@ -24,4 +24,8 @@ export WANDB_DIR=/nfs/scratch/staff/schmittth/.cache
 
 BASE_DIR=/nfs/scratch/staff/schmittth/sync/ultralytics
 
+wait_time=$(((SLURM_ARRAY_TASK_ID - 1) * 4 * 60))  # This multiplies job ID by 60 to get seconds
+echo "Waiting for $wait_time seconds ((SLURM_ARRAY_TASK_ID -1) * 4 * 60)"
+sleep $wait_time
+
 python $BASE_DIR/train_scripts/python_array_train.py --index $SLURM_ARRAY_TASK_ID
