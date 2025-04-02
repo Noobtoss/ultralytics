@@ -46,10 +46,10 @@ IMGSZ = 640
 
 # === Configuration ===
 MODEL = "models/yolo11x.pt"
-DATA = ["datasets/semmel/machine/semmel75.yaml",
-        "datasets/semmel/machine/semmel76.yaml",
-        "datasets/semmel/machine/semmel77.yaml",
-        "datasets/semmel/machine/semmel78.yaml"]
+DATA = ["datasets/semmel/05machine/semmel75.yaml",
+        "datasets/semmel/05machine/semmel76.yaml",
+        "datasets/semmel/05machine/semmel77.yaml",
+        "datasets/semmel/05machine/semmel78.yaml"]
 EPOCHS = 100
 SEEDS = 6666
 IMGSZ = 1280
@@ -77,14 +77,49 @@ SEEDS = 6666
 IMGSZ = 640
 
 # === Configuration ===
-# MODEL = "models/yolo11x.pt"
-# DATA = ["datasets/semmel/machine/semmel75.yaml",
-#         "datasets/semmel/machine/semmel76.yaml",
-#         "datasets/semmel/machine/semmel77.yaml",
-#         "datasets/semmel/machine/semmel78.yaml"]
-# EPOCHS = 100
-# SEEDS = 6666
-# IMGSZ = 1280
+MODEL = "models/yolo11x.pt"
+DATA = ["datasets/semmel/05machine/semmel75.yaml",
+        "datasets/semmel/05machine/semmel76.yaml",
+        "datasets/semmel/05machine/semmel77.yaml",
+        "datasets/semmel/05machine/semmel78.yaml"]
+EPOCHS = 100
+SEEDS = 6666
+IMGSZ = 1280
+
+# === Configuration ===
+MODEL = "models/yolo11s.pt"
+DATA = ["datasets/semmel/05machine/semmel75.yaml",
+        "datasets/semmel/05machine/semmel76.yaml",
+        "datasets/semmel/05machine/semmel77.yaml",
+        "datasets/semmel/05machine/semmel78.yaml"]
+EPOCHS = 200
+SEEDS = 6666
+IMGSZ = 640
+
+# === Configuration ===
+MODEL = ["models/yolo11s.pt", "models/yolo11m.pt", "models/yolo11l.pt", "models/yolo11x.pt"]
+DATA = "datasets/lebensmittel/lebensmittel01.yaml"
+EPOCHS = 300
+SEEDS = 6666
+IMGSZ = 640
+
+# === Configuration ===
+MODEL = "yolo11x.yaml"
+DATA =  ["datasets/coco/coco10.yaml",
+         "datasets/coco/coco11.yaml"]
+EPOCHS = 70
+SEEDS = 6666
+IMGSZ = 640
+
+# === Configuration ===
+MODEL = "models/yolo11x.pt"
+DATA = ["datasets/semmel/05fzi2025/semmel84.yaml",
+        "datasets/semmel/05fzi2025/semmel85.yaml",
+        "datasets/semmel/05fzi2025/semmel86.yaml",
+        "datasets/semmel/05fzi2025/semmel87.yaml"]
+EPOCHS = 100
+SEEDS = 6666
+IMGSZ = 1280
 
 def training(cfg: Namespace):
     model = YOLO(cfg.model)
