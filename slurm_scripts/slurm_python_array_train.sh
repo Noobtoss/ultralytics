@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=yolo_array    # Kurzname des Jobs
-#SBATCH --array=1-2%2            # 3 Jobs total running 2 at a time
+#SBATCH --array=1-24%4            # 3 Jobs total running 2 at a time
 #SBATCH --output=logs/R-%j.out
 #SBATCH --partition=p2
 #SBATCH --qos=gpuultimate
@@ -21,12 +21,14 @@ conda activate conda_ultralytics
 yolo settings wandb=True
 export WANDB_API_KEY=95177947f5f36556806da90ea7a0bf93ed857d58
 export WANDB_DIR=/tmp/ths_wandb
+export WANDB_CACHE_DIR=/tmp/ths_wandb
+export WANDB_CONFIG_DIR=/tmp/ths_wandb
 # /nfs/scratch/staff/schmittth/.cache
 
 BASE_DIR=/nfs/scratch/staff/schmittth/sync/ultralytics
 
-wait_time=$(((SLURM_ARRAY_TASK_ID - 1) * 4 * 60))  # This multiplies job ID by 60 to get seconds
+wait_time=$(((SLURM_ARRAY_TASK_ID - 1) * 2 * 60))  # This multiplies job ID by 60 to get seconds
 echo "Waiting for $wait_time seconds ((SLURM_ARRAY_TASK_ID -1) * 4 * 60)"
 sleep $wait_time
 
-python $BASE_DIR/train_scripts/python_array_train.py --index $SLURM_ARRAY_TASK_ID
+python $BASE_DIR/python_scripts/python_array_train.py --index $SLURM_ARRAY_TASK_ID

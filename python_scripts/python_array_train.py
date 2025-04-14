@@ -97,7 +97,10 @@ SEEDS = 6666
 IMGSZ = 640
 
 # === Configuration ===
-MODEL = ["models/yolo11s.pt", "models/yolo11m.pt", "models/yolo11l.pt", "models/yolo11x.pt"]
+MODEL = ["models/yolo11s.pt",
+         "models/yolo11m.pt",
+         "models/yolo11l.pt",
+         "models/yolo11x.pt"]
 DATA = "datasets/lebensmittel/lebensmittel01.yaml"
 EPOCHS = 300
 SEEDS = 6666
@@ -116,15 +119,40 @@ MODEL = "models/yolo11x.pt"
 DATA = ["datasets/semmel/05fzi2025/semmel84.yaml",
         "datasets/semmel/05fzi2025/semmel85.yaml",
         "datasets/semmel/05fzi2025/semmel86.yaml",
-        "datasets/semmel/05fzi2025/semmel87.yaml"]
+        "datasets/semmel/05fzi2025/semmel87.yaml",
+        "datasets/semmel/05fzi2025/semmel88.yaml",
+        "datasets/semmel/05fzi2025/semmel89.yaml",
+        "datasets/semmel/05fzi2025/semmel90.yaml",
+        "datasets/semmel/05fzi2025/semmel91.yaml"]
 EPOCHS = 100
-SEEDS = 6666
+SEEDS = [886666, 881313, 888888, 884040]
+IMGSZ = 1280
+
+# === Configuration ===
+MODEL = "models/yolo11x.pt"
+DATA = ["datasets/semmel/05fzi2025/semmel92.yaml",
+        "datasets/semmel/05fzi2025/semmel93.yaml",
+        "datasets/semmel/05fzi2025/semmel94.yaml"]
+EPOCHS = 100
+SEEDS = [886666, 881313, 888888, 884040]
+IMGSZ = 1280
+
+# === Configuration ===
+MODEL = "models/yolo11x.pt"
+DATA = ["datasets/semmel/05Ostern/semmel95.yaml",
+        "datasets/semmel/05Ostern/semmel96.yaml",
+        "datasets/semmel/05Ostern/semmel97.yaml",
+        "datasets/semmel/05Ostern/semmel98.yaml",
+        "datasets/semmel/05Ostern/semmel99.yaml",
+        "datasets/semmel/05Ostern/semmelDemo04.yaml"]
+EPOCHS = 100
+SEEDS = [886666, 881313, 888888, 884040]
 IMGSZ = 1280
 
 def training(cfg: Namespace):
     model = YOLO(cfg.model)
     train_cfg = cfg.train_cfg
-    train_cfg.save_period = 10
+    # train_cfg.save_period = 10
     # train_cfg.time = 42
     model.train(**vars(train_cfg))
 
