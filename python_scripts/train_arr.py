@@ -46,10 +46,10 @@ IMGSZ = 640
 
 # === Configuration ===
 MODEL = "models/yolo11x.pt"
-DATA = ["datasets/semmel/05machine/semmel75.yaml",
-        "datasets/semmel/05machine/semmel76.yaml",
-        "datasets/semmel/05machine/semmel77.yaml",
-        "datasets/semmel/05machine/semmel78.yaml"]
+DATA = ["datasets/semmel/05Machine/semmel75.yaml",
+        "datasets/semmel/05Machine/semmel76.yaml",
+        "datasets/semmel/05Machine/semmel77.yaml",
+        "datasets/semmel/05Machine/semmel78.yaml"]
 EPOCHS = 100
 SEEDS = 6666
 IMGSZ = 1280
@@ -78,20 +78,20 @@ IMGSZ = 640
 
 # === Configuration ===
 MODEL = "models/yolo11x.pt"
-DATA = ["datasets/semmel/05machine/semmel75.yaml",
-        "datasets/semmel/05machine/semmel76.yaml",
-        "datasets/semmel/05machine/semmel77.yaml",
-        "datasets/semmel/05machine/semmel78.yaml"]
+DATA = ["datasets/semmel/05Machine/semmel75.yaml",
+        "datasets/semmel/05Machine/semmel76.yaml",
+        "datasets/semmel/05Machine/semmel77.yaml",
+        "datasets/semmel/05Machine/semmel78.yaml"]
 EPOCHS = 100
 SEEDS = 6666
 IMGSZ = 1280
 
 # === Configuration ===
 MODEL = "models/yolo11s.pt"
-DATA = ["datasets/semmel/05machine/semmel75.yaml",
-        "datasets/semmel/05machine/semmel76.yaml",
-        "datasets/semmel/05machine/semmel77.yaml",
-        "datasets/semmel/05machine/semmel78.yaml"]
+DATA = ["datasets/semmel/05Machine/semmel75.yaml",
+        "datasets/semmel/05Machine/semmel76.yaml",
+        "datasets/semmel/05Machine/semmel77.yaml",
+        "datasets/semmel/05Machine/semmel78.yaml"]
 EPOCHS = 200
 SEEDS = 6666
 IMGSZ = 640
@@ -144,10 +144,36 @@ DATA = ["datasets/semmel/05Ostern/semmel95.yaml",
         "datasets/semmel/05Ostern/semmel97.yaml",
         "datasets/semmel/05Ostern/semmel98.yaml",
         "datasets/semmel/05Ostern/semmel99.yaml",
-        "datasets/semmel/05Ostern/semmelDemo04.yaml"]
+        "datasets/semmel/05Ostern/semmelDemo04.yaml",
+        "datasets/semmel/05Ostern/semmel100.yaml",
+        "datasets/semmel/05Ostern/semmel101.yaml",
+        "datasets/semmel/05Ostern/semmel102.yaml"]
 EPOCHS = 100
 SEEDS = [886666, 881313, 888888, 884040]
 IMGSZ = 1280
+
+# === Configuration ===
+MODEL = ["models/yolo11s.pt", "models/yolo11m.pt", "models/yolo11l.pt", "models/yolo11x.pt"]
+DATA = ["datasets/semmel/05Machine/semmel75.yaml"]
+EPOCHS = 100
+SEEDS = 6666
+IMGSZ = 1280
+
+# === Configuration ===
+MODEL = ["models/yolo11s.pt", "models/yolo11m.pt", "models/yolo11l.pt", "models/yolo11x.pt"]
+DATA = ["datasets/semmel/05Machine/semmel75.yaml"]
+EPOCHS = 100
+SEEDS = 6666
+IMGSZ = 640
+
+# === Configuration ===
+MODEL = "models/yolo11x.pt"
+DATA = ["datasets/papier/papier00.yaml",
+        "datasets/papier/papier01.yaml"]
+EPOCHS = [100, 1000]
+SEEDS = [886666, 881313, 888888, 884040]
+IMGSZ = 1280
+
 
 def training(cfg: Namespace):
     model = YOLO(cfg.model)
@@ -251,7 +277,7 @@ def parse_cfg(cfg_dict: dict[str, Any]) -> Namespace:
 
     return cfg
 
-def main():
+def train_arr():
     args = parse_args()
     cfg_dict = parse_index(args.index)
     cfg = parse_cfg(cfg_dict)
@@ -259,4 +285,4 @@ def main():
     evaluation(cfg)
 
 if __name__ == '__main__':
-    main()
+    train_arr()

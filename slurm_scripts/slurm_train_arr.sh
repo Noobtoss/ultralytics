@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=yolo_array    # Kurzname des Jobs
-#SBATCH --array=1-24%4            # 3 Jobs total running 2 at a time
+#SBATCH --array=1-2%2            # 3 Jobs total running 2 at a time
 #SBATCH --output=logs/R-%j.out
 #SBATCH --partition=p2
 #SBATCH --qos=gpuultimate
@@ -31,4 +31,4 @@ wait_time=$(((SLURM_ARRAY_TASK_ID - 1) * 2 * 60))  # This multiplies job ID by 6
 echo "Waiting for $wait_time seconds ((SLURM_ARRAY_TASK_ID -1) * 4 * 60)"
 sleep $wait_time
 
-python $BASE_DIR/python_scripts/python_array_train.py --index $SLURM_ARRAY_TASK_ID
+python $BASE_DIR/python_scripts/train_arr.py --index $SLURM_ARRAY_TASK_ID
