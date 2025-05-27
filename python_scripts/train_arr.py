@@ -170,7 +170,22 @@ IMGSZ = 640
 MODEL = "models/yolo11x.pt"
 DATA = ["datasets/papier/papier00.yaml",
         "datasets/papier/papier01.yaml"]
-EPOCHS = [100, 1000]
+EPOCHS = [100, 2000]
+SEEDS = [886666, 881313, 888888, 884040]
+IMGSZ = 1280
+
+# === Configuration ===
+MODEL = "models/yolo11x.pt"
+DATA = ["datasets/semmel/05Zucker/semmel103.yaml",
+        "datasets/semmel/05Zucker/semmel104.yaml",
+        "datasets/semmel/05Zucker/semmel105.yaml",
+        "datasets/semmel/05Zucker/semmel106.yaml",
+        "datasets/semmel/05Zucker/semmel107.yaml",
+        "datasets/semmel/05Zucker/semmel108.yaml",
+        "datasets/semmel/05Zucker/semmel109.yaml",
+        "datasets/semmel/05Zucker/semmel110.yaml"
+        ]
+EPOCHS = 100
 SEEDS = [886666, 881313, 888888, 884040]
 IMGSZ = 1280
 
@@ -255,7 +270,8 @@ def parse_index(index: int) -> dict[str, Any]:
         "data": data,
         "epochs": epochs,
         "imgsz": imgsz,
-        "seed": seed
+        "seed": seed,
+        "batch": 8
     }
 
     print(cfg_dict)

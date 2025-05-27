@@ -24,7 +24,7 @@ export WANDB_CACHE_DIR=/tmp/ths_wandb
 export WANDB_CONFIG_DIR=/tmp/ths_wandb
 # export WANDB_DIR=/nfs/scratch/staff/schmittth/.cache
 
-BASE_DIR=/nfs/scratch/staff/schmittth/sync/ultralytics
+BASE_DIR=/nfs/scratch/staff/schmittth/codeNexus/ultralytics
 CFG=$1
 DATA=$2
 EPOCHS=${3:-100}

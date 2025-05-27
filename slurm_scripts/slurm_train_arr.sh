@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=yolo_array    # Kurzname des Jobs
-#SBATCH --array=1-2%2            # 3 Jobs total running 2 at a time
+#SBATCH --array=1-8%3            # 3 Jobs total running 2 at a time
 #SBATCH --output=logs/R-%j.out
 #SBATCH --partition=p2
 #SBATCH --qos=gpuultimate
@@ -25,7 +25,7 @@ export WANDB_CACHE_DIR=/tmp/ths_wandb
 export WANDB_CONFIG_DIR=/tmp/ths_wandb
 # /nfs/scratch/staff/schmittth/.cache
 
-BASE_DIR=/nfs/scratch/staff/schmittth/sync/ultralytics
+BASE_DIR=/nfs/scratch/staff/schmittth/codeNexus/ultralytics
 
 wait_time=$(((SLURM_ARRAY_TASK_ID - 1) * 2 * 60))  # This multiplies job ID by 60 to get seconds
 echo "Waiting for $wait_time seconds ((SLURM_ARRAY_TASK_ID -1) * 4 * 60)"
