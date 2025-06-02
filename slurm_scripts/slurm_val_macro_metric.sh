@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=yolo_val_macro    # Kurzname des Jobs
-#SBATCH --output=R-%j.out
+#SBATCH --output=logs/R-%j.out
 #SBATCH --partition=p2
 #SBATCH --qos=gpuultimate
 #SBATCH --gres=gpu:1
@@ -16,4 +16,4 @@ eval "$(conda shell.bash hook)"
 conda activate conda_ultralytics
 BASE_DIR=/nfs/scratch/staff/schmittth/codeNexus/ultralytics
 
-python $BASE_DIR/python_scripts/val_macro_metric.py --root $BASE_DIR --dir results/semmel/05Ostern
+python $BASE_DIR/python_scripts/val_macro_metric.py --root $BASE_DIR --dir results/semmel/05Zucker
