@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=yolo_val_macro    # Kurzname des Jobs
+#SBATCH --job-name=ultralytics_val_macro_metrics    # Kurzname des Jobs
 #SBATCH --output=logs/R-%j.out
 #SBATCH --partition=p2
 #SBATCH --qos=gpuultimate

@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=yolo        # Kurzname des Jobs
+#SBATCH --job-name=ultralytics_train   # Kurzname des Jobs
 #SBATCH --output=logs/R-%j.out
 #SBATCH --partition=p2
 #SBATCH --qos=gpuultimate

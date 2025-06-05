@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=yolo_array    # Kurzname des Jobs
+#SBATCH --job-name=ultralytics_train_arr # Kurzname des Jobs
 #SBATCH --array=1-32%2            # 3 Jobs total running 2 at a time
 #SBATCH --output=logs/R-%j.out
 #SBATCH --partition=p2
