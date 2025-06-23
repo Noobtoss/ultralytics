@@ -189,6 +189,33 @@ EPOCHS = 100
 SEEDS = [886666, 881313, 888888, 884040]
 IMGSZ = 1280
 
+# === Configuration ===
+MODEL = "models/yolo11x.pt"
+DATA = ["datasets/semmel/04/semmel111Baseline.yaml",
+        "datasets/semmel/05/semmelDemo04.yaml"]
+EPOCHS = 100
+SEEDS = [886666, 881313, 888888, 884040]
+IMGSZ = 640
+
+# === Configuration ===
+MODEL = "models/yolo11x.pt"
+DATA = ["datasets/semmel/05/semmel113Baseline.yaml"]
+EPOCHS = 100
+SEEDS = 888888 # [886666, 881313, 888888, 884040]
+IMGSZ = 640
+
+
+# === Configuration ===
+MODEL = "models/yolo11x.pt"
+DATA = ["datasets/semmel/06/semmel114Baseline.yaml",
+        "datasets/semmel/06/semmel115Videos06Train.yaml",
+        "datasets/semmel/06/semmel116AllTrain.yaml"
+        ]
+EPOCHS = 100
+SEEDS = 886666 # [886666, 881313, 888888, 884040]
+IMGSZ = 640
+
+
 
 def training(cfg: Namespace):
     model = YOLO(cfg.model)
