@@ -297,6 +297,7 @@ def parse_index(index: int) -> dict[str, Any]:
         "epochs": epochs,
         "imgsz": imgsz,
         "seed": seed,
+        "agnostic_nms": True,
         "batch": 8
     }
 
