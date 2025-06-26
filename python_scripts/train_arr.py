@@ -67,11 +67,11 @@ IMGSZ = 1280
 
 # === Configuration ===
 MODEL = "yolo11x.yaml"
-DATA =  ["datasets/coco/coco05.yaml",
-         "datasets/coco/coco06.yaml",
-         "datasets/coco/coco07.yaml",
-         "datasets/coco/coco08.yaml",
-         "datasets/coco/coco09.yaml"]
+DATA = ["datasets/coco/coco05.yaml",
+        "datasets/coco/coco06.yaml",
+        "datasets/coco/coco07.yaml",
+        "datasets/coco/coco08.yaml",
+        "datasets/coco/coco09.yaml"]
 EPOCHS = 70
 SEEDS = 6666
 IMGSZ = 640
@@ -108,8 +108,8 @@ IMGSZ = 640
 
 # === Configuration ===
 MODEL = "yolo11x.yaml"
-DATA =  ["datasets/coco/coco10.yaml",
-         "datasets/coco/coco11.yaml"]
+DATA = ["datasets/coco/coco10.yaml",
+        "datasets/coco/coco11.yaml"]
 EPOCHS = 70
 SEEDS = 6666
 IMGSZ = 640
@@ -191,30 +191,26 @@ IMGSZ = 1280
 
 # === Configuration ===
 MODEL = "models/yolo11x.pt"
-DATA = ["datasets/semmel/04/semmel111Baseline.yaml",
-        "datasets/semmel/05/semmelDemo04.yaml"]
+DATA = ["datasets/semmel/05/semmel113Baseline.yaml",
+        "datasets/semmel/05/semmelDemo04.yaml",
+        "datasets/semmel/05/semmel119Mono_dino.yaml",
+        "datasets/semmel/05/semmel119Mono_owl.yaml",
+        ]
 EPOCHS = 100
-SEEDS = [886666, 881313, 888888, 884040]
-IMGSZ = 640
-
-# === Configuration ===
-MODEL = "models/yolo11x.pt"
-DATA = ["datasets/semmel/05/semmel113Baseline.yaml"]
-EPOCHS = 100
-SEEDS = 888888 # [886666, 881313, 888888, 884040]
-IMGSZ = 640
-
+SEEDS = 888888
+IMGSZ = 1280
 
 # === Configuration ===
 MODEL = "models/yolo11x.pt"
 DATA = ["datasets/semmel/06/semmel114Baseline.yaml",
-        "datasets/semmel/06/semmel115Videos06Train.yaml",
-        "datasets/semmel/06/semmel116AllTrain.yaml"
+        "datasets/semmel/06/semmel115Videos06Train_ann0.yaml",
+        "datasets/semmel/06/semmel116Videos06Train_ann0_plus.yaml",
+        "datasets/semmel/06/semmel117Videos06Train_yolo11x-semmel113.yaml",
+        "datasets/semmel/06/semmel118Videos06Train_yolo11x-semmel113_plus.yaml"
         ]
 EPOCHS = 100
-SEEDS = 886666 # [886666, 881313, 888888, 884040]
-IMGSZ = 640
-
+SEEDS = 888888
+IMGSZ = 1280
 
 
 def training(cfg: Namespace):
@@ -223,6 +219,7 @@ def training(cfg: Namespace):
     # train_cfg.save_period = 10
     # train_cfg.time = 42
     model.train(**vars(train_cfg))
+
 
 def evaluation(cfg: Namespace) -> None:
     eval_cfg = cfg.train_cfg
@@ -253,7 +250,7 @@ def evaluation(cfg: Namespace) -> None:
                     "names": data_cfg["names"]}
             yaml.dump(data, file, default_flow_style=False)
 
-        eval_cfg.data=tmp_file_name
+        eval_cfg.data = tmp_file_name
         eval_cfg.name = os.path.join(eval_cfg.name, f"test-{set_name}")
         results = model.val(**vars(eval_cfg), split="test")
         eval_cfg.name = os.path.dirname(eval_cfg.name)
@@ -267,11 +264,13 @@ def evaluation(cfg: Namespace) -> None:
     df.to_csv(os.path.join(results_dir, "evaluation.csv"))
     return
 
+
 def parse_args() -> Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument('--index', type=int)
     args = parser.parse_args()
     return args
+
 
 def parse_index(index: int) -> dict[str, Any]:
     num_models = len(MODEL) if isinstance(MODEL, list) else 1
@@ -288,7 +287,7 @@ def parse_index(index: int) -> dict[str, Any]:
     # Get the corresponding configuration values
     model = MODEL[model_index] if isinstance(MODEL, list) else MODEL
     seed = SEEDS[seed_index] if isinstance(SEEDS, list) else SEEDS
-    data = DATA[data_index]  if isinstance(DATA, list) else DATA
+    data = DATA[data_index] if isinstance(DATA, list) else DATA
     epochs = EPOCHS[data_index] if isinstance(EPOCHS, list) else EPOCHS
     imgsz = IMGSZ[data_index] if isinstance(IMGSZ, list) else IMGSZ
 
@@ -304,6 +303,7 @@ def parse_index(index: int) -> dict[str, Any]:
     print(cfg_dict)
     return cfg_dict
 
+
 def parse_cfg(cfg_dict: dict[str, Any]) -> Namespace:
     cfg = argparse.Namespace()
     model = cfg_dict.pop("model")
@@ -315,10 +315,11 @@ def parse_cfg(cfg_dict: dict[str, Any]) -> Namespace:
         setattr(cfg.train_cfg, key, value)
     cfg.train_cfg.project = "runs"
     cfg.train_cfg.name = (f"{os.path.splitext(os.path.basename(model))[0]}-"
-                                f"{os.path.splitext(os.path.basename(data))[0].lower()}-"
-                                f"{seed}-{datetime.now().strftime('%Y-%m-%d_%H-%M')}")
+                          f"{os.path.splitext(os.path.basename(data))[0].lower()}-"
+                          f"{seed}-{datetime.now().strftime('%Y-%m-%d_%H-%M')}")
 
     return cfg
+
 
 def train_arr():
     args = parse_args()
@@ -326,6 +327,7 @@ def train_arr():
     cfg = parse_cfg(cfg_dict)
     training(cfg)
     evaluation(cfg)
+
 
 if __name__ == '__main__':
     train_arr()
