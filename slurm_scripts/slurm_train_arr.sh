@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=ultralytics_train_arr # Kurzname des Jobs
-#SBATCH --array=1-3%3           # 3 Jobs total running 2 at a time
+#SBATCH --array=1-3%2          # 3 Jobs total running 2 at a time
 #SBATCH --output=logs/R-%j.out
 #SBATCH --partition=p2
 #SBATCH --qos=gpuultimate
@@ -18,7 +18,7 @@ eval "$(conda shell.bash hook)"
 
 conda activate conda_ultralytics
 
-yolo settings wandb=True
+yolo settings wandb=False
 export WANDB_API_KEY=95177947f5f36556806da90ea7a0bf93ed857d58
 export WANDB_DIR=/tmp/ths_wandb
 export WANDB_CACHE_DIR=/tmp/ths_wandb
@@ -28,7 +28,7 @@ export WANDB_CONFIG_DIR=/tmp/ths_wandb
 BASE_DIR=/nfs/scratch/staff/schmittth/codeNexus/ultralytics
 
 wait_time=$(((SLURM_ARRAY_TASK_ID - 1) * 2 * 60))  # This multiplies job ID by 60 to get seconds
-echo "Waiting for $wait_time seconds ((SLURM_ARRAY_TASK_ID -1) * 4 * 60)"
+echo "Waiting for $wait_time seconds ((SLURM_ARRAY_TASK_ID -1) * 2 * 60)"
 sleep $wait_time
 
 python $BASE_DIR/python_scripts/train_arr.py --index $SLURM_ARRAY_TASK_ID
