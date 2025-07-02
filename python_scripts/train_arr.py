@@ -191,10 +191,10 @@ IMGSZ = 1280
 
 # === Configuration ===
 MODEL = "models/yolo11x.pt"
-DATA = ["datasets/semmel/05/semmel113Baseline.yaml",
-        "datasets/semmel/05/semmelDemo04.yaml",
+DATA = ["datasets/semmel/05/semmel120Mono_owl.yaml",
         "datasets/semmel/05/semmel119Mono_dino.yaml",
-        "datasets/semmel/05/semmel119Mono_owl.yaml",
+        "datasets/semmel/05/semmel113Baseline.yaml",
+        "datasets/semmel/05/semmelDemo04.yaml",
         ]
 EPOCHS = 100
 SEEDS = 888888
@@ -202,22 +202,16 @@ IMGSZ = 1280
 
 # === Configuration ===
 MODEL = "models/yolo11x.pt"
-DATA = ["datasets/semmel/06/semmel114Baseline.yaml",
-        "datasets/semmel/06/semmel115Videos06Train_ann0.yaml",
-        "datasets/semmel/06/semmel116Videos06Train_ann0_plus.yaml",
+DATA = ["datasets/semmel/06/semmel118Videos06Train_semmel113_plus.yaml"
         "datasets/semmel/06/semmel117Videos06Train_semmel113.yaml",
-        "datasets/semmel/06/semmel118Videos06Train_semmel113_plus.yaml"
+        "datasets/semmel/06/semmel116Videos06Train_ann0_plus.yaml",
+        "datasets/semmel/06/semmel115Videos06Train_ann0.yaml",
+        "datasets/semmel/06/semmel114Baseline.yaml",
         ]
 EPOCHS = 100
 SEEDS = 888888
 IMGSZ = 1280
 
-# === Configuration ===
-MODEL = "models/yolo11x.pt"
-DATA = ["datasets/semmel/05/semmel113Baseline.yaml"]
-EPOCHS = 100
-SEEDS = 888888
-IMGSZ = 1280
 
 def training(cfg: Namespace):
     model = YOLO(cfg.model)
