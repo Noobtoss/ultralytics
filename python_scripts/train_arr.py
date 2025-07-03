@@ -20,7 +20,7 @@ DATA = ["datasets/semmel/04/semmel61.yaml",
         "datasets/semmel/04/semmel83.yaml"]
 EPOCHS = 200
 SEEDS = 6666
-IMGSZ = 1280 # 640
+IMGSZ = 1280  # 640
 
 # === Configuration ===
 MODEL = "models/yolo11x.pt"
@@ -30,7 +30,7 @@ DATA = ["datasets/semmel/05Machine/semmel75.yaml",
         "datasets/semmel/05Machine/semmel78.yaml"]
 EPOCHS = 100
 SEEDS = 6666
-IMGSZ = 1280 # 640
+IMGSZ = 1280  # 640
 
 # === Configuration ===
 MODEL = "models/yolo11x.pt"
@@ -106,6 +106,7 @@ EPOCHS = 100
 SEEDS = 888888
 IMGSZ = 1280
 """
+
 
 def training(cfg: Namespace):
     model = YOLO(cfg.model)
