@@ -17,7 +17,8 @@ DATA = ["datasets/semmel/04/semmel61.yaml",
         "datasets/semmel/04/semmel68.yaml",
         "datasets/semmel/04/semmel81.yaml",
         "datasets/semmel/04/semmel82.yaml",
-        "datasets/semmel/04/semmel83.yaml"]
+        "datasets/semmel/04/semmel83.yaml"
+        ]
 EPOCHS = 200
 SEEDS = 6666
 IMGSZ = 1280  # 640
@@ -27,7 +28,8 @@ MODEL = "models/yolo11x.pt"
 DATA = ["datasets/semmel/05Machine/semmel75.yaml",
         "datasets/semmel/05Machine/semmel76.yaml",
         "datasets/semmel/05Machine/semmel77.yaml",
-        "datasets/semmel/05Machine/semmel78.yaml"]
+        "datasets/semmel/05Machine/semmel78.yaml"
+        ]
 EPOCHS = 100
 SEEDS = 6666
 IMGSZ = 1280  # 640
@@ -44,7 +46,8 @@ DATA = ["datasets/semmel/05fzi2025/semmel94.yaml",
         "datasets/semmel/05fzi2025/semmel87.yaml",
         "datasets/semmel/05fzi2025/semmel86.yaml",
         "datasets/semmel/05fzi2025/semmel85.yaml",
-        "datasets/semmel/05fzi2025/semmel84.yaml"]
+        "datasets/semmel/05fzi2025/semmel84.yaml"
+        ]
 EPOCHS = 100
 SEEDS = [886666, 881313, 888888, 884040]
 IMGSZ = 1280
@@ -59,7 +62,8 @@ DATA = ["datasets/semmel/05Ostern/semmel95.yaml",
         "datasets/semmel/05Ostern/semmelDemo04.yaml",
         "datasets/semmel/05Ostern/semmel100.yaml",
         "datasets/semmel/05Ostern/semmel101.yaml",
-        "datasets/semmel/05Ostern/semmel102.yaml"]
+        "datasets/semmel/05Ostern/semmel102.yaml"
+        ]
 EPOCHS = 100
 SEEDS = [886666, 881313, 888888, 884040]
 IMGSZ = 1280
@@ -81,9 +85,9 @@ IMGSZ = 1280
 
 # === Configuration ===
 MODEL = "models/yolo11x.pt"
-DATA = ["datasets/semmel/05/semmel123_tetris_plus.yaml",
-        "datasets/semmel/05/semmel122_tetris.yaml",
-        "datasets/semmel/05/semmel121_20pct.yaml",
+DATA = ["datasets/semmel/05/semmel123_20pct.yaml",
+        "datasets/semmel/05/semmel122_tetris_plus.yaml",
+        "datasets/semmel/05/semmel121_tetris.yaml",
         "datasets/semmel/05/semmel120Mono_owl.yaml",
         "datasets/semmel/05/semmel119Mono_dino.yaml",
         "datasets/semmel/05/semmel113Baseline.yaml",
