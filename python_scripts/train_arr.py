@@ -85,7 +85,8 @@ IMGSZ = 1280
 
 # === Configuration ===
 MODEL = "models/yolo11x.pt"
-DATA = ["datasets/semmel/05/semmel123_10pct.yaml",
+DATA = ["datasets/semmel/05/semmel124_10pct.yaml",
+        "datasets/semmel/05/semmel123_mono_10pct.yaml",
         "datasets/semmel/05/semmel122_tetris_plus.yaml",
         "datasets/semmel/05/semmel121_tetris.yaml",
         "datasets/semmel/05/semmel120Mono_owl.yaml",
@@ -93,7 +94,7 @@ DATA = ["datasets/semmel/05/semmel123_10pct.yaml",
         "datasets/semmel/05/semmel113Baseline.yaml",
         "datasets/semmel/05/semmelDemo04.yaml"
         ]
-EPOCHS = [200, 100, 100, 200, 200, 100, 100]
+EPOCHS = [200, 200, 100, 100, 200, 200, 100, 100]
 SEEDS = 888888
 IMGSZ = 1280
 
