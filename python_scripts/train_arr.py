@@ -85,20 +85,19 @@ IMGSZ = 1280
 
 # === Configuration ===
 MODEL = "models/yolo11x.pt"
-DATA = ["datasets/semmel/05/semmel124_10pct.yaml",
-        "datasets/semmel/05/semmel123_mono_10pct.yaml",
-        "datasets/semmel/05/semmel122_tetris_plus.yaml",
-        "datasets/semmel/05/semmel121_tetris.yaml",
-        "datasets/semmel/05/semmel120Mono_owl.yaml",
-        "datasets/semmel/05/semmel119Mono_dino.yaml",
-        "datasets/semmel/05/semmel113Baseline.yaml",
-        "datasets/semmel/05/semmelDemo04.yaml"
+DATA = ["datasets/semmel/05WAVC/semmel124_10pct.yaml",
+        "datasets/semmel/05WAVC/semmel123_mono_10pct.yaml",
+        "datasets/semmel/05WAVC/semmel122_tetris_plus.yaml",
+        "datasets/semmel/05WAVC/semmel121_tetris.yaml",
+        "datasets/semmel/05WAVC/semmel120Mono_owl.yaml",
+        "datasets/semmel/05WAVC/semmel119Mono_dino.yaml",
+        "datasets/semmel/05WAVC/semmel113Baseline.yaml",
+        "datasets/semmel/05WAVC/semmelDemo04.yaml"
         ]
-EPOCHS = [200, 200, 100, 100, 200, 200, 100, 100]
+EPOCHS = [200, 200, 200, 200, 200, 200, 100, 100]
 SEEDS = 888888
 IMGSZ = 1280
 
-"""
 # === Configuration ===
 MODEL = "models/yolo11x.pt"
 DATA = ["datasets/semmel/06/semmel118Videos06Train_semmel113_plus.yaml",
@@ -107,11 +106,22 @@ DATA = ["datasets/semmel/06/semmel118Videos06Train_semmel113_plus.yaml",
         "datasets/semmel/06/semmel115Videos06Train_ann0.yaml",
         "datasets/semmel/06/semmel114Baseline.yaml"
         ]
-EPOCHS = 100
+EPOCHS = 1
 SEEDS = 888888
 IMGSZ = 1280
-"""
 
+# === Configuration ===
+MODEL = "models/omni-semmel126.pt" # "models/semmel125.pt" # "models/omni-semmel74.pt"
+DATA = ["datasets/semmel/05WAVC/semmel124_10pct.yaml",
+        "datasets/semmel/05WAVC/semmel123_mono_10pct.yaml",
+        "datasets/semmel/05WAVC/semmel122_tetris_plus.yaml",
+        "datasets/semmel/05WAVC/semmel121_tetris.yaml",
+        "datasets/semmel/05WAVC/semmel120Mono_owl.yaml",
+        "datasets/semmel/05WAVC/semmel119Mono_dino.yaml",
+        ]
+EPOCHS = [200, 200, 200, 200, 200, 200]
+SEEDS = 888888
+IMGSZ = 1280
 
 def training(cfg: Namespace):
     model = YOLO(cfg.model)
@@ -216,9 +226,9 @@ def parse_cfg(cfg_dict: dict[str, Any]) -> Namespace:
     for key, value in cfg_dict.items():
         setattr(cfg.train_cfg, key, value)
     cfg.train_cfg.project = "runs"
-    cfg.train_cfg.name = (f"{os.path.splitext(os.path.basename(model))[0]}-"
-                          f"{os.path.splitext(os.path.basename(data))[0].lower()}-"
-                          f"{seed}-{datetime.now().strftime('%Y-%m-%d_%H-%M')}")
+    cfg.train_cfg.name = (f"{os.path.splitext(os.path.basename(model))[0]}_"
+                          f"{os.path.splitext(os.path.basename(data))[0].lower()}_"
+                          f"{seed}_{datetime.now().strftime('%Y-%m-%d_%H-%M')}")
 
     return cfg
 
