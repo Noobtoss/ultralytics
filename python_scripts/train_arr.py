@@ -209,7 +209,8 @@ def parse_index(index: int) -> dict[str, Any]:
         "seed": seed,
         "iou": 0.7,  # 0.8
         "agnostic_nms": True,
-        "batch": 8
+        "batch": 8,
+        "single_cls": False
     }
 
     print(cfg_dict)
