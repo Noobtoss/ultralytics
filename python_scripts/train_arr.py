@@ -111,7 +111,7 @@ SEEDS = 888888
 IMGSZ = 1280
 
 # === Configuration ===
-MODEL = "models/omni-semmel126.pt" # "models/semmel125.pt" # "models/omni-semmel74.pt"
+MODEL = "models/yolo11x.pt"
 DATA = ["datasets/semmel/05WAVC/semmel124_10pct.yaml",
         "datasets/semmel/05WAVC/semmel123_mono_10pct.yaml",
         "datasets/semmel/05WAVC/semmel122_tetris_plus.yaml",
@@ -122,6 +122,29 @@ DATA = ["datasets/semmel/05WAVC/semmel124_10pct.yaml",
 EPOCHS = [200, 200, 200, 200, 200, 200]
 SEEDS = 888888
 IMGSZ = 1280
+
+# === Configuration ===
+MODEL = "models/omni-semmel125.pt" # "models/omni-semmel126.pt"  # "models/semmel125.pt" # "models/omni-semmel74.pt"
+DATA = ["datasets/semmel/05WAVC/semmel121_tetris.yaml",
+        "datasets/semmel/05WAVC/semmel120Mono_owl.yaml",
+        "datasets/semmel/05WAVC/semmel119Mono_dino.yaml",
+        ]
+EPOCHS = [200, 200, 200]
+SEEDS = 888888
+IMGSZ = 1280
+
+# === Configuration ===
+MODEL = "models/semmel125.pt"
+DATA = ["datasets/semmel/06/semmel118Videos06Train_semmel113_plus.yaml",
+        "datasets/semmel/06/semmel117Videos06Train_semmel113.yaml",
+        "datasets/semmel/06/semmel116Videos06Train_ann0_plus.yaml",
+        "datasets/semmel/06/semmel115Videos06Train_ann0.yaml",
+        "datasets/semmel/06/semmel114Baseline.yaml"
+        ]
+EPOCHS = 1
+SEEDS = 888888
+IMGSZ = 1280
+
 
 def training(cfg: Namespace):
     model = YOLO(cfg.model)
