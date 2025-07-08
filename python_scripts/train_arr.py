@@ -106,7 +106,7 @@ DATA = ["datasets/semmel/06/semmel118Videos06Train_semmel113_plus.yaml",
         "datasets/semmel/06/semmel115Videos06Train_ann0.yaml",
         "datasets/semmel/06/semmel114Baseline.yaml"
         ]
-EPOCHS = 1
+EPOCHS = 100
 SEEDS = 888888
 IMGSZ = 1280
 
@@ -141,7 +141,7 @@ DATA = ["datasets/semmel/06/semmel118Videos06Train_semmel113_plus.yaml",
         "datasets/semmel/06/semmel115Videos06Train_ann0.yaml",
         "datasets/semmel/06/semmel114Baseline.yaml"
         ]
-EPOCHS = 1
+EPOCHS = 100
 SEEDS = 888888
 IMGSZ = 1280
 
