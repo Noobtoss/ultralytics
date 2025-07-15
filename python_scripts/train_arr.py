@@ -107,7 +107,7 @@ SEEDS = 888888
 IMGSZ = 1280
 
 # === Configuration ===
-MODEL = "models/semmel125.pt"
+MODEL = "models/yolo11x.pt"
 DATA = ["datasets/semmel/06WAVC/semmel129Videos06Train_ann0_Mono.yaml",
         "datasets/semmel/06WAVC/semmel128Mono.yaml",
         "datasets/semmel/06WAVC/semmel127Videos06Train_semmel119_plus.yaml",
@@ -159,9 +159,9 @@ def evaluation(cfg: Namespace) -> None:
         results = model.val(**vars(eval_cfg), split="test")
         eval_cfg.name = os.path.dirname(eval_cfg.name)
         evaluation_results[set_name] = {
-            "mAP50": results.box.map50,
-            "mAP75": results.box.map75,
-            "mAP50-95": results.box.map
+            "mAP50": round(results.box.map50,3),
+            "mAP75": round(results.box.map75,3),
+            "mAP50-95": round(results.box.map,3)
         }
         os.remove(tmp_file_name)
     df = pd.DataFrame.from_dict(evaluation_results, orient='index')
