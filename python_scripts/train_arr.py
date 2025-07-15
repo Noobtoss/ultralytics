@@ -95,7 +95,7 @@ SEEDS = 888888
 IMGSZ = 1280
 
 # === Configuration ===
-MODEL = "models/yolo11x.pt"
+MODEL = "models/semmel113.pt" # "models/yolo11x.pt"
 DATA = ["datasets/semmel/06WAVC/semmel118Videos06Train_semmel113_plus.yaml",
         "datasets/semmel/06WAVC/semmel117Videos06Train_semmel113.yaml",
         "datasets/semmel/06WAVC/semmel116Videos06Train_ann0_plus.yaml",
@@ -105,9 +105,9 @@ DATA = ["datasets/semmel/06WAVC/semmel118Videos06Train_semmel113_plus.yaml",
 EPOCHS = 100
 SEEDS = 888888
 IMGSZ = 1280
-
+"""
 # === Configuration ===
-MODEL = "models/yolo11x.pt"
+MODEL = "models/semmel119.pt" # "models/yolo11x.pt"
 DATA = ["datasets/semmel/06WAVC/semmel129Videos06Train_ann0_Mono.yaml",
         "datasets/semmel/06WAVC/semmel128Mono.yaml",
         "datasets/semmel/06WAVC/semmel127Videos06Train_semmel119_plus.yaml",
@@ -116,7 +116,7 @@ DATA = ["datasets/semmel/06WAVC/semmel129Videos06Train_ann0_Mono.yaml",
 EPOCHS = 100
 SEEDS = 888888
 IMGSZ = 1280
-
+"""
 def training(cfg: Namespace):
     model = YOLO(cfg.model)
     train_cfg = cfg.train_cfg
