@@ -126,5 +126,5 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", default="yolov8n.onnx", help="Input your ONNX model.")
     parser.add_argument("--img", default=str(ASSETS / "bus.jpg"), help="Path to input image.")
-    args = parser.parse_args()
+    args = parser.parse_config()
     main(args.model, args.img)

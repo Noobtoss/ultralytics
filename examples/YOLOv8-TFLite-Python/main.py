@@ -212,7 +212,7 @@ if __name__ == "__main__":
     parser.add_argument("--conf", type=float, default=0.25, help="Confidence threshold")
     parser.add_argument("--iou", type=float, default=0.45, help="NMS IoU threshold")
     parser.add_argument("--metadata", type=str, default="yolov8n_saved_model/metadata.yaml", help="Metadata yaml")
-    args = parser.parse_args()
+    args = parser.parse_config()
 
     detector = YOLOv8TFLite(args.model, args.conf, args.iou, args.metadata)
     result = detector.detect(str(ASSETS / "bus.jpg"))[..., ::-1]

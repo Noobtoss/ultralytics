@@ -238,7 +238,7 @@ def parse_opt():
     parser.add_argument("--track-thickness", type=int, default=2, help="Tracking line thickness")
     parser.add_argument("--region-thickness", type=int, default=4, help="Region thickness")
 
-    return parser.parse_args()
+    return parser.parse_config()
 
 
 def main(opt):

@@ -98,7 +98,7 @@ class SAHIInference:
         parser.add_argument("--view-img", action="store_true", help="show results")
         parser.add_argument("--save-img", action="store_true", help="save results")
         parser.add_argument("--exist-ok", action="store_true", help="existing project/name ok, do not increment")
-        return parser.parse_args()
+        return parser.parse_config()
 
 
 if __name__ == "__main__":

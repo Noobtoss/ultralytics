@@ -425,8 +425,8 @@ There are two methods to set up a Raspberry Pi Camera for YOLO11 inference:
     from ultralytics import YOLO
 
     picam2 = Picamera2()
-    picam2.preview_configuration.main.size = (1280, 720)
-    picam2.preview_configuration.main.format = "RGB888"
+    picam2.preview_configuration.train_arr.size = (1280, 720)
+    picam2.preview_configuration.train_arr.format = "RGB888"
     picam2.preview_configuration.align()
     picam2.configure("preview")
     picam2.start()

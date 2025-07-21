@@ -451,7 +451,7 @@ def parse_opt():
         default=["dancing", "singing a song"],
         help="labels for zero-shot video classification",
     )
-    return parser.parse_args()
+    return parser.parse_config()
 
 
 def main(opt):

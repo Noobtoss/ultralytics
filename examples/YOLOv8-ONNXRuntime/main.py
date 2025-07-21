@@ -210,7 +210,7 @@ if __name__ == "__main__":
     parser.add_argument("--img", type=str, default=str(ASSETS / "bus.jpg"), help="Path to input image.")
     parser.add_argument("--conf-thres", type=float, default=0.5, help="Confidence threshold")
     parser.add_argument("--iou-thres", type=float, default=0.5, help="NMS IoU threshold")
-    args = parser.parse_args()
+    args = parser.parse_config()
 
     # Check the requirements and select the appropriate backend (CPU or GPU)
     check_requirements("onnxruntime-gpu" if torch.cuda.is_available() else "onnxruntime")
