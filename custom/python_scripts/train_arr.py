@@ -117,6 +117,14 @@ EPOCHS = 100
 SEEDS = 888888
 IMGSZ = 1280
 
+# === Configuration ===
+MODEL = "models/yolo11x.pt"
+DATA = ["datasets/semmel/04/semmel130Baseline.yaml",
+        ]
+EPOCHS = 100
+SEEDS = 888888
+IMGSZ = 1280
+
 def training(cfg: Namespace):
     model = YOLO(cfg.model)
     train_cfg = cfg.train_cfg
@@ -201,8 +209,8 @@ def parse_index(index: int) -> dict[str, Any]:
         "epochs": epochs,
         "imgsz": imgsz,
         "seed": seed,
-        "iou": 0.7,  # 0.8
-        "agnostic_nms": True,
+        # "iou": 0.7,  # 0.8
+        # "agnostic_nms": True,
         "batch": 8,
         "single_cls": False
     }
