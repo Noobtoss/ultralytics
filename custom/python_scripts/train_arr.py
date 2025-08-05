@@ -236,7 +236,7 @@ def parse_cfg(cfg_dict: dict[str, Any]) -> Namespace:
     return cfg
 
 
-def train_arr():
+def main():
     args = parse_args()
     cfg_dict = parse_index(args.index)
     cfg = parse_cfg(cfg_dict)
@@ -245,4 +245,4 @@ def train_arr():
 
 
 if __name__ == '__main__':
-    train_arr()
+    main()
