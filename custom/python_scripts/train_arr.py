@@ -119,11 +119,12 @@ IMGSZ = 1280
 
 # === Configuration ===
 MODEL = "models/yolo11x.pt"
-DATA = ["datasets/semmel/04/semmel130Baseline.yaml",
+DATA = ["datasets/semmel/05Zucker/semmelDemo04.yaml",
+        "datasets/semmel/05Zucker/semmelDemo04.yaml",
         ]
 EPOCHS = 100
 SEEDS = 888888
-IMGSZ = 1280
+IMGSZ = [640, 1280]
 
 def training(cfg: Namespace):
     model = YOLO(cfg.model)
