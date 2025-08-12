@@ -7,7 +7,7 @@ def make_parser():
     """Create and return the argument parser."""
     parser = argparse.ArgumentParser(description="YOLO CoreML Export Script")
     parser.add_argument("--imgsz", type=int, default=1280, help="Image size used during CoreML export")
-    parser.add_argument("--ckpt", type=str, required=True, help="Path to the YOLO model checkpoint (.pt file)")
+    parser.add_argument("--ckpt", type=str, default="last.pt", help="Path to the YOLO model checkpoint (.pt file)")
     return parser
 
 
