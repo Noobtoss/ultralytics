@@ -1,5 +1,6 @@
 #!/bin/bash
-#SBATCH --job-name=ultralytics_train # Kurzname des Jobs
+#SBATCH --job-name=ultralytics_train_seg # Kurzname des Jobs
+#SBATCH --array=1-2%2        # 3 Jobs total running 2 at a time
 #SBATCH --output=logs/R-%j.out
 #SBATCH --partition=p2
 #SBATCH --qos=gpuultimate
@@ -25,21 +26,5 @@ export WANDB_CONFIG_DIR=/tmp/ths_wandb
 # export WANDB_DIR=/nfs/scratch/staff/schmittth/.cache
 
 BASE_DIR=/nfs/scratch/staff/schmittth/codeNexus/ultralytics
-CFG=$1
-DATA=$2
-EPOCHS=${3:-100}
-SEED=${4:-4040}
-PROJECT="runs"
-NAME="$(basename "${CFG%.*}")_$(basename "${DATA%.*}" | tr '[:upper:]' '[:lower:]')_${SEED}_${SLURM_JOB_ID}"
 
-echo $BASE_DIR/$CFG
-echo $BASE_DIR/$DATA
-echo $PROJECT
-echo $NAME
-echo $EPOCHS
-echo $SEED
-
-srun yolo train cfg=$BASE_DIR/$CFG mode=train data=$BASE_DIR/$DATA project=$PROJECT name=$NAME epochs=$EPOCHS seed=$SEED
-
-# srun yolo val cfg=$BASE_DIR/$CFG mode=val data=$BASE_DIR/$DATA project=$PROJECT name=$NAME_test_best model=$RUN_NAME/train/weights/best.pt split=test
-# srun yolo val cfg=$BASE_DIR/$CFG mode=val data=$BASE_DIR/$DATA project=$PROJECT name=$NAME_test_last model=$RUN_NAME/train/weights/last.pt split=test
+python $BASE_DIR/custom/python_scripts/train_seg.py
