@@ -8,7 +8,7 @@ import pandas as pd
 from ultralytics import YOLO
 
 # === Configuration ===
-MODEL = "models/yolo11x.pt"
+MODEL = "checkpoints/yolo11x.pt"
 DATA = ["datasets/semmel/04/semmel61.yaml",
         "datasets/semmel/04/semmel64.yaml",
         "datasets/semmel/04/semmel65.yaml",
@@ -24,7 +24,7 @@ SEEDS = 6666
 IMGSZ = 1280  # 640
 
 # === Configuration ===
-MODEL = "models/yolo11x.pt"
+MODEL = "checkpoints/yolo11x.pt"
 DATA = ["datasets/semmel/05Machine/semmel75.yaml",
         "datasets/semmel/05Machine/semmel76.yaml",
         "datasets/semmel/05Machine/semmel77.yaml",
@@ -35,7 +35,7 @@ SEEDS = 6666
 IMGSZ = 1280  # 640
 
 # === Configuration ===
-MODEL = "models/yolo11x.pt"
+MODEL = "checkpoints/yolo11x.pt"
 DATA = ["datasets/semmel/05fzi2025/semmel94.yaml",
         "datasets/semmel/05fzi2025/semmel93.yaml",
         "datasets/semmel/05fzi2025/semmel92.yaml",
@@ -53,7 +53,7 @@ SEEDS = [886666, 881313, 888888, 884040]
 IMGSZ = 1280
 
 # === Configuration ===
-MODEL = "models/yolo11x.pt"
+MODEL = "checkpoints/yolo11x.pt"
 DATA = ["datasets/semmel/05Ostern/semmel95.yaml",
         "datasets/semmel/05Ostern/semmel96.yaml",
         "datasets/semmel/05Ostern/semmel97.yaml",
@@ -69,7 +69,7 @@ SEEDS = [886666, 881313, 888888, 884040]
 IMGSZ = 1280
 
 # === Configuration ===
-MODEL = "models/yolo11x.pt"
+MODEL = "checkpoints/yolo11x.pt"
 DATA = ["datasets/semmel/05Zucker/semmel103.yaml",
         "datasets/semmel/05Zucker/semmel104.yaml",
         "datasets/semmel/05Zucker/semmel105.yaml",
@@ -84,7 +84,7 @@ SEEDS = [886666, 881313, 888888, 884040]
 IMGSZ = 1280
 
 # === Configuration ===
-MODEL = "models/semmel125.pt" # "models/yolo11x.pt" #
+MODEL = "checkpoints/semmel125.pt" # "checkpoints/yolo11x.pt" #
 DATA = ["datasets/semmel/05WACV/semmel121Mono_ann.yaml",
         "datasets/semmel/05WACV/semmel120Mono_owl.yaml",
         "datasets/semmel/05WACV/semmel119Mono_dino.yaml",
@@ -95,7 +95,7 @@ SEEDS = 888888
 IMGSZ = 1280
 
 # === Configuration ===
-MODEL = "models/semmel113.pt" # "models/yolo11x.pt"
+MODEL = "checkpoints/semmel113.pt" # "checkpoints/yolo11x.pt"
 DATA = ["datasets/semmel/06WACV/semmel118Videos06Train_semmel113_plus.yaml",
         "datasets/semmel/06WACV/semmel117Videos06Train_semmel113.yaml",
         "datasets/semmel/06WACV/semmel116Videos06Train_ann0_plus.yaml",
@@ -107,7 +107,7 @@ SEEDS = 888888
 IMGSZ = 1280
 
 # === Configuration ===
-MODEL = "models/semmel119.pt" # "models/yolo11x.pt"
+MODEL = "checkpoints/semmel119.pt" # "checkpoints/yolo11x.pt"
 DATA = ["datasets/semmel/06WACV/semmel127Videos06Train_semmel119_plus.yaml",
         "datasets/semmel/06WACV/semmel126Videos06Train_semmel119.yaml",
         "datasets/semmel/06WACV/semmel129Videos06Train_ann0_Mono.yaml",
@@ -118,7 +118,7 @@ SEEDS = 888888
 IMGSZ = 1280
 
 # === Configuration ===
-MODEL = "models/yolo11x.pt"
+MODEL = "checkpoints/yolo11x.pt"
 DATA = ["datasets/semmel/05Zucker/semmelDemo04.yaml",
         "datasets/semmel/05Zucker/semmelDemo04.yaml",
         ]
