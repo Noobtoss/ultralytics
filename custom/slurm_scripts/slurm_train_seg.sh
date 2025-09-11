@@ -24,6 +24,6 @@ export WANDB_CACHE_DIR=/tmp/ths_wandb
 export WANDB_CONFIG_DIR=/tmp/ths_wandb
 # export WANDB_DIR=/nfs/scratch/staff/schmittth/.cache
 
-BASE_DIR=/nfs/scratch/staff/schmittth/codeNexus/ultralytics
+BASE_DIR=/nfs/scratch/staff/schmittth/code-nexus/ultralytics
 
 python $BASE_DIR/custom/python_scripts/train_seg.py

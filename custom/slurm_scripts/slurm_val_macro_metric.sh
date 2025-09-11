@@ -14,6 +14,6 @@ module load python/anaconda3
 eval "$(conda shell.bash hook)"
 
 conda activate conda-ultralytics
-BASE_DIR=/nfs/scratch/staff/schmittth/codeNexus/ultralytics
+BASE_DIR=/nfs/scratch/staff/schmittth/code-nexus/ultralytics
 
 python $BASE_DIR/custom/python_scripts/val_macro_metric.py --root $BASE_DIR --dir results/semmel/05Zucker

@@ -9,7 +9,7 @@ import numpy as np
 
 def parse_args() -> Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument('--root', type=str, default='/Users/noobtoss/codeNexus/ultralytics')
+    parser.add_argument('--root', type=str, default='/Users/noobtoss/code-nexus/ultralytics')
     parser.add_argument('--dir', type=str, default='results/semmel/05Ostern')
     args = parser.parse_args()
     return args
