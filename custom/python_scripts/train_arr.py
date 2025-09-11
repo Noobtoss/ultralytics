@@ -230,9 +230,9 @@ def parse_cfg(cfg_dict: dict[str, Any]) -> Namespace:
     for key, value in cfg_dict.items():
         setattr(cfg.train_cfg, key, value)
     cfg.train_cfg.project = "runs"
-    cfg.train_cfg.name = (f"{os.path.splitext(os.path.basename(model))[0]}_"
-                          f"{os.path.splitext(os.path.basename(data))[0].lower()}_"
-                          f"{seed}_{datetime.now().strftime('%Y-%m-%d_%H-%M')}")
+    cfg.train_cfg.name = (f"{os.path.splitext(os.path.basename(model))[0]}-"
+                          f"{os.path.splitext(os.path.basename(data))[0].lower()}-"
+                          f"{seed}-{datetime.now().strftime('%Y-%m-%d_%H-%M')}")
 
     return cfg
 
