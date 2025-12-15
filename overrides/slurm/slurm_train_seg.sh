@@ -26,4 +26,4 @@ export WANDB_CONFIG_DIR=/tmp/ths_wandb
 
 BASE_DIR=/nfs/scratch/staff/schmittth/code-nexus/ultralytics
 
-python $BASE_DIR/custom/python_scripts/train_seg.py
+python $BASE_DIR/overrides/python/train_seg.py

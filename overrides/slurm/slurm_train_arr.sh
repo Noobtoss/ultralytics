@@ -31,4 +31,4 @@ wait_time=$(((SLURM_ARRAY_TASK_ID - 1) * 2 * 60))  # This multiplies job ID by 6
 echo "Waiting for $wait_time seconds ((SLURM_ARRAY_TASK_ID -1) * 2 * 60)"
 sleep $wait_time
 
-python $BASE_DIR/custom/python_scripts/train_arr.py --index $SLURM_ARRAY_TASK_ID
+python $BASE_DIR/overrides/python/train_arr.py --index $SLURM_ARRAY_TASK_ID
