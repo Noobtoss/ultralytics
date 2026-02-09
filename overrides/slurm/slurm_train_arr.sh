@@ -25,7 +25,7 @@ export WANDB_CACHE_DIR=/tmp/ths_wandb
 export WANDB_CONFIG_DIR=/tmp/ths_wandb
 # /nfs/scratch/staff/schmittth/.cache
 
-BASE_DIR=/nfs/scratch/staff/schmittth/code-nexus/ultralytics
+BASE_DIR=/nfs/scratch/staff/schmittth/code_nexus/ultralytics
 
 wait_time=$(((SLURM_ARRAY_TASK_ID - 1) * 2 * 60))  # This multiplies job ID by 60 to get seconds
 echo "Waiting for $wait_time seconds ((SLURM_ARRAY_TASK_ID -1) * 2 * 60)"
