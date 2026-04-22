@@ -1,10 +1,14 @@
+import sys
+import os
 import argparse
 from argparse import Namespace
 import warnings
 from ultralytics import YOLO
 from ultralytics.cfg import CFG_FLOAT_KEYS, CFG_FRACTION_KEYS, CFG_INT_KEYS, CFG_BOOL_KEYS
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from get_eval_metrics import get_eval_metrics
+from mods.trainer import Trainer
 
 DEFAULT_TRAIN_CFG = Namespace(
     data="",
@@ -25,7 +29,7 @@ DEFAULT_CFG = Namespace(
 
 def train(cfg: Namespace):
     model = YOLO(cfg.model)
-    model.train(**vars(cfg.train_cfg))
+    model.train(trainer=Trainer, **vars(cfg.train_cfg))
 
 
 def parse_args():

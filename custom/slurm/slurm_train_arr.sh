@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=ultralytics_train_arr # Kurzname des Jobs
-#SBATCH --array=1-2%2            # 3 Jobs total running 2 at a time
+#SBATCH --array=3-4%2            # 3 Jobs total running 2 at a time
 #SBATCH --output=logs/R-%A-%a.out
 #SBATCH --partition=p2
 #SBATCH --qos=gpuultimate
@@ -43,10 +43,10 @@ MODEL="${KV[model]:-checkpoints/yolo11x.pt}"
 DATA="${KV[data]:-datasets/default.yaml}"
 
 python $BASE_DIR/custom/python/train.py \
-    --exp_name $EXP_NAME \
-    --model    $BASE_DIR/$MODEL \
-    --data     $BASE_DIR/$DATA  \
-    $PARAMS
+       --exp_name $EXP_NAME \
+       --model    $BASE_DIR/$MODEL \
+       --data     $BASE_DIR/$DATA  \
+       $PARAMS
 
 KEEP_FILES=("metrics.csv" "results.csv" "last.pt")
 eval find "$OUTPUT_DIR/$EXP_NAME" -type f $(printf ' ! -name "%s"' "${KEEP_FILES[@]}") -delete

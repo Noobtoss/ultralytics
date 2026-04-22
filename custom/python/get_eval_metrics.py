@@ -2,7 +2,6 @@ import os
 from argparse import Namespace
 import yaml
 import pandas as pd
-
 from ultralytics import YOLO
 
 
