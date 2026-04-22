@@ -1,0 +1,4 @@
+# Experiments Images05_cls_train init cls_train
+exp_name YOLO11_Oktoberfest model checkpoints/yolo11x.pt data datasets/public/Oktoberfest.yaml epochs 100
+exp_name YOLO11_Oktoberfest model checkpoints/yolo11x.pt data datasets/public/Oktoberfest.yaml epochs 200
+# Experiments End Current
