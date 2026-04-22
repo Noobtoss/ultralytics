@@ -37,17 +37,18 @@ for ((i=0; i<${#ARR[@]}; i+=2)); do
     KV["$key"]="$value"
 done
 
-OUTPUT_DIR="${BASE_DIR}/runs"
 EXP_NAME="${KV[exp_name]:-unnamed_experiment}"
+SAVE_DIR="${BASE_DIR}/runs/${EXP_NAME}"
 MODEL="${KV[model]:-checkpoints/yolo11x.pt}"
 DATA="${KV[data]:-datasets/default.yaml}"
 
 python $BASE_DIR/custom/python/train.py \
        --exp_name $EXP_NAME \
+       --save_dir $SAVE_DIR \
        --model    $BASE_DIR/$MODEL \
        --data     $BASE_DIR/$DATA  \
        $PARAMS
 
 KEEP_FILES=("metrics.csv" "results.csv" "last.pt")
-eval find "$OUTPUT_DIR/$EXP_NAME" -type f $(printf ' ! -name "%s"' "${KEEP_FILES[@]}") -delete
-find "$OUTPUT_DIR/$EXP_NAME" -type d -empty -delete
+eval find $SAVE_DIR -type f $(printf ' ! -name "%s"' "${KEEP_FILES[@]}") -delete
+find $SAVE_DIR -type d -empty -delete

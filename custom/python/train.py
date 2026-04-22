@@ -35,6 +35,7 @@ def train(cfg: Namespace):
 def parse_args():
     parser = argparse.ArgumentParser("ultralytics train parser")
     parser.add_argument("--exp_name", type=str, help="exp name")
+    parser.add_argument("--save_dir", type=str, help="save dir")
     parser.add_argument("--model", type=str, help="path to model file")
     parser.add_argument("--data", type=str, help="path to data file")
     parser.add_argument(
@@ -50,6 +51,7 @@ def parse_cfg(args: Namespace) -> Namespace:
     cfg = DEFAULT_CFG
 
     cfg.train_cfg.name = args.exp_name
+    cfg.train_cfg.save_dir = args.save_dir
     cfg.model = args.model
     cfg.train_cfg.data = args.data
 
@@ -67,6 +69,8 @@ def parse_cfg(args: Namespace) -> Namespace:
                     setattr(cfg.train_cfg, k, bool(v))
                 else:
                     warnings.warn(f"Skipping unknown key: '{k}'")
+
+    print(cfg)
 
     return cfg
 
