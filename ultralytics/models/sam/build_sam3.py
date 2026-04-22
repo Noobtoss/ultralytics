@@ -251,7 +251,7 @@ def build_sam3_image_model(checkpoint_path: str, enable_segmentation: bool = Tru
 
     # Load checkpoint
     model = _load_checkpoint(model, checkpoint_path)
-    model.eval()
+    model.get_eval_metrics()
     return model
 
 
@@ -344,7 +344,7 @@ def build_interactive_sam3(checkpoint_path: str, compile=None, with_backbone=Tru
     model = _load_checkpoint(model, checkpoint_path, interactive=True)
 
     # Setup device and mode
-    model.eval()
+    model.get_eval_metrics()
     return model
 
 

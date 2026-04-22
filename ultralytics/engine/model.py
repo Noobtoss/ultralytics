@@ -1105,7 +1105,7 @@ class Model(torch.nn.Module):
 
         Examples:
             >>> model = YOLO("yolo26n.pt")
-            >>> model.eval()
+            >>> model.get_eval_metrics()
             >>> # Model is now in evaluation mode for inference
         """
         self.model.eval()

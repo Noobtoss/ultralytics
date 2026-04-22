@@ -173,7 +173,7 @@ def put_in_eval_mode(trainer):
 
     for i, (name, module) in enumerate(trainer.model.named_modules()):
         if name.endswith("bn") and int(name.split(".")[1]) < n_layers:
-            module.eval()
+            module.get_eval_metrics()
             module.track_running_stats = False
 
 

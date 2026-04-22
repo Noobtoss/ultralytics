@@ -84,7 +84,7 @@ SEEDS = [886666, 881313, 888888, 884040]
 IMGSZ = 1280
 
 # === Configuration ===
-MODEL = "checkpoints/semmel125.pt" # "checkpoints/yolo11x.pt" #
+MODEL = "checkpoints/semmel125.pt"  # "checkpoints/yolo11x.pt" #
 DATA = ["datasets/semmel/05SAC/semmel121Mono_ann.yaml",
         "datasets/semmel/05SAC/semmel120Mono_owl.yaml",
         "datasets/semmel/05SAC/semmel119Mono_dino.yaml",
@@ -95,7 +95,7 @@ SEEDS = 888888
 IMGSZ = 1280
 
 # === Configuration ===
-MODEL = "checkpoints/semmel113.pt" # "checkpoints/yolo11x.pt"
+MODEL = "checkpoints/semmel113.pt"  # "checkpoints/yolo11x.pt"
 DATA = ["datasets/semmel/06SAC/semmel118Videos06Train_semmel113_plus.yaml",
         "datasets/semmel/06SAC/semmel117Videos06Train_semmel113.yaml",
         "datasets/semmel/06SAC/semmel116Videos06Train_ann0_plus.yaml",
@@ -107,7 +107,7 @@ SEEDS = 888888
 IMGSZ = 1280
 
 # === Configuration ===
-MODEL = "checkpoints/semmel119.pt" # "checkpoints/yolo11x.pt"
+MODEL = "checkpoints/semmel119.pt"  # "checkpoints/yolo11x.pt"
 DATA = ["datasets/semmel/06SAC/semmel127Videos06Train_semmel119_plus.yaml",
         "datasets/semmel/06SAC/semmel126Videos06Train_semmel119.yaml",
         "datasets/semmel/06SAC/semmel129Videos06Train_ann0_Mono.yaml",
@@ -125,6 +125,7 @@ DATA = ["datasets/semmel/05Zucker/semmelDemo04.yaml",
 EPOCHS = 100
 SEEDS = 888888
 IMGSZ = [640, 1280]
+
 
 def training(cfg: Namespace):
     model = YOLO(cfg.model)
@@ -168,9 +169,9 @@ def evaluation(cfg: Namespace) -> None:
         results = model.val(**vars(eval_cfg), split="test")
         eval_cfg.name = os.path.dirname(eval_cfg.name)
         evaluation_results[set_name] = {
-            "mAP50": round(results.box.map50,3),
-            "mAP75": round(results.box.map75,3),
-            "mAP50-95": round(results.box.map,3)
+            "mAP50": round(results.box.map50, 3),
+            "mAP75": round(results.box.map75, 3),
+            "mAP50-95": round(results.box.map, 3)
         }
         os.remove(tmp_file_name)
     df = pd.DataFrame.from_dict(evaluation_results, orient='index')

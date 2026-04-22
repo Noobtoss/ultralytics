@@ -252,7 +252,7 @@ def _build_sam2(
 
     Examples:
         >>> sam2_model = _build_sam2(encoder_embed_dim=96, encoder_stages=[1, 2, 7, 2])
-        >>> sam2_model.eval()
+        >>> sam2_model.get_eval_metrics()
     """
     image_encoder = ImageEncoder(
         trunk=Hiera(

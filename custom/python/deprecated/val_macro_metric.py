@@ -14,6 +14,7 @@ def parse_args() -> Namespace:
     args = parser.parse_args()
     return args
 
+
 def unpack_metrics(metrics):
     names = metrics.names
     map = metrics.box.map
@@ -30,6 +31,7 @@ def unpack_metrics(metrics):
         "ap": ap,
         "ap50": ap50
     }
+
 
 def macro_metrics(metrics):
     maps = [d["map"] for d in metrics]
@@ -48,6 +50,7 @@ def macro_metrics(metrics):
         "ap50_me": np.round(np.mean(ap50s, axis=0), 3).tolist(),
         "ap50_s": np.round(np.std(ap50s, axis=0), 3).tolist()
     }
+
 
 def print_macro_metrics(macro):
     names = macro["names"]
@@ -111,6 +114,7 @@ def val_macro_metric():
     print("\n" + "=" * 50 + "\n")
     if Path('runs').exists():
         shutil.rmtree('runs')
+
 
 if __name__ == '__main__':
     val_macro_metric()

@@ -81,7 +81,7 @@ class TorchVisionVideoClassifier:
             raise ValueError(f"Invalid model name '{model_name}'. Available models: {self.available_model_names()}")
         model, self.weights = self.model_name_to_model_and_weights[model_name]
         self.device = select_device(device)
-        self.model = model(weights=self.weights).to(self.device).eval()
+        self.model = model(weights=self.weights).to(self.device).get_eval_metrics()
 
     @staticmethod
     def available_model_names() -> list[str]:
@@ -202,7 +202,7 @@ class HuggingFaceVideoClassifier:
         model = AutoModel.from_pretrained(model_name).to(self.device)
         if fp16:
             model = model.half()
-        self.model = model.eval()
+        self.model = model.get_eval_metrics()
 
     def preprocess_crops_for_video_cls(
         self, crops: list[np.ndarray], input_size: list[int] | None = None

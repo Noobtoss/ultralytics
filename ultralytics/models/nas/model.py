@@ -78,7 +78,7 @@ class NAS(Model):
         self.model.pt_path = str(weights)  # for export()
         self.model.task = "detect"  # for export()
         self.model.args = {**DEFAULT_CFG_DICT, **self.overrides}  # for export()
-        self.model.eval()
+        self.model.get_eval_metrics()
 
     def info(self, detailed: bool = False, verbose: bool = True) -> dict[str, Any]:
         """Log model information.

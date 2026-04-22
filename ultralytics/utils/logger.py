@@ -304,7 +304,7 @@ class SystemLogger:
     Examples:
         Basic usage:
         >>> logger = SystemLogger()
-        >>> metrics = logger.get_metrics()
+        >>> metrics = logger.get_eval_metrics()
         >>> print(f"CPU: {metrics['cpu']}%, RAM: {metrics['ram']}%")
         >>> if metrics["gpus"]:
         ...     gpu0 = metrics["gpus"]["0"]
@@ -314,7 +314,7 @@ class SystemLogger:
         >>> system_logger = SystemLogger()
         >>> for epoch in range(epochs):
         ...     # Training code here
-        ...     metrics = system_logger.get_metrics()
+        ...     metrics = system_logger.get_eval_metrics()
         ...     # Log to database/file
     """
 
@@ -390,8 +390,8 @@ class SystemLogger:
 
         Examples:
             >>> logger = SystemLogger()
-            >>> logger.get_metrics()["cpu"]  # CPU percentage
-            >>> logger.get_metrics(rates=True)["network"]["recv_mbs"]  # MB/s download rate
+            >>> logger.get_eval_metrics()["cpu"]  # CPU percentage
+            >>> logger.get_eval_metrics()["network"]["recv_mbs"]  # MB/s download rate
         """
         import psutil  # scoped as slow import
 

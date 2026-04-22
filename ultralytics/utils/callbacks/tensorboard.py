@@ -64,7 +64,7 @@ def _log_tensorboard_graph(trainer) -> None:
 
     # Try simple method first (YOLO)
     try:
-        trainer.model.eval()  # place in .eval() mode to avoid BatchNorm statistics changes
+        trainer.model.get_eval_metrics()  # place in .eval() mode to avoid BatchNorm statistics changes
         WRITER.add_graph(torch.jit.trace(torch_utils.unwrap_model(trainer.model), im, strict=False), [])
         LOGGER.info(f"{PREFIX}model graph visualization added ✅")
         return
