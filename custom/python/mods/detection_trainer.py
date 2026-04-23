@@ -8,7 +8,7 @@ from .detection_model import DetectionModel
 # THS, Copied from ultralytics.engine.trainer.BaseTrainer
 
 
-class Trainer(DetectionTrainer):
+class DetectionTrainer(DetectionTrainer):
 
     def get_model(self, cfg=None, weights=None, verbose=True):
         model = DetectionModel(cfg, nc=self.data["nc"], verbose=verbose and RANK == -1)

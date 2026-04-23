@@ -10,7 +10,7 @@ from ultralytics.cfg import CFG_FLOAT_KEYS, CFG_FRACTION_KEYS, CFG_INT_KEYS, CFG
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from get_eval_metrics import get_eval_metrics
-from mods.trainer import Trainer
+from mods.detection_trainer import DetectionTrainer
 
 DEFAULT_TRAIN_CFG = Namespace(
     data="",
@@ -31,7 +31,7 @@ DEFAULT_CFG = Namespace(
 
 def train(cfg: Namespace):
     model = YOLO(cfg.ckpt)
-    model.train(**vars(cfg.train_cfg), trainer=Trainer)
+    model.train(**vars(cfg.train_cfg), trainer=DetectionTrainer)
 
 
 def parse_args():
