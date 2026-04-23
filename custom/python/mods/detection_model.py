@@ -1,6 +1,6 @@
 from __future__ import annotations
 from ultralytics.utils.loss import E2ELoss
-from ultralytics.nn.tasks import DetectionModel
+from ultralytics.nn.tasks import DetectionModel as BaseDetectionModel
 
 from .train_loss import TrainLoss
 
@@ -8,6 +8,6 @@ from .train_loss import TrainLoss
 # THS, Copied from ultralytics.nn.tasks
 
 
-class DetectionModel(DetectionModel):
+class DetectionModel(BaseDetectionModel):
     def init_criterion(self):
         return E2ELoss(self, TrainLoss) if getattr(self, "end2end", False) else TrainLoss(self)

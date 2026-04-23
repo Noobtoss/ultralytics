@@ -1,4 +1,4 @@
-from ultralytics.models.yolo.detect import DetectionTrainer
+from ultralytics.models.yolo.detect import DetectionTrainer as BaseDetectionTrainer
 from ultralytics.utils import RANK
 
 from .detection_model import DetectionModel
@@ -8,7 +8,7 @@ from .detection_model import DetectionModel
 # THS, Copied from ultralytics.engine.trainer.BaseTrainer
 
 
-class DetectionTrainer(DetectionTrainer):
+class DetectionTrainer(BaseDetectionTrainer):
 
     def get_model(self, cfg=None, weights=None, verbose=True):
         model = DetectionModel(cfg, nc=self.data["nc"], verbose=verbose and RANK == -1)
