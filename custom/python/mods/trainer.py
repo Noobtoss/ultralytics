@@ -1,16 +1,17 @@
 from ultralytics.models.yolo.detect import DetectionTrainer
+from ultralytics.utils import RANK
 
-from .train_loss import TrainLoss
+from .detection_model import DetectionModel
 
 
 # THS, Copied from ultralytics.models.yolo.detect.DetectionTrainer
 # THS, Copied from ultralytics.engine.trainer.BaseTrainer
 
-class Trainer(DetectionTrainer):
-    def get_model(self, cfg=None, weights=None, verbose=True):
-        model = super().get_model(cfg, weights, verbose)
-        return model
 
-    def init_criterion(self):
-        """Replace default loss with your custom one."""
-        return TrainLoss(self.model)
+class Trainer(DetectionTrainer):
+
+    def get_model(self, cfg=None, weights=None, verbose=True):
+        model = DetectionModel(cfg, nc=self.data["nc"], verbose=verbose and RANK == -1)
+        if weights:
+            model.load(weights)
+        return model

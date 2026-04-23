@@ -1,3 +1,4 @@
+from __future__ import annotations
 import sys
 import os
 import argparse
@@ -5,6 +6,7 @@ from argparse import Namespace
 import warnings
 from ultralytics import YOLO
 from ultralytics.cfg import CFG_FLOAT_KEYS, CFG_FRACTION_KEYS, CFG_INT_KEYS, CFG_BOOL_KEYS
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from get_eval_metrics import get_eval_metrics
@@ -22,21 +24,21 @@ DEFAULT_TRAIN_CFG = Namespace(
 )
 
 DEFAULT_CFG = Namespace(
-    model="checkpoints/yolo11x.pt",
+    ckpt="checkpoints/yolo11x.pt",
     train_cfg=DEFAULT_TRAIN_CFG
 )
 
 
 def train(cfg: Namespace):
-    model = YOLO(cfg.model)
-    model.train(trainer=Trainer, **vars(cfg.train_cfg))
+    model = YOLO(cfg.ckpt)
+    model.train(**vars(cfg.train_cfg), trainer=Trainer)
 
 
 def parse_args():
     parser = argparse.ArgumentParser("ultralytics train parser")
     parser.add_argument("--exp_name", type=str, help="exp name")
     parser.add_argument("--save_dir", type=str, help="save dir")
-    parser.add_argument("--model", type=str, help="path to model file")
+    parser.add_argument("--ckpt", type=str, help="path to ckpt")
     parser.add_argument("--data", type=str, help="path to data file")
     parser.add_argument(
         "opts",
@@ -52,7 +54,7 @@ def parse_cfg(args: Namespace) -> Namespace:
 
     cfg.train_cfg.name = args.exp_name
     cfg.train_cfg.save_dir = args.save_dir
-    cfg.model = args.model
+    cfg.ckpt = args.ckpt
     cfg.train_cfg.data = args.data
 
     if args.opts:
@@ -69,9 +71,6 @@ def parse_cfg(args: Namespace) -> Namespace:
                     setattr(cfg.train_cfg, k, bool(v))
                 else:
                     warnings.warn(f"Skipping unknown key: '{k}'")
-
-    print(cfg)
-
     return cfg
 
 
