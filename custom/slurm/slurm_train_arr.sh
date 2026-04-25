@@ -39,12 +39,14 @@ done
 
 EXP_NAME="${KV[exp_name]:-unnamed_experiment}"
 SAVE_DIR="${BASE_DIR}/runs/${EXP_NAME}"
+MODEL="${KV[model]:-custom/cfg/cls_feats_return_yolo11.yaml}"
 CKPT="${KV[ckpt]:-checkpoints/yolo11x.pt}"
 DATA="${KV[data]:-datasets/default.yaml}"
 
 python $BASE_DIR/custom/python/train.py \
        --exp_name $EXP_NAME \
        --save_dir $SAVE_DIR \
+       --model    $BASE_DIR/$MODEL \
        --ckpt     $BASE_DIR/$CKPT \
        --data     $BASE_DIR/$DATA  \
        $PARAMS

@@ -1,16 +1,25 @@
 from __future__ import annotations
-import sys
 import os
+import sys
+import site
 import argparse
-from argparse import Namespace
 import warnings
+from argparse import Namespace
+
+# When running from inside a local ultralytics repo clone, Python would normally
+# pick up the local folder instead of the conda-installed package. We fix this by
+# forcing the conda site-packages to the front of the search path.
+sys.path.insert(0, site.getsitepackages()[0])
+# Also ensure the directory of this script itself is on the path for local imports.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 from ultralytics import YOLO
 from ultralytics.cfg import CFG_FLOAT_KEYS, CFG_FRACTION_KEYS, CFG_INT_KEYS, CFG_BOOL_KEYS
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-
 from get_eval_metrics import get_eval_metrics
 from mods.detection_trainer import DetectionTrainer
+#from mods.yolo import YOLO
+from mods import YOLO
 
 DEFAULT_TRAIN_CFG = Namespace(
     data="",
@@ -30,7 +39,10 @@ DEFAULT_CFG = Namespace(
 
 
 def train(cfg: Namespace):
-    model = YOLO(cfg.ckpt)
+    if cfg.model is not None:
+        model = YOLO(cfg.model).load(cfg.ckpt)
+    else:
+        model = YOLO(cfg.ckpt)
     model.train(**vars(cfg.train_cfg), trainer=DetectionTrainer)
 
 
@@ -38,6 +50,7 @@ def parse_args():
     parser = argparse.ArgumentParser("ultralytics train parser")
     parser.add_argument("--exp_name", type=str, help="exp name")
     parser.add_argument("--save_dir", type=str, help="save dir")
+    parser.add_argument("--model", type=str, default=None, help="path to model")
     parser.add_argument("--ckpt", type=str, help="path to ckpt")
     parser.add_argument("--data", type=str, help="path to data file")
     parser.add_argument(
@@ -54,6 +67,7 @@ def parse_cfg(args: Namespace) -> Namespace:
 
     cfg.train_cfg.name = args.exp_name
     cfg.train_cfg.save_dir = args.save_dir
+    cfg.model = args.model
     cfg.ckpt = args.ckpt
     cfg.train_cfg.data = args.data
 
@@ -75,7 +89,18 @@ def parse_cfg(args: Namespace) -> Namespace:
 
 
 def main():
-    args = parse_args()
+    if False:
+        args = parse_args()
+    else:
+        args = Namespace(
+            exp_name="unnamed_experiment",
+            save_dir="/Users/noobtoss/code_nexus/ultralytics/runs/unnamed_experiment",
+            model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feats_return_yolo11x.yaml",
+            ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/yolo11x.pt",
+            data="/Users/noobtoss/code_nexus/ultralytics/datasets/public/Oktoberfest-local.yaml",
+            opts="",
+        )
+
     cfg = parse_cfg(args)
     train(cfg)
     get_eval_metrics(cfg)
