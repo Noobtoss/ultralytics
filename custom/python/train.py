@@ -1,9 +1,7 @@
-from __future__ import annotations
 import os
 import sys
 import site
 import argparse
-import warnings
 from argparse import Namespace
 
 # When running from inside a local ultralytics repo clone, Python would normally
@@ -13,12 +11,8 @@ sys.path.insert(0, site.getsitepackages()[0])
 # Also ensure the directory of this script itself is on the path for local imports.
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from ultralytics import YOLO
-from ultralytics.cfg import CFG_FLOAT_KEYS, CFG_FRACTION_KEYS, CFG_INT_KEYS, CFG_BOOL_KEYS
-
 from get_eval_metrics import get_eval_metrics
-from mods.detection_trainer import DetectionTrainer
-from mods import YOLO
+from mods import YOLO, DetectionTrainer
 
 DEFAULT_TRAIN_CFG = Namespace(
     data="",
@@ -29,6 +23,8 @@ DEFAULT_TRAIN_CFG = Namespace(
     single_cls=False,
     project="runs",
     name="",
+    cls_emb_loss="sup_con_loss",
+    cls_emb=0.5,
 )
 
 DEFAULT_CFG = Namespace(
@@ -64,26 +60,16 @@ def parse_args():
 def parse_cfg(args: Namespace) -> Namespace:
     cfg = DEFAULT_CFG
 
-    cfg.train_cfg.name = args.exp_name
-    cfg.train_cfg.save_dir = args.save_dir
-    cfg.model = args.model
-    cfg.ckpt = args.ckpt
-    cfg.train_cfg.data = args.data
+    cfg.train_cfg.name = args.exp_name; delattr(args, "exp_name")
+    cfg.train_cfg.save_dir = args.save_dir; delattr(args, "save_dir")
+    cfg.model = args.model; delattr(args, "model")
+    cfg.ckpt = args.ckpt; delattr(args, "ckpt")
+    cfg.train_cfg.data = args.data; delattr(args, "data")
 
     if args.opts:
         it = iter(args.opts)
         for k, v in zip(it, it):
-            if v is not None:
-                if k in CFG_FLOAT_KEYS:
-                    setattr(cfg.train_cfg, k, float(v))
-                elif k in CFG_FRACTION_KEYS:
-                    setattr(cfg.train_cfg, k, float(v))
-                elif k in CFG_INT_KEYS:
-                    setattr(cfg.train_cfg, k, int(v))
-                elif k in CFG_BOOL_KEYS:
-                    setattr(cfg.train_cfg, k, bool(v))
-                else:
-                    warnings.warn(f"Skipping unknown key: '{k}'")
+            setattr(cfg.train_cfg, k, v)
     return cfg
 
 

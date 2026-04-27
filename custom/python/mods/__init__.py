@@ -4,8 +4,8 @@ import ultralytics.nn.modules as nn_modules
 import ultralytics.nn.tasks as tasks
 
 from .cls_feats_return_detect import ClsFeatsReturnDetect
-from .model import Model
 from .yolo import YOLO
+from .detection_trainer import DetectionTrainer
 
 # ── CFG validation ────────────────────────────────────────────────────────────
 def _patched_check_dict_alignment(*args, **kwargs):
