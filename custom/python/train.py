@@ -18,7 +18,6 @@ from ultralytics.cfg import CFG_FLOAT_KEYS, CFG_FRACTION_KEYS, CFG_INT_KEYS, CFG
 
 from get_eval_metrics import get_eval_metrics
 from mods.detection_trainer import DetectionTrainer
-#from mods.yolo import YOLO
 from mods import YOLO
 
 DEFAULT_TRAIN_CFG = Namespace(
@@ -89,17 +88,18 @@ def parse_cfg(args: Namespace) -> Namespace:
 
 
 def main():
-    if False:
-        args = parse_args()
-    else:
+    FLAG = True
+    if FLAG:
         args = Namespace(
             exp_name="unnamed_experiment",
             save_dir="/Users/noobtoss/code_nexus/ultralytics/runs/unnamed_experiment",
-            model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feats_return_yolo11x.yaml",
-            ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/yolo11x.pt",
+            model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feats_return_yolo11n.yaml",
+            ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/yolo11n.pt",
             data="/Users/noobtoss/code_nexus/ultralytics/datasets/public/Oktoberfest-local.yaml",
             opts="",
         )
+    else:
+        args = parse_args()
 
     cfg = parse_cfg(args)
     train(cfg)
