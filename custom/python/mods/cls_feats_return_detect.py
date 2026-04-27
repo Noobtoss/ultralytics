@@ -22,8 +22,8 @@ class ClsFeatsReturnDetect(BaseDetect):
         boxes = torch.cat([box_head[i](x[i]).view(bs, 4 * self.reg_max, -1) for i in range(self.nl)], dim=-1)
         # >>> MOD
         scores = []
-        cls_emb_raw = []
-        cls_emb = []
+        cls_embs_raw = []
+        cls_embs = []
         for i in range(self.nl):
             cls_feats_raw_i = x[i]
             cls_feats_i = cls_head[i][0](cls_feats_raw_i)
@@ -37,10 +37,10 @@ class ClsFeatsReturnDetect(BaseDetect):
             cls_feats_i = cls_feats_i.view(bs, cls_feats_i.shape[1], -1)
 
             scores.append(score_i)
-            cls_emb_raw.append(cls_feats_raw_i)
-            cls_emb.append(cls_feats_i)
+            cls_embs_raw.append(cls_feats_raw_i)
+            cls_embs.append(cls_feats_i)
 
         scores = torch.cat(scores, dim=-1)
-        cls_emb = torch.cat(cls_emb, dim=-1)
-        return dict(boxes=boxes, scores=scores, feats=x, cls_emb=cls_emb, cls_emb_raw=cls_emb_raw)
+        cls_embs = torch.cat(cls_embs, dim=-1)  # cls_embs.shape == scores.shape do not be alarmed
+        return dict(boxes=boxes, scores=scores, feats=x, cls_embs=cls_embs, cls_embs_raw=cls_embs_raw)
         # <<< MOD
