@@ -132,3 +132,8 @@ cfg: # (str, optional) path to a config.yaml that overrides defaults
 
 # Tracker settings ------------------------------------------------------------------------------------------------------
 tracker: botsort.yaml # (str) tracker config file: botsort.yaml or bytetrack.yaml
+
+# Custom
+cls_emb: 0.0
+cls_emb_loss: sup_con_loss
+cls_emb_temp: 0.07

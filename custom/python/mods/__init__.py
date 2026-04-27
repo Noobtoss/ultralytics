@@ -9,7 +9,7 @@ from .cls_feats_return_detect import ClsFeatsReturnDetect
 nn_modules.ClsFeatsReturnDetect = ClsFeatsReturnDetect
 tasks.ClsFeatsReturnDetect = ClsFeatsReturnDetect
 
-# Patch parse_model to treat Detect2 like Detect
+# Patch parse_model to treat ClsFeatsReturnDetect like Detect
 _original_parse_model = tasks.parse_model
 
 
