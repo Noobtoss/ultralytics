@@ -15,7 +15,7 @@ _original_parse_model = tasks.parse_model
 def _patched_parse_model(d, ch, verbose=True):
     import ultralytics.nn.tasks as t
     _orig_detect = t.Detect
-    t.Detect = ClsFeatsReturnDetect  # trick parse_model into handling Detect2 like Detect
+    t.Detect = ClsFeatsReturnDetect  # trick parse_model into handling ClsFeatsReturnDetect like Detect
     result = _original_parse_model(d, ch, verbose)
     t.Detect = _orig_detect  # restore
     return result
