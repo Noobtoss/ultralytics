@@ -41,6 +41,6 @@ class ClsFeatsReturnDetect(BaseDetect):
             cls_embs.append(cls_feats_i)
 
         scores = torch.cat(scores, dim=-1)
-        cls_embs = torch.cat(cls_embs, dim=-1)  # cls_embs.shape == scores.shape do not be alarmed
+        cls_embs = torch.cat(cls_embs, dim=-1)  # cls_embs.shape can be == scores.shape, do not be alarmed
         return dict(boxes=boxes, scores=scores, feats=x, cls_embs=cls_embs, cls_embs_raw=cls_embs_raw)
         # <<< MOD
