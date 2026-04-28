@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=ultralytics_train_arr # Kurzname des Jobs
-#SBATCH --array=3-3%2            # 3 Jobs total running 2 at a time
+#SBATCH --array=1-1%2            # 3 Jobs total running 2 at a time
 #SBATCH --output=logs/R-%A-%a.out
 #SBATCH --partition=p2
 #SBATCH --qos=gpuultimate
@@ -39,7 +39,7 @@ done
 
 EXP_NAME="${KV[exp_name]:-unnamed_experiment}"
 SAVE_DIR="${BASE_DIR}/runs/${EXP_NAME}"
-MODEL="${KV[model]:-custom/cfg/cls_feats_return_yolo11.yaml}"
+MODEL="${KV[model]:-custom/cfg/cls_feats_return_yolo11x.yaml}"
 CKPT="${KV[ckpt]:-checkpoints/yolo11x.pt}"
 DATA="${KV[data]:-datasets/default.yaml}"
 
