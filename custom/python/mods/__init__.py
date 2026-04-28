@@ -14,6 +14,7 @@ def patched_check_dict_alignment(*args, **kwargs):
     LOGGER.warning("[MonkeyPatch] check_dict_alignment skipped")
     pass
 
+ucfg.CFG_FLOAT_KEYS |= {"cls_emb", "scl_temp"}  # just add your keys to the set
 _base_check_cfg = ucfg.check_cfg
 def patched_check_cfg(cfg: dict) -> None:
     LOGGER.warning("[MonkeyPatch] check_cfg forced hard=False")
@@ -21,6 +22,7 @@ def patched_check_cfg(cfg: dict) -> None:
 
 ucfg.check_dict_alignment     = patched_check_dict_alignment
 ucfg.check_cfg                = patched_check_cfg
+utrainer.check_cfg            = patched_check_cfg
 utrainer.check_dict_alignment = patched_check_dict_alignment
 
 # ── Namespace patches ─────────────────────────────────────────────────────────
