@@ -1,7 +1,6 @@
 import torch
 from ultralytics.utils.loss import v8DetectionLoss
 from ultralytics.utils.tal import make_anchors
-from ultralytics.utils import LOGGER
 
 from .cls_feat_loss import ClsFeatLossFactory
 
@@ -61,15 +60,17 @@ class TrainLoss(v8DetectionLoss):
             bce_loss *= self.class_weights
         loss[1] = bce_loss.sum() / target_scores_sum  # BCE
         # >>> MOD
+        target_cls = gt_labels[torch.arange(batch_size).unsqueeze(1), target_gt_idx.long()]
         if self.cls_feat_loss is not None and self.hyp.cls_feat is not None:
             scales = [f.shape[1] for f in cls_feats]
-            for fg_mask_i, target_scores_i, cls_feats_i in zip(torch.split(fg_mask, scales, dim=1),
-                                                               torch.split(target_scores, scales, dim=1),
-                                                               cls_feats):
+
+            for fg_mask_i, target_cls_i, cls_feats_i in zip(torch.split(fg_mask, scales, dim=1),
+                                                            torch.split(target_cls, scales, dim=1),
+                                                            cls_feats):
                 if fg_mask_i.sum():
-                    matched_target_labels = target_scores_i[fg_mask_i].argmax(dim=1)
+                    matched_target_labels = target_cls_i[fg_mask_i].squeeze(-1)
                     matched_cls_feats = cls_feats_i[fg_mask_i]
-                    loss[3] += self.cls_feat_loss(matched_cls_feats, matched_target_labels).sum()
+                    loss[3] += self.cls_feat_loss(matched_cls_feats, matched_target_labels)
             loss[3] /= target_scores_sum
             loss[3] *= self.hyp.cls_feat
         # <<< MOD
