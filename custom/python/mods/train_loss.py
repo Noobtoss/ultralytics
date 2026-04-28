@@ -36,11 +36,13 @@ class TrainLoss(v8DetectionLoss):
         """
         # >>> MOD
         loss = torch.zeros(4, device=self.device)  # box, cls, dfl, feats
-        pred_distri, pred_scores, cls_feats = (
+        pred_distri, pred_scores = (
             preds["boxes"].permute(0, 2, 1).contiguous(),
             preds["scores"].permute(0, 2, 1).contiguous(),
-            preds["cls_feats"].permute(0, 2, 1).contiguous(),
         )
+        cls_feats = [
+            f.flatten(2).permute(0, 2, 1).contiguous() for f in preds["feats"]
+        ]
         # <<< MOD
         anchor_points, stride_tensor = make_anchors(preds["feats"], self.stride, 0.5)
 
@@ -75,11 +77,15 @@ class TrainLoss(v8DetectionLoss):
         loss[1] = bce_loss.sum() / target_scores_sum  # BCE
         # >>> MOD
         if self.cls_feat_loss is not None and self.hyp.cls_feat is not None:
-            if fg_mask.sum():
-                matched_cls_feats = cls_feats[fg_mask]
-                matched_target_labels = target_scores[fg_mask].clone().argmax(dim=1)
-                cls_feat_loss = self.cls_feat_loss(matched_cls_feats, matched_target_labels)
-                loss[3] = cls_feat_loss.sum() / target_scores_sum
+            scales = [f.shape[1] for f in cls_feats]
+            for fg_mask_i, target_scores_i, cls_feats_i in zip(torch.split(fg_mask, scales, dim=1),
+                                                               torch.split(target_scores, scales, dim=1),
+                                                               cls_feats):
+                if fg_mask_i.sum():
+                    matched_target_labels = target_scores_i[fg_mask_i].argmax(dim=1)
+                    matched_cls_feats = cls_feats_i[fg_mask_i]
+                    loss[3] += self.cls_feat_loss(matched_cls_feats, matched_target_labels).sum()
+            loss[3] /= target_scores_sum
             loss[3] *= self.hyp.cls_feat
         # <<< MOD
         # Bbox loss
