@@ -17,8 +17,8 @@ class ClsFeatLossFactory:
             return None
         if loss == "sup_con_loss":
             kwargs = {}
-            if hasattr(hyp, "cls_feat_temp"):
-                kwargs["temperature"] = hyp.cls_feat_temp
+            if hasattr(hyp, "cls_feat_loss_temp"):
+                kwargs["temperature"] = hyp.cls_feat_loss_temp
             return SupConLoss(**kwargs)
         else:
             raise ValueError(f"Unknown cls_feat loss type: '{loss}'")

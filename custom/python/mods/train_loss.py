@@ -1,12 +1,20 @@
 import torch
+import torch.nn.functional as F
+from pytorch_metric_learning import losses
 from ultralytics.utils.loss import v8DetectionLoss
 from ultralytics.utils.tal import make_anchors
 from ultralytics.utils import LOGGER
 
-from .sup_con_loss import SupConLoss
-
 
 # THS, Copied from ultralytics.utils.loss
+
+
+class _SupConLossWithNorm:
+    def __init__(self, temperature: float):
+        self._loss = losses.SupConLoss(temperature=temperature)
+
+    def __call__(self, emb, labels):
+        return self._loss(F.normalize(emb, dim=1), labels)
 
 
 class ClsFeatLossFactory:
@@ -16,10 +24,8 @@ class ClsFeatLossFactory:
             LOGGER.warning("No cls_feat loss type specified, cls_feat loss disabled.")
             return None
         if loss == "sup_con_loss":
-            kwargs = {}
-            if hasattr(hyp, "cls_feat_temp"):
-                kwargs["temperature"] = hyp.cls_feat_temp
-            return SupConLoss(**kwargs)
+            temperature = getattr(hyp, "cls_feat_loss_temp", 0.07)
+            return _SupConLossWithNorm(temperature)
         else:
             raise ValueError(f"Unknown cls_feat loss type: '{loss}'")
 
