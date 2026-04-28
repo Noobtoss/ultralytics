@@ -17,8 +17,8 @@ class ClsEmbLossFactory:
             return None
         if loss == "sup_con_loss":
             kwargs = {}
-            if hasattr(hyp, "scl_temp"):
-                kwargs["temperature"] = hyp.scl_temp
+            if hasattr(hyp, "cls_emb_temp"):
+                kwargs["temperature"] = hyp.cls_emb_temp
             return SupConLoss(**kwargs)
         else:
             raise ValueError(f"Unknown cls_emb loss type: '{loss}'")
