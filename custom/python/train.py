@@ -12,7 +12,7 @@ sys.path.insert(0, site.getsitepackages()[0])
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from get_eval_metrics import get_eval_metrics
-from mods import YOLO, DetectionTrainer
+from mods import YOLO, DetectionTrainer, LossGainScheduler
 
 DEFAULT_TRAIN_CFG = Namespace(
     data="",
@@ -23,6 +23,9 @@ DEFAULT_TRAIN_CFG = Namespace(
     single_cls=False,
     project="runs",
     name="",
+    box=7.5,
+    cls=0.5,
+    dfl=1.5,
     cls_emb_loss="sup_con_loss",
     cls_emb=0.5,
 )
@@ -38,6 +41,7 @@ def train(cfg: Namespace):
         model = YOLO(cfg.model).load(cfg.ckpt)
     else:
         model = YOLO(cfg.ckpt)
+    # model.add_callback("on_train_epoch_start", LossGainScheduler())
     model.train(**vars(cfg.train_cfg), trainer=DetectionTrainer)
 
 
@@ -74,14 +78,15 @@ def parse_cfg(args: Namespace) -> Namespace:
 
 
 def main():
-    FLAG = True
+    FLAG = False
+    # FLAG = True
     if FLAG:
         args = Namespace(
             exp_name="unnamed_experiment",
             save_dir="/Users/noobtoss/code_nexus/ultralytics/runs/unnamed_experiment",
             model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feats_return_yolo11n.yaml",
             ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/yolo11n.pt",
-            data="/Users/noobtoss/code_nexus/ultralytics/datasets/public/Oktoberfest-local.yaml",
+            data="/Users/noobtoss/code_nexus/ultralytics/datasets/semmel/Images05MetaFood2026_local.yaml",
             opts="",
         )
     else:

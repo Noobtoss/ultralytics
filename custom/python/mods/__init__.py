@@ -2,17 +2,26 @@ import ultralytics.cfg as ucfg
 import ultralytics.engine.trainer as utrainer
 import ultralytics.nn.modules as nn_modules
 import ultralytics.nn.tasks as tasks
+from ultralytics.utils import LOGGER
 
 from .cls_feats_return_detect import ClsFeatsReturnDetect
 from .yolo import YOLO
 from .detection_trainer import DetectionTrainer
+from .loss_gain_scheduler import LossGainScheduler
 
 # ── CFG validation ────────────────────────────────────────────────────────────
-def _patched_check_dict_alignment(*args, **kwargs):
+def patched_check_dict_alignment(*args, **kwargs):
+    LOGGER.warning("[MonkeyPatch] check_dict_alignment skipped")
     pass
 
-ucfg.check_dict_alignment    = _patched_check_dict_alignment
-utrainer.check_dict_alignment = _patched_check_dict_alignment
+_base_check_cfg = ucfg.check_cfg
+def patched_check_cfg(cfg: dict) -> None:
+    LOGGER.warning("[MonkeyPatch] check_cfg forced hard=False")
+    _base_check_cfg(cfg, hard=False)
+
+ucfg.check_dict_alignment     = patched_check_dict_alignment
+ucfg.check_cfg                = patched_check_cfg
+utrainer.check_dict_alignment = patched_check_dict_alignment
 
 # ── Namespace patches ─────────────────────────────────────────────────────────
 nn_modules.ClsFeatsReturnDetect = ClsFeatsReturnDetect
