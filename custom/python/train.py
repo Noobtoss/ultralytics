@@ -17,7 +17,7 @@ from mods import YOLO, DetectionTrainer, LossGainScheduler
 DEFAULT_TRAIN_CFG = Namespace(
     data="",
     epochs=100,
-    imgsz=640,
+    imgsz=1280, # 640
     seed=88888,
     batch=8,
     single_cls=False,
@@ -27,7 +27,7 @@ DEFAULT_TRAIN_CFG = Namespace(
     cls=0.5,
     dfl=1.5,
     cls_emb_loss="sup_con_loss",
-    cls_emb=0.5,
+    cls_emb=None, # 0.5,
     scl_temp=0.1,
 )
 
@@ -42,7 +42,7 @@ def train(cfg: Namespace):
         model = YOLO(cfg.model).load(cfg.ckpt)
     else:
         model = YOLO(cfg.ckpt)
-    # model.add_callback("on_train_epoch_start", LossGainScheduler())
+    model.add_callback("on_train_epoch_start", LossGainScheduler())
     model.train(**vars(cfg.train_cfg), trainer=DetectionTrainer)
 
 
@@ -80,7 +80,7 @@ def parse_cfg(args: Namespace) -> Namespace:
 
 def main():
     FLAG = False
-    FLAG = True
+    # FLAG = True
     if FLAG:
         args = Namespace(
             exp_name="unnamed_experiment",
