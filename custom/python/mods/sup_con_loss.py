@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from math import log
 
 
 # https://github.com/google-research/google-research/blob/master/supcon/losses.py#L99
@@ -23,17 +22,24 @@ def divide_no_nan(x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
 
 
 class SupConLoss(nn.Module):
-    def __init__(self, temperature=0.07):
+    def __init__(self, temperature: float = 0.1):
         """
         Implementation of the loss described in the paper Supervised Contrastive Learning:
         https://arxiv.org/abs/2004.11362
 
-        :param temperature: float
+        :param temperature: float — controls sharpness of the contrastive distribution.
+            Lower values → sharper, harder contrast (sensitive to hardest negatives).
+            Higher values → softer, more uniform distribution over negatives.
+
+            Rough guidelines:
+                batch_size ~32,  n_classes ~5-10  → 0.07 (paper default)
+                batch_size ~128, n_classes ~10-20 → 0.1
+                batch_size ~300, n_classes ~30    → 0.1 - 0.2
         """
         super().__init__()
         self.temperature = temperature
 
-    def forward(self, projections, targets):
+    def forward(self, projections: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
         """
         :param projections: torch.Tensor, shape [batch_size, projection_dim]
         :param targets: torch.Tensor, shape [batch_size]
@@ -44,9 +50,8 @@ class SupConLoss(nn.Module):
         device = projections.device
 
         dot_product_tempered = torch.mm(projections, projections.T) / self.temperature
-        # Minus max for numerical stability with exponential. Same done in cross entropy. Epsilon added to avoid log(0)
-        exp_dot_tempered = (
-                torch.exp(dot_product_tempered - torch.max(dot_product_tempered, dim=1, keepdim=True)[0]) + 1e-5
+        exp_dot_tempered = torch.exp(
+            dot_product_tempered - torch.max(dot_product_tempered, dim=1, keepdim=True)[0].detach()
         )
 
         mask_similar_class = (targets.unsqueeze(1).repeat(1, targets.shape[0]) == targets).to(device)
@@ -54,9 +59,11 @@ class SupConLoss(nn.Module):
         mask_combined = mask_similar_class * mask_anchor_out
         cardinality_per_samples = torch.sum(mask_combined, dim=1)
 
-        log_prob = -torch.log(exp_dot_tempered / (torch.sum(exp_dot_tempered * mask_anchor_out, dim=1, keepdim=True)))
-        supervised_contrastive_loss_per_sample = divide_no_nan(
+        log_prob = -torch.log(
+            exp_dot_tempered / (torch.sum(exp_dot_tempered * mask_anchor_out, dim=1, keepdim=True) + 1e-8)
+        )
+        loss_per_sample = divide_no_nan(
             torch.sum(log_prob * mask_combined, dim=1), cardinality_per_samples
         )
 
-        return supervised_contrastive_loss_per_sample
+        return loss_per_sample
