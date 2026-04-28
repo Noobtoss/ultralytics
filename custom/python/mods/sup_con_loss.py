@@ -22,7 +22,7 @@ def divide_no_nan(x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
 
 
 class SupConLoss(nn.Module):
-    def __init__(self, temperature: float = 0.1):
+    def __init__(self, temperature: float = 0.07):
         """
         Implementation of the loss described in the paper Supervised Contrastive Learning:
         https://arxiv.org/abs/2004.11362

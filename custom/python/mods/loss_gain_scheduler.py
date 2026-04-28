@@ -5,12 +5,12 @@ class LossGainScheduler:
         box: float = None,
         cls: float = None,
         dfl: float = None,
-        cls_emb: float = None,
+        cls_feat: float = None,
     ):
         self.box = box
         self.cls = cls
         self.dfl = dfl
-        self.cls_emb = cls_emb
+        self.cls_feat = cls_feat
 
     def __call__(self, trainer):
         pass

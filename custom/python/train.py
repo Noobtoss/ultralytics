@@ -26,9 +26,9 @@ DEFAULT_TRAIN_CFG = Namespace(
     box=7.5,
     cls=0.5,
     dfl=1.5,
-    cls_emb_loss="sup_con_loss",
-    cls_emb=None, # 0.5,
-    cls_emb_temp=0.1,
+    cls_feat_loss="sup_con_loss",
+    cls_feat=0.09, # 0.5,
+    cls_feat_temp=0.1,
 )
 
 DEFAULT_CFG = Namespace(
@@ -80,7 +80,7 @@ def parse_cfg(args: Namespace) -> Namespace:
 
 def main():
     FLAG = False
-    # FLAG = True
+    FLAG = True
     if FLAG:
         args = Namespace(
             exp_name="unnamed_experiment",

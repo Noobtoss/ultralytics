@@ -21,9 +21,10 @@ class ClsFeatsReturnDetect(BaseDetect):
         bs = x[0].shape[0]  # batch size
         boxes = torch.cat([box_head[i](x[i]).view(bs, 4 * self.reg_max, -1) for i in range(self.nl)], dim=-1)
         # >>> MOD
+        # scores = torch.cat([cls_head[i](x[i]).view(bs, self.nc, -1) for i in range(self.nl)], dim=-1)
         scores = []
-        cls_embs_raw = []
-        cls_embs = []
+        cls_feats_raw = []
+        cls_feats = []
         for i in range(self.nl):
             cls_feats_raw_i = x[i]
             cls_feats_i = cls_head[i][0](cls_feats_raw_i)
@@ -37,10 +38,10 @@ class ClsFeatsReturnDetect(BaseDetect):
             cls_feats_i = cls_feats_i.view(bs, cls_feats_i.shape[1], -1)
 
             scores.append(score_i)
-            cls_embs_raw.append(cls_feats_raw_i)
-            cls_embs.append(cls_feats_i)
+            cls_feats_raw.append(cls_feats_raw_i)
+            cls_feats.append(cls_feats_i)
 
         scores = torch.cat(scores, dim=-1)
-        cls_embs = torch.cat(cls_embs, dim=-1)  # cls_embs.shape can be == scores.shape, do not be alarmed
-        return dict(boxes=boxes, scores=scores, feats=x, cls_embs=cls_embs, cls_embs_raw=cls_embs_raw)
+        cls_feats = torch.cat(cls_feats, dim=-1)  # cls_feats.shape can be == scores.shape, do not be alarmed
+        return dict(boxes=boxes, scores=scores, feats=x, cls_feats=cls_feats, cls_feats_raw=cls_feats_raw)
         # <<< MOD

@@ -1,7 +1,6 @@
 # Experiments Images05_cls_train init cls_train
 exp_name Images05MetaFood2026_baseline ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100
-exp_name Images05MetaFood2026_cls_010 ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_emb 0.1
-exp_name Images05MetaFood2026_cls_025 ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_emb 0.25
-exp_name Images05MetaFood2026_cls_05 ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_emb 0.5
-exp_name Images05MetaFood2026_cls_10 ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_emb 1.0
+exp_name Images05MetaFood2026_cls_010  ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat 0.1
+exp_name Images05MetaFood2026_cls_025  ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat 0.25
+exp_name Images05MetaFood2026_cls_05   ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat 0.5
 # Experiments End Current
