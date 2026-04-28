@@ -4,7 +4,7 @@ import ultralytics.nn.modules as nn_modules
 import ultralytics.nn.tasks as tasks
 from ultralytics.utils import LOGGER
 
-from .cls_feats_return_detect import ClsFeatsReturnDetect
+from .cls_feats_detect import ClsFeatsDetect
 from .yolo import YOLO
 from .detection_trainer import DetectionTrainer
 from .loss_gain_scheduler import LossGainScheduler
@@ -26,15 +26,15 @@ utrainer.check_cfg            = patched_check_cfg
 utrainer.check_dict_alignment = patched_check_dict_alignment
 
 # ── Namespace patches ─────────────────────────────────────────────────────────
-nn_modules.ClsFeatsReturnDetect = ClsFeatsReturnDetect
-tasks.ClsFeatsReturnDetect      = ClsFeatsReturnDetect
+nn_modules.ClsFeatsDetect = ClsFeatsDetect
+tasks.ClsFeatsDetect      = ClsFeatsDetect
 
 # ── parse_model patch ─────────────────────────────────────────────────────────
 _original_parse_model = tasks.parse_model
 
 def _patched_parse_model(d, ch, verbose=True):
     _orig_detect  = tasks.Detect
-    tasks.Detect  = ClsFeatsReturnDetect
+    tasks.Detect  = ClsFeatsDetect
     result        = _original_parse_model(d, ch, verbose)
     tasks.Detect  = _orig_detect
     return result

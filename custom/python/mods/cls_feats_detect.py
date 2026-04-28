@@ -6,22 +6,23 @@ from ultralytics.utils import LOGGER
 # THS, Copied from ultralytics.nn.modules.head
 
 
-class ClsFeatsReturnDetect(BaseDetect):
+class ClsFeatsDetect(BaseDetect):
     def __init__(self, *args, **kwargs) -> None:
         LOGGER.warning("FeatsReturnDetect __init__ called")
 
         super().__init__(*args, **kwargs)
 
     def forward_head(
-            self, x: list[torch.Tensor], box_head: torch.nn.Module = None, cls_head: torch.nn.Module = None
+        self, x: list[torch.Tensor], box_head: torch.nn.Module = None, cls_head: torch.nn.Module = None
     ) -> dict[str, torch.Tensor]:
         """Concatenates and returns predicted bounding boxes and class probabilities."""
         if box_head is None or cls_head is None:  # for fused inference
             return dict()
         bs = x[0].shape[0]  # batch size
         boxes = torch.cat([box_head[i](x[i]).view(bs, 4 * self.reg_max, -1) for i in range(self.nl)], dim=-1)
+        scores = torch.cat([cls_head[i](x[i]).view(bs, self.nc, -1) for i in range(self.nl)], dim=-1)
+        """
         # >>> MOD
-        # scores = torch.cat([cls_head[i](x[i]).view(bs, self.nc, -1) for i in range(self.nl)], dim=-1)
         scores = []
         cls_feats_raw = []
         cls_feats = []
@@ -44,4 +45,6 @@ class ClsFeatsReturnDetect(BaseDetect):
         scores = torch.cat(scores, dim=-1)
         cls_feats = torch.cat(cls_feats, dim=-1)  # cls_feats.shape can be == scores.shape, do not be alarmed
         return dict(boxes=boxes, scores=scores, feats=x, cls_feats=cls_feats, cls_feats_raw=cls_feats_raw)
-        # <<< MOD
+        # <<< MOD        
+        """
+        return dict(boxes=boxes, scores=scores, feats=x)
