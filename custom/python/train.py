@@ -28,7 +28,7 @@ DEFAULT_TRAIN_CFG = Namespace(
     dfl=1.5,
     cls_feat_loss="sup_con_loss",
     cls_feat=0.09, # 0.5,
-    cls_feat_loss_temp=0.1,
+    cls_feat_loss_temperature=0.1,
 )
 
 DEFAULT_CFG = Namespace(

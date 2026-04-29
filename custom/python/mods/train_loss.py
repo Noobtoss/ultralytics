@@ -11,7 +11,11 @@ from .cls_feat_losses import ClsFeatLossFactory
 class TrainLoss(v8DetectionLoss):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.cls_feat_loss = ClsFeatLossFactory.get(getattr(self.hyp, "cls_feat_loss", None), self.hyp)
+        prefix = "cls_feat_loss_"
+        self.cls_feat_loss = ClsFeatLossFactory.get(
+            getattr(self.hyp, "cls_feat_loss", None),
+            **{k[len(prefix):]: v for k, v in vars(self.hyp).items() if k.startswith(prefix)}
+        )
         self.hyp.cls_feat = getattr(self.hyp, "cls_feat", None)
 
     def get_assigned_targets_and_loss(self, preds: dict[str, torch.Tensor], batch: dict[str, any]) -> tuple:
