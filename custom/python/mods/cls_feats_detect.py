@@ -21,6 +21,24 @@ class ClsFeatsDetect(BaseDetect):
         bs = x[0].shape[0]  # batch size
         boxes = torch.cat([box_head[i](x[i]).view(bs, 4 * self.reg_max, -1) for i in range(self.nl)], dim=-1)
         scores = torch.cat([cls_head[i](x[i]).view(bs, self.nc, -1) for i in range(self.nl)], dim=-1)
+        # >>> MOD
+        """
+        # Insanity check
+        for i in range(self.nl):
+            x_i = x[i].detach().clone().requires_grad_(True)
+            with torch.enable_grad():
+                scores_i = cls_head[i](x_i).view(bs, self.nc, -1)
+                h, w = x[i].shape[2], x[i].shape[3]
+                for hi in range(h):
+                    for wi in range(w):
+                        if x_i.grad is not None:
+                            x_i.grad.zero_()
+                        scores_i[0, 0, hi * w + wi].backward(retain_graph=True)
+                        affected = x_i.grad[0, 0, :, :].nonzero(as_tuple=False)
+                        print(f"scale {i} input ({hi},{wi}) affects outputs: {affected.tolist()}")
+        raise SystemExit("Insanity check done")
+        """
+        # <<< MOD
         """
         # >>> MOD
         scores = []
