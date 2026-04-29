@@ -1,5 +1,7 @@
 import torch
+import torch.nn as nn
 from ultralytics.nn.modules.head import Detect as BaseDetect
+from ultralytics.nn.modules.conv import Conv, DWConv
 from ultralytics.utils import LOGGER
 
 
@@ -7,13 +9,26 @@ from ultralytics.utils import LOGGER
 
 
 class ClsFeatsDetect(BaseDetect):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, nc: int = 80, reg_max=16, end2end=False, ch: tuple = ()) -> None:
         LOGGER.warning("FeatsReturnDetect __init__ called")
 
-        super().__init__(*args, **kwargs)
+        super().__init__(nc, reg_max, end2end, ch)
+        c2, c3 = max((16, ch[0] // 4, self.reg_max * 4)), max(ch[0], min(self.nc, 100))  # channels
+        self.cv3 = (
+            nn.ModuleList(nn.Sequential(Conv(x, c3, 1), Conv(c3, c3, 1), nn.Conv2d(c3, self.nc, 1)) for x in ch)
+            if self.legacy
+            else nn.ModuleList(
+                nn.Sequential(
+                    nn.Sequential(DWConv(x, x, 1), Conv(x, c3, 1)),
+                    nn.Sequential(DWConv(c3, c3, 1), Conv(c3, c3, 1)),
+                    nn.Conv2d(c3, self.nc, 1),
+                )
+                for x in ch
+            )
+        )
 
     def forward_head(
-        self, x: list[torch.Tensor], box_head: torch.nn.Module = None, cls_head: torch.nn.Module = None
+            self, x: list[torch.Tensor], box_head: torch.nn.Module = None, cls_head: torch.nn.Module = None
     ) -> dict[str, torch.Tensor]:
         """Concatenates and returns predicted bounding boxes and class probabilities."""
         if box_head is None or cls_head is None:  # for fused inference
