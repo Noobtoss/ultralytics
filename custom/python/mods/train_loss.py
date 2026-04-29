@@ -2,7 +2,7 @@ import torch
 from ultralytics.utils.loss import v8DetectionLoss
 from ultralytics.utils.tal import make_anchors
 
-from .cls_feat_loss import ClsFeatLossFactory
+from .cls_feat_losses import ClsFeatLossFactory
 
 
 # THS, Copied from ultralytics.utils.loss
