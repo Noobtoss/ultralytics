@@ -17,7 +17,6 @@ class TrainLoss(v8DetectionLoss):
             **{k[len(prefix):]: v for k, v in vars(self.hyp).items() if k.startswith(prefix)}
         )
         self.hyp.cls_feat = getattr(self.hyp, "cls_feat", None)
-        self.hyp.cls_feat_min_target_score = getattr(self.hyp, "cls_feat_min_target_score", None)
 
     def get_assigned_targets_and_loss(self, preds: dict[str, torch.Tensor], batch: dict[str, any]) -> tuple:
         """Calculate the sum of the loss for box, cls and dfl multiplied by batch size and return foreground mask and
@@ -32,7 +31,6 @@ class TrainLoss(v8DetectionLoss):
         )
         # feats = [f.flatten(2).permute(0, 2, 1).contiguous() for f in preds["feats"]]
         cls_feats = [f.flatten(2).permute(0, 2, 1).contiguous() for f in preds["cls_feats"]]
-        cls_feats = torch.cat([f for f in cls_feats], dim=1)
         # <<< MOD
         anchor_points, stride_tensor = make_anchors(preds["feats"], self.stride, 0.5)
 
@@ -66,20 +64,18 @@ class TrainLoss(v8DetectionLoss):
             bce_loss *= self.class_weights
         loss[1] = bce_loss.sum() / target_scores_sum  # BCE
         # >>> MOD
-        if self.cls_feat_loss is not None and self.hyp.cls_feat is not None:
-            if fg_mask.sum():
-                target_cls = gt_labels[torch.arange(batch_size).unsqueeze(1), target_gt_idx.long()]
-                matched_target_labels = target_cls[fg_mask].squeeze(-1)
-                matched_cls_feats = cls_feats[fg_mask]
-
-                if self.hyp.cls_feat_min_target_score is not None:
-                    matched_target_scores_mask = target_scores.sum(-1)[fg_mask] >= self.hyp.cls_feat_min_target_score
-                    matched_target_labels = matched_target_labels[matched_target_scores_mask]
-                    matched_cls_feats = matched_cls_feats[matched_target_scores_mask]
-                else:
-                    matched_target_scores_mask = target_scores.sum(-1)[fg_mask] >= 0.5
-
-                loss[3] = self.cls_feat_loss(matched_cls_feats, matched_target_labels) / matched_target_labels.shape[0]
+        target_cls = gt_labels[torch.arange(batch_size).unsqueeze(1), target_gt_idx.long()]
+        if fg_mask.sum():
+            if self.cls_feat_loss is not None and self.hyp.cls_feat is not None:
+                scales = [f.shape[1] for f in cls_feats]
+                for fg_mask_i, target_cls_i, cls_feats_i in zip(torch.split(fg_mask, scales, dim=1),
+                                                                torch.split(target_cls, scales, dim=1),
+                                                                cls_feats):
+                    if fg_mask_i.sum():
+                        matched_target_labels = target_cls_i[fg_mask_i].squeeze(-1)
+                        matched_cls_feats = cls_feats_i[fg_mask_i]
+                        loss[3] += self.cls_feat_loss(matched_cls_feats, matched_target_labels)
+                loss[3] /= fg_mask.sum()
                 logging_loss[3] = loss[3].clone().detach()
                 loss[3] *= self.hyp.cls_feat
         # <<< MOD
@@ -105,9 +101,6 @@ class TrainLoss(v8DetectionLoss):
         return (
             (fg_mask, target_gt_idx, target_bboxes, anchor_points, stride_tensor),
             loss,
-            torch.cat([logging_loss, torch.tensor([
-                fg_mask.sum(),
-                matched_target_scores_mask.sum(),
-                batch["cls"].shape[0]], device=logging_loss.device)]),
+            logging_loss,
         )  # loss(box, cls, dfl, feat)
         # <<< MOD
