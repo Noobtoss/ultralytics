@@ -54,3 +54,4 @@ python $BASE_DIR/custom/python/train.py \
 KEEP_FILES=("metrics.csv" "results.csv" "last.pt")
 eval find $SAVE_DIR -type f $(printf ' ! -name "%s"' "${KEEP_FILES[@]}") -delete
 find $SAVE_DIR -type d -empty -delete
+f

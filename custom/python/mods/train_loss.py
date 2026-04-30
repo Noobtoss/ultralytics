@@ -24,13 +24,13 @@ class TrainLoss(v8DetectionLoss):
         """
         # >>> MOD
         loss = torch.zeros(4, device=self.device)  # box, cls, dfl, feats
+        logging_loss = torch.zeros(4, device=self.device)
         pred_distri, pred_scores = (
             preds["boxes"].permute(0, 2, 1).contiguous(),
             preds["scores"].permute(0, 2, 1).contiguous(),
         )
-        cls_feats = [
-            f.flatten(2).permute(0, 2, 1).contiguous() for f in preds["feats"]
-        ]
+        # feats = [f.flatten(2).permute(0, 2, 1).contiguous() for f in preds["feats"]]
+        cls_feats = [f.flatten(2).permute(0, 2, 1).contiguous() for f in preds["cls_feats"]]
         # <<< MOD
         anchor_points, stride_tensor = make_anchors(preds["feats"], self.stride, 0.5)
 
@@ -76,6 +76,7 @@ class TrainLoss(v8DetectionLoss):
                     matched_cls_feats = cls_feats_i[fg_mask_i]
                     loss[3] += self.cls_feat_loss(matched_cls_feats, matched_target_labels)
             loss[3] /= target_scores_sum
+            logging_loss[3] = loss[3].clone().detach()
             loss[3] *= self.hyp.cls_feat
         # <<< MOD
         # Bbox loss
@@ -95,8 +96,11 @@ class TrainLoss(v8DetectionLoss):
         loss[0] *= self.hyp.box  # box gain
         loss[1] *= self.hyp.cls  # cls gain
         loss[2] *= self.hyp.dfl  # dfl gain
+        # >>> MOD
+        logging_loss[:3] = loss[:3].clone().detach()
         return (
             (fg_mask, target_gt_idx, target_bboxes, anchor_points, stride_tensor),
             loss,
-            loss.detach(),
+            logging_loss,
         )  # loss(box, cls, dfl, feat)
+        # <<< MOD

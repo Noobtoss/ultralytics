@@ -23,7 +23,7 @@ class ClsFeatLossFactory:
         if loss == "sup_con_loss":
             kwargs = {k: v for k, v in kwargs.items() if k in inspect.signature(losses.SupConLoss).parameters}
             return NormalizeFeats(losses.SupConLoss(**kwargs, reducer=reducers.SumReducer()))
-        if loss == "gen_lifted_struct":
+        if loss == "general_lifted_struct":
             kwargs = {k: v for k, v in kwargs.items() if k in inspect.signature(losses.GeneralizedLiftedStructureLoss).parameters}
             return NormalizeFeats(losses.GeneralizedLiftedStructureLoss(**kwargs, reducer=reducers.SumReducer()))
         else:
