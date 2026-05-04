@@ -30,10 +30,10 @@ class ClsFeatLoss(nn.Module):
         target_cls = target_scores.max(-1).indices
         pred_conf = pred_scores.detach().sigmoid().max(-1).values
 
-        """
+        # """
         # raw
         loss += self.feat_loss(cls_feats, target_cls).mean()
-        """
+        # """
         """
         # masking
         pred_conf_mask = pred_conf > self.conf_thresh
@@ -42,7 +42,7 @@ class ClsFeatLoss(nn.Module):
         """
         # """
         # weighting
-        loss += sum(self.feat_loss(cls_feats, target_cls) * pred_conf) / pred_conf.sum()
+        # loss += sum(self.feat_loss(cls_feats, target_cls) * pred_conf) / pred_conf.sum()
         # """
 
         return loss

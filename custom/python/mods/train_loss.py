@@ -91,8 +91,6 @@ class TrainLoss(v8DetectionLoss):
         return (
             (fg_mask, target_gt_idx, target_bboxes, anchor_points, stride_tensor),
             loss,
-            torch.cat([logging_loss, torch.tensor([
-                (pred_scores.sigmoid().max(1).values > 0.2).sum().item()
-            ], device=logging_loss.device)]),
+            logging_loss,
         )  # loss(box, cls, dfl, feat)
         # <<< MOD
