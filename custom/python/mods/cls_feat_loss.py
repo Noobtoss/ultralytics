@@ -15,15 +15,11 @@ class ClsFeatLoss(nn.Module):
             cls_feats: torch.Tensor,
             target_scores: torch.Tensor,
             pred_scores: torch.Tensor,
-            target_bboxes: torch.Tensor,
-            pred_bboxes: torch.Tensor,
             fg_mask: torch.Tensor,
     ) -> torch.Tensor:
         cls_feats = cls_feats[fg_mask]
         target_scores = target_scores[fg_mask]
         pred_scores = pred_scores[fg_mask]
-        target_bboxes = target_bboxes[fg_mask]
-        pred_bboxes = pred_bboxes[fg_mask]
 
         loss = torch.zeros(1, device=cls_feats.device)  # tmp
 
