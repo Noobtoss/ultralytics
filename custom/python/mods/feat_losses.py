@@ -24,7 +24,7 @@ class NormalizeFeats(nn.Module):
 
 class FeatLossFactory:
     @staticmethod
-    def get(loss: str, **kwargs):
+    def get(loss: str = None, **kwargs):
         if loss is None:
             return None
         if loss == "sup_con_loss":
