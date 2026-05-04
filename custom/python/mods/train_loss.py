@@ -2,7 +2,7 @@ import torch
 from ultralytics.utils.loss import v8DetectionLoss
 from ultralytics.utils.tal import make_anchors
 
-from .cls_feat_losses import ClsFeatLossFactory
+from .cls_feat_loss import ClsFeatLoss
 
 
 # THS, Copied from ultralytics.utils.loss
@@ -11,13 +11,11 @@ from .cls_feat_losses import ClsFeatLossFactory
 class TrainLoss(v8DetectionLoss):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        prefix = "cls_feat_loss_"
-        self.cls_feat_loss = ClsFeatLossFactory.get(
-            getattr(self.hyp, "cls_feat_loss", None),
-            **{k[len(prefix):]: v for k, v in vars(self.hyp).items() if k.startswith(prefix)}
-        )
-        self.hyp.cls_feat = getattr(self.hyp, "cls_feat", None)
-        self.hyp.cls_feat_min_target_score = getattr(self.hyp, "cls_feat_min_target_score", None)
+        # >>> MOD
+        self.cls_feat_loss = ClsFeatLoss(**{k[len("cls_feat_"):]: v for k, v in vars(self.hyp).items() if
+                                            k.startswith("cls_feat_")}).to(self.device)
+        self.hyp.cls_feat = getattr(self.hyp, "cls_feat", 0)
+        # <<< MOD
 
     def get_assigned_targets_and_loss(self, preds: dict[str, torch.Tensor], batch: dict[str, any]) -> tuple:
         """Calculate the sum of the loss for box, cls and dfl multiplied by batch size and return foreground mask and
@@ -66,22 +64,10 @@ class TrainLoss(v8DetectionLoss):
             bce_loss *= self.class_weights
         loss[1] = bce_loss.sum() / target_scores_sum  # BCE
         # >>> MOD
-        if self.cls_feat_loss is not None and self.hyp.cls_feat is not None:
-            if fg_mask.sum():
-                target_cls = gt_labels[torch.arange(batch_size).unsqueeze(1), target_gt_idx.long()]
-                matched_target_labels = target_cls[fg_mask].squeeze(-1)
-                matched_cls_feats = cls_feats[fg_mask]
-
-                if self.hyp.cls_feat_min_target_score is not None:
-                    matched_target_scores_mask = target_scores.sum(-1)[fg_mask] >= self.hyp.cls_feat_min_target_score
-                    matched_target_labels = matched_target_labels[matched_target_scores_mask]
-                    matched_cls_feats = matched_cls_feats[matched_target_scores_mask]
-                else:
-                    matched_target_scores_mask = target_scores.sum(-1)[fg_mask] >= 0.5
-
-                loss[3] = self.cls_feat_loss(matched_cls_feats, matched_target_labels) / matched_target_labels.shape[0]
-                logging_loss[3] = loss[3].clone().detach()
-                loss[3] *= self.hyp.cls_feat
+        if fg_mask.sum():
+            loss[3] = self.cls_feat_loss(cls_feats, target_scores, pred_scores, target_bboxes, pred_bboxes, fg_mask)
+            logging_loss[3] = loss[3].clone().detach()
+            loss[3] *= self.hyp.cls_feat
         # <<< MOD
         # Bbox loss
         if fg_mask.sum():
@@ -106,8 +92,7 @@ class TrainLoss(v8DetectionLoss):
             (fg_mask, target_gt_idx, target_bboxes, anchor_points, stride_tensor),
             loss,
             torch.cat([logging_loss, torch.tensor([
-                fg_mask.sum(),
-                matched_target_scores_mask.sum(),
-                batch["cls"].shape[0]], device=logging_loss.device)]),
+                (pred_scores.sigmoid().max(1).values > 0.2).sum().item()
+            ], device=logging_loss.device)]),
         )  # loss(box, cls, dfl, feat)
         # <<< MOD

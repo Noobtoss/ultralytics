@@ -20,7 +20,7 @@ class DetectionTrainer(BaseDetectionTrainer):
 
     def get_validator(self):
         """Return a DetectionValidator for YOLO model validation."""
-        self.loss_names = "box_loss", "cls_loss", "dfl_loss", "cls_feat_loss", "tmp_num_preds", "tmp_num_good_preds", "tmp_num_targets"
+        self.loss_names = "box_loss", "cls_loss", "dfl_loss", "cls_feat_loss", "high_conf_preds>0.2"
         return yolo.detect.DetectionValidator(
             self.test_loader, save_dir=self.save_dir, args=copy(self.args), _callbacks=self.callbacks
         )
