@@ -1,4 +1,13 @@
 # Experiments Images05_cls_train init cls_train
-exp_name Images05MetaFood2026_scl_baseline ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat 0.0
-exp_name Images05MetaFood2026_scl_cls_02   ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat 0.2
+exp_name Images05MetaFood2026_scl_base              ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100
+exp_name Images05MetaFood2026_scl_base              ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100
+exp_name Images05MetaFood2026_scl_02_base           ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat 0.2
+exp_name Images05MetaFood2026_scl_02_head_s         ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat 0.2 cls_feat_proj_head s
+exp_name Images05MetaFood2026_scl_02_head_m         ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat 0.2 cls_feat_proj_head m
+exp_name Images05MetaFood2026_scl_04_base           ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat 0.4
+exp_name Images05MetaFood2026_scl_04_head_s         ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat 0.4 cls_feat_proj_head s
+exp_name Images05MetaFood2026_scl_04_head_m         ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat 0.4 cls_feat_proj_head m
+exp_name Images05MetaFood2026_scl_04_base_temp_02   ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat 0.4                      cls_feat_temperature 0.2
+exp_name Images05MetaFood2026_scl_04_head_s_temp_02 ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat 0.4 cls_feat_proj_head s cls_feat_temperature 0.2
+exp_name Images05MetaFood2026_scl_04_head_m_temp_02 ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat 0.4 cls_feat_proj_head m cls_feat_temperature 0.2
 # Experiments End Current
