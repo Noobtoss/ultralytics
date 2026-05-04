@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
-from ultralytics.nn.modules.head import Detect as BaseDetect
 from ultralytics.nn.modules.conv import Conv, DWConv
+from ultralytics.nn.modules.head import Detect as BaseDetect
 from ultralytics.utils import LOGGER
 
 
@@ -15,7 +15,14 @@ class ClsFeatsDetect(BaseDetect):
         super().__init__(nc, reg_max, end2end, ch)
         c2, c3 = max((16, ch[0] // 4, self.reg_max * 4)), max(ch[0], min(self.nc, 100))  # channels
         # >>> MOD
-        c3 *=2
+        c3 = c3*1  # 64 # 128 # 256
+        self.cls_feats_proj_head = nn.ModuleList([
+            nn.Sequential(
+                nn.Conv2d(c3, c3, 1),
+                nn.SiLU(),
+                nn.Conv2d(c3, 128, 1)
+            ) for _ in ch
+        ])
         # <<< MOD
         self.cv2 = nn.ModuleList(
             nn.Sequential(Conv(x, c2, 3), Conv(c2, c2, 3), nn.Conv2d(c2, 4 * self.reg_max, 1)) for x in ch
@@ -78,6 +85,7 @@ class ClsFeatsDetect(BaseDetect):
 
         scores = []
         cls_feats = []
+        cls_feats_proj = []
         for i in range(self.nl):
             h = x[i]
             for layer in list(cls_head[i])[:-1]:
@@ -86,7 +94,9 @@ class ClsFeatsDetect(BaseDetect):
             score_i = cls_head[i][-1](h).view(bs, self.nc, -1)  # conv → (bs, nc, H, W)
             scores.append(score_i)
             cls_feats.append(cls_feats_i)
+            cls_feats_proj.append(self.cls_feats_proj_head[i](cls_feats_i))
+
         scores = torch.cat(scores, dim=-1)
 
-        return dict(boxes=boxes, scores=scores, feats=x, cls_feats=cls_feats)
+        return dict(boxes=boxes, scores=scores, feats=x, cls_feats=cls_feats, cls_feats_proj=cls_feats_proj)
         # <<< MOD

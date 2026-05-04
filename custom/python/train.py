@@ -80,7 +80,7 @@ def parse_cfg(args: Namespace) -> Namespace:
 
 def main():
     FLAG = False
-    # FLAG = True
+    FLAG = True
     if FLAG:
         args = Namespace(
             exp_name="unnamed_experiment",
