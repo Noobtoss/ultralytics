@@ -1,4 +1,4 @@
-# Experiments Images05_cls_train init cls_train
+# Experiments init
 exp_name Images05MetaFood2026_scl_base              ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100
 exp_name Images05MetaFood2026_scl_base              ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100
 exp_name Images05MetaFood2026_scl_02_base           ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat 0.2
