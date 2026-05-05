@@ -87,8 +87,8 @@ def main():
         args = Namespace(
             exp_name="unnamed_experiment",
             save_dir="/Users/noobtoss/code_nexus/ultralytics/runs/unnamed_experiment",
-            model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feats_return_yolo11n.yaml",
-            ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/yolo11n.pt",
+            model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feats_yolo26n.yaml",
+            ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/yolo26n.pt",
             data="/Users/noobtoss/code_nexus/ultralytics/datasets/semmel/Images05MetaFood2026_local.yaml",
             opts="",
         )

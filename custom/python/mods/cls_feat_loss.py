@@ -54,12 +54,12 @@ class ClsFeatLoss(nn.Module):
     ) -> torch.Tensor:
         cls_feats = cls_feats[fg_mask]
         target_scores = target_scores[fg_mask]
-        pred_scores = pred_scores[fg_mask]
+        # pred_scores = pred_scores[fg_mask]
 
         loss = torch.zeros(1, device=cls_feats.device)  # tmp
 
         target_cls = target_scores.max(-1).indices
-        pred_conf = pred_scores.detach().sigmoid().max(-1).values
+        # pred_conf = pred_scores.detach().sigmoid().max(-1).values
 
         # """
         # raw

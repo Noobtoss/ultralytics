@@ -1,5 +1,5 @@
 # Experiments quick and dirty
-exp_name Images05MetaFood2026_baseline              ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100
+exp_name Images05MetaFood2026_baseline              ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat 0.0
 exp_name Images05MetaFood2026_scl_02                ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat 0.2
 # Experiments proper
 exp_name Images05MetaFood2026_scl_02_head_s         ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat 0.2 cls_feat_proj_head s
