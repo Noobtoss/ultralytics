@@ -15,6 +15,12 @@ class TrainLoss(v8DetectionLoss):
         self.cls_feat_loss = ClsFeatLoss(**{k[len("cls_feat_"):]: v for k, v in vars(self.hyp).items() if
                                             k.startswith("cls_feat_")}).to(self.device)
         self.hyp.cls_feat = getattr(self.hyp, "cls_feat", 0)
+        self.assigner.topk2 = 2
+        #print(self.assigner.topk)
+        #print(self.assigner.topk2)
+        #self.topk = topk
+        #self.topk2 = topk2 or topk
+        #8==D
         # <<< MOD
 
     def get_assigned_targets_and_loss(self, preds: dict[str, torch.Tensor], batch: dict[str, any]) -> tuple:
@@ -30,6 +36,7 @@ class TrainLoss(v8DetectionLoss):
         )
         cls_feats = [f.flatten(2).permute(0, 2, 1).contiguous() for f in preds["cls_feats"]]
         cls_feats = torch.cat([f for f in cls_feats], dim=1)
+        # print(cls_feats.shape)
         # <<< MOD
         anchor_points, stride_tensor = make_anchors(preds["feats"], self.stride, 0.5)
 
@@ -54,7 +61,11 @@ class TrainLoss(v8DetectionLoss):
             gt_bboxes,
             mask_gt,
         )
-
+        #print(target_scores.sum())
+        #print(fg_mask.shape)
+        #print(target_scores.shape)
+        #print(target_scores[fg_mask].shape)
+        #8==D
         target_scores_sum = max(target_scores.sum(), 1)
 
         # Cls loss with optional class weighting

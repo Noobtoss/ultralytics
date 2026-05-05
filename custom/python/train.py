@@ -1,6 +1,7 @@
 import os
 import sys
 import site
+import warnings
 import argparse
 from argparse import Namespace
 
@@ -79,9 +80,10 @@ def parse_cfg(args: Namespace) -> Namespace:
 
 
 def main():
-    FLAG = False
-    # FLAG = True
-    if FLAG:
+    if len(sys.argv) > 1:
+        args = parse_args()
+    else:
+        warnings.warn("⚠️ Running with hardcoded test args")
         args = Namespace(
             exp_name="unnamed_experiment",
             save_dir="/Users/noobtoss/code_nexus/ultralytics/runs/unnamed_experiment",
@@ -90,8 +92,6 @@ def main():
             data="/Users/noobtoss/code_nexus/ultralytics/datasets/semmel/Images05MetaFood2026_local.yaml",
             opts="",
         )
-    else:
-        args = parse_args()
 
     cfg = parse_cfg(args)
     train(cfg)
