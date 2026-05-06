@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 from ultralytics.nn.modules.conv import Conv, DWConv
-from ultralytics.nn.modules.head import Detect as BaseDetect
+from ultralytics.nn.modules.head import Detect as _Detect
 from ultralytics.utils import LOGGER
 
 
@@ -47,7 +47,7 @@ def _insanity_check(x, cls_head, nl, nc):
     raise SystemExit("Receptive field check complete")
 
 
-class ClsFeatsDetect(BaseDetect):
+class ClsFeatsDetect(_Detect):
     def __init__(self, nc: int = 80, reg_max=16, end2end=False, ch: tuple = ()) -> None:
         LOGGER.warning("[Modded] ClsFeatsDetect")
 

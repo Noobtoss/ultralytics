@@ -18,7 +18,7 @@ from mods import YOLO, DetectionTrainer, DetectionValidator, LossGainScheduler
 DEFAULT_TRAIN_CFG = Namespace(
     data="",
     epochs=100,
-    imgsz=1280, # 640
+    imgsz=1280,  # 640
     seed=88888,
     batch=8,
     single_cls=False,
@@ -27,7 +27,7 @@ DEFAULT_TRAIN_CFG = Namespace(
     box=7.5,
     cls=0.5,
     dfl=1.5,
-    cls_feat=0.09, # 0.5,
+    cls_feat=0.09,  # 0.5,
     cls_feat_loss="sup_con_loss",
     cls_feat_temperature=0.07,
 )
@@ -68,11 +68,16 @@ def parse_args():
 def parse_cfg(args: Namespace) -> Namespace:
     cfg = DEFAULT_CFG
 
-    cfg.train_cfg.name = args.exp_name; delattr(args, "exp_name")
-    cfg.train_cfg.save_dir = args.save_dir; delattr(args, "save_dir")
-    cfg.model = args.model; delattr(args, "model")
-    cfg.ckpt = args.ckpt; delattr(args, "ckpt")
-    cfg.train_cfg.data = args.data; delattr(args, "data")
+    cfg.train_cfg.name = args.exp_name;
+    delattr(args, "exp_name")
+    cfg.train_cfg.save_dir = args.save_dir;
+    delattr(args, "save_dir")
+    cfg.model = args.model;
+    delattr(args, "model")
+    cfg.ckpt = args.ckpt;
+    delattr(args, "ckpt")
+    cfg.train_cfg.data = args.data;
+    delattr(args, "data")
 
     if args.opts:
         it = iter(args.opts)

@@ -1,7 +1,7 @@
-import ultralytics.cfg as ucfg
-import ultralytics.engine.trainer as utrainer
-import ultralytics.nn.modules as nn_modules
-import ultralytics.nn.tasks as tasks
+import ultralytics.cfg as _cfg
+import ultralytics.engine.trainer as _trainer
+import ultralytics.nn.modules as _modules
+import ultralytics.nn.tasks as _tasks
 from ultralytics.utils import LOGGER
 
 from .base_trainer import BaseTrainer
@@ -23,8 +23,8 @@ def patched_check_dict_alignment(*args, **kwargs):
     pass
 
 
-ucfg.CFG_FLOAT_KEYS |= {"cls_feat", "cls_feat_temperature"}  # just add your keys to the set
-_base_check_cfg = ucfg.check_cfg
+_cfg.CFG_FLOAT_KEYS |= {"cls_feat", "cls_feat_temperature"}  # just add your keys to the set
+_base_check_cfg = _cfg.check_cfg
 
 
 def patched_check_cfg(cfg: dict) -> None:
@@ -32,25 +32,25 @@ def patched_check_cfg(cfg: dict) -> None:
     _base_check_cfg(cfg, hard=False)
 
 
-ucfg.check_dict_alignment = patched_check_dict_alignment
-ucfg.check_cfg = patched_check_cfg
-utrainer.check_cfg = patched_check_cfg
-utrainer.check_dict_alignment = patched_check_dict_alignment
+_cfg.check_dict_alignment = patched_check_dict_alignment
+_cfg.check_cfg = patched_check_cfg
+_trainer.check_cfg = patched_check_cfg
+_trainer.check_dict_alignment = patched_check_dict_alignment
 
 # ── Namespace patches ─────────────────────────────────────────────────────────
-nn_modules.ClsFeatsDetect = ClsFeatsDetect
-tasks.ClsFeatsDetect = ClsFeatsDetect
+_modules.ClsFeatsDetect = ClsFeatsDetect
+_tasks.ClsFeatsDetect = ClsFeatsDetect
 
 # ── parse_model patch ─────────────────────────────────────────────────────────
-_original_parse_model = tasks.parse_model
+_original_parse_model = _tasks.parse_model
 
 
 def _patched_parse_model(d, ch, verbose=True):
-    _orig_detect = tasks.Detect
-    tasks.Detect = ClsFeatsDetect
+    _orig_detect = _tasks.Detect
+    _tasks.Detect = ClsFeatsDetect
     result = _original_parse_model(d, ch, verbose)
-    tasks.Detect = _orig_detect
+    _tasks.Detect = _orig_detect
     return result
 
 
-tasks.parse_model = _patched_parse_model
+_tasks.parse_model = _patched_parse_model
