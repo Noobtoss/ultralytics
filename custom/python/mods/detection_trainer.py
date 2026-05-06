@@ -6,13 +6,14 @@ from ultralytics.utils import RANK, LOGGER
 from .detection_model import DetectionModel
 from .proj_heads import ProjHeadFactory
 from .base_trainer import BaseTrainer
-
+from .detection_validator import DetectionValidator
 
 BaseDetectionTrainer.__bases__ = (BaseTrainer,)
 
+
 class DetectionTrainer(BaseDetectionTrainer):
     def __init__(self, *args, **kwargs) -> None:
-        LOGGER.warning("Modded DetectionTrainer __init__ called")
+        LOGGER.warning("[Modded] DetectionTrainer")
         super().__init__(*args, **kwargs)
 
     def get_model(self, cfg=None, weights=None, verbose=True):
@@ -29,6 +30,6 @@ class DetectionTrainer(BaseDetectionTrainer):
     def get_validator(self):
         """Return a DetectionValidator for YOLO model validation."""
         self.loss_names = "box_loss", "cls_loss", "dfl_loss", "cls_feat_loss"
-        return yolo.detect.DetectionValidator(
+        return DetectionValidator(
             self.test_loader, save_dir=self.save_dir, args=copy(self.args), _callbacks=self.callbacks
         )

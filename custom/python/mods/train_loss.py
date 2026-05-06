@@ -8,7 +8,7 @@ from .cls_feat_loss import ClsFeatLoss
 
 class TrainLoss(v8DetectionLoss):
     def __init__(self, *args, **kwargs) -> None:
-        LOGGER.warning("Modded TrainLoss __init__ called")
+        LOGGER.warning("[Modded] TrainLoss")
         super().__init__(*args, **kwargs)
         # >>> MOD
         self.cls_feat_loss = ClsFeatLoss(**{k[len("cls_feat_"):]: v for k, v in vars(self.hyp).items() if

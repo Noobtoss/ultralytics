@@ -7,7 +7,7 @@ from .train_loss import TrainLoss
 
 class DetectionModel(BaseDetectionModel):
     def __init__(self, *args, **kwargs) -> None:
-        LOGGER.warning("Modded DetectionModel __init__ called")
+        LOGGER.warning("[Modded] DetectionModel")
         super().__init__(*args, **kwargs)
 
     def init_criterion(self):

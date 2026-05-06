@@ -8,5 +8,5 @@ BaseYOLO.__bases__ = (Model,)
 
 class YOLO(BaseYOLO):
     def __init__(self, *args, **kwargs) -> None:
-        LOGGER.warning("Modded YOLO __init__ called")
+        LOGGER.warning("[Modded] YOLO")
         super().__init__(*args, **kwargs)

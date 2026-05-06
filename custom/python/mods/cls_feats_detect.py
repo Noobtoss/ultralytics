@@ -49,7 +49,7 @@ def _insanity_check(x, cls_head, nl, nc):
 
 class ClsFeatsDetect(BaseDetect):
     def __init__(self, nc: int = 80, reg_max=16, end2end=False, ch: tuple = ()) -> None:
-        LOGGER.warning("Modded ClsFeatsDetect __init__ called")
+        LOGGER.warning("[Modded] ClsFeatsDetect")
 
         super().__init__(nc, reg_max, end2end, ch)
         c2, c3 = max((16, ch[0] // 4, self.reg_max * 4)), max(ch[0], min(self.nc, 100))  # channels

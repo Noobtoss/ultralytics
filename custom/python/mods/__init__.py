@@ -9,6 +9,7 @@ from .cls_feat_loss import ClsFeatLossFactory, ClsFeatLoss
 from .cls_feats_detect import ClsFeatsDetect
 from .detection_model import DetectionModel
 from .detection_trainer import DetectionTrainer
+from .detection_validator import DetectionValidator
 from .loss_gain_scheduler import LossGainScheduler
 from .model import Model
 from .proj_heads import ProjHeadFactory

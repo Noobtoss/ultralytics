@@ -13,7 +13,7 @@ sys.path.insert(0, site.getsitepackages()[0])
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from get_eval_metrics import get_eval_metrics
-from mods import YOLO, DetectionTrainer, LossGainScheduler
+from mods import YOLO, DetectionTrainer, DetectionValidator, LossGainScheduler
 
 DEFAULT_TRAIN_CFG = Namespace(
     data="",
@@ -44,7 +44,9 @@ def train(cfg: Namespace):
     else:
         model = YOLO(cfg.ckpt)
     model.add_callback("on_train_epoch_start", LossGainScheduler())
+    model.val(**vars(cfg.train_cfg), validator=DetectionValidator)
     model.train(**vars(cfg.train_cfg), trainer=DetectionTrainer)
+    model.val(**vars(cfg.train_cfg), validator=DetectionValidator)
 
 
 def parse_args():
