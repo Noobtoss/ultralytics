@@ -4,14 +4,12 @@ import ultralytics.nn.modules as _modules
 import ultralytics.nn.tasks as _tasks
 from ultralytics.utils import LOGGER
 
-from .base_trainer import BaseTrainer
 from .cls_feat_loss import ClsFeatLossFactory, ClsFeatLoss
 from .cls_feats_detect import ClsFeatsDetect
 from .detection_model import DetectionModel
 from .detection_trainer import DetectionTrainer
 from .detection_validator import DetectionValidator
 from .loss_gain_scheduler import LossGainScheduler
-from .model import Model
 from .proj_heads import ProjHeadFactory
 from .train_loss import TrainLoss
 from .yolo import YOLO
