@@ -1,17 +1,19 @@
 from copy import copy
 from ultralytics.models.yolo.detect import DetectionTrainer as BaseDetectionTrainer
 from ultralytics.models import yolo
-from ultralytics.utils import RANK
+from ultralytics.utils import RANK, LOGGER
 
 from .detection_model import DetectionModel
 from .proj_heads import ProjHeadFactory
+from .base_trainer import BaseTrainer
 
 
-# THS, Copied from ultralytics.models.yolo.detect.DetectionTrainer
-# THS, Copied from ultralytics.engine.trainer.BaseTrainer
-
+BaseDetectionTrainer.__bases__ = (BaseTrainer,)
 
 class DetectionTrainer(BaseDetectionTrainer):
+    def __init__(self, *args, **kwargs) -> None:
+        LOGGER.warning("Modded DetectionTrainer __init__ called")
+        super().__init__(*args, **kwargs)
 
     def get_model(self, cfg=None, weights=None, verbose=True):
         model = DetectionModel(cfg, nc=self.data["nc"], verbose=verbose and RANK == -1)

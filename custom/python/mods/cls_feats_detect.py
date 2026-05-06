@@ -5,9 +5,6 @@ from ultralytics.nn.modules.head import Detect as BaseDetect
 from ultralytics.utils import LOGGER
 
 
-# THS, Copied from ultralytics.nn.modules.head
-
-
 def _insanity_check(x, cls_head, nl, nc):
     """
     Insanity-checks that each output position in cls_head only depends on
@@ -52,7 +49,7 @@ def _insanity_check(x, cls_head, nl, nc):
 
 class ClsFeatsDetect(BaseDetect):
     def __init__(self, nc: int = 80, reg_max=16, end2end=False, ch: tuple = ()) -> None:
-        LOGGER.warning("FeatsReturnDetect __init__ called")
+        LOGGER.warning("Modded ClsFeatsDetect __init__ called")
 
         super().__init__(nc, reg_max, end2end, ch)
         c2, c3 = max((16, ch[0] // 4, self.reg_max * 4)), max(ch[0], min(self.nc, 100))  # channels

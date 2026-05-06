@@ -1,15 +1,14 @@
 import torch
+from ultralytics.utils import LOGGER
 from ultralytics.utils.loss import v8DetectionLoss
 from ultralytics.utils.tal import make_anchors
 
 from .cls_feat_loss import ClsFeatLoss
 
 
-# THS, Copied from ultralytics.utils.loss
-
-
 class TrainLoss(v8DetectionLoss):
     def __init__(self, *args, **kwargs) -> None:
+        LOGGER.warning("Modded TrainLoss __init__ called")
         super().__init__(*args, **kwargs)
         # >>> MOD
         self.cls_feat_loss = ClsFeatLoss(**{k[len("cls_feat_"):]: v for k, v in vars(self.hyp).items() if
