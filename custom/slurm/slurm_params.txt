@@ -1,5 +1,4 @@
 # Experiments quick and dirty
-exp_name tmp_ASSHOLE            model custom/cfg/cls_feats_yolo11n.yaml  ckpt checkpoints/yolo11n.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 10 cls_feat 0.0
 exp_name Images05MetaFood2026_baseline              ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat 0.0
 exp_name Images05MetaFood2026_scl_01                ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat 0.1
 exp_name Images05MetaFood2026_scl_02                ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat 0.2

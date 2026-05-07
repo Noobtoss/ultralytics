@@ -4,6 +4,8 @@ import site
 import warnings
 import argparse
 from argparse import Namespace
+import csv
+from ultralytics.utils import LOGGER
 
 # When running from inside a local ultralytics repo clone, Python would normally
 # pick up the local folder instead of the conda-installed package. We fix this by
@@ -37,6 +39,24 @@ DEFAULT_CFG = Namespace(
     train_cfg=DEFAULT_TRAIN_CFG
 )
 
+def val_last_on_train_end(trainer):
+    if trainer.last.exists():
+        LOGGER.info(f"\nValidating {trainer.last}...")
+        metrics = trainer.validator(model=trainer.last)
+
+        for csv_path in [trainer.save_dir.parent / "results.csv",
+                         trainer.save_dir.parent.parent / "results/results.csv",
+                         trainer.save_dir.parent.parent / "results.csv"]:
+            csv_path.parent.mkdir(parents=True, exist_ok=True)
+            row = {"name": trainer.args.name, **{k: round(v, 3) for k, v in metrics.items()}}
+            write_header = not csv_path.exists()
+            with open(csv_path, "a", newline="") as f:
+                writer = csv.DictWriter(f, fieldnames=row.keys())
+                if write_header:
+                    writer.writeheader()
+                writer.writerow(row)
+            LOGGER.info(f"Results saved to {csv_path}")
+
 
 def train(cfg: Namespace):
     if cfg.model is not None:
@@ -44,9 +64,8 @@ def train(cfg: Namespace):
     else:
         model = YOLO(cfg.ckpt)
     model.add_callback("on_train_epoch_start", LossGainScheduler())
-    model.val(**vars(cfg.train_cfg), validator=DetectionValidator)
+    model.add_callback("on_train_end", val_last_on_train_end)
     model.train(**vars(cfg.train_cfg), trainer=DetectionTrainer)
-    model.val(**vars(cfg.train_cfg), validator=DetectionValidator)
 
 
 def parse_args():

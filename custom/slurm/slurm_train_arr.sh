@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --job-name=ultralytics_train_arr # Kurzname des Jobs
-#SBATCH --array=1-1%4           # 3 Jobs total running 2 at a time
+#SBATCH --array=1-5%4           # 3 Jobs total running 2 at a time
 #SBATCH --output=logs/R-%A-%a.out
-#SBATCH --partition=p2
+#SBATCH --partition=p1,p2,p3,p4,p5,p6 # p2
 #SBATCH --qos=gpuultimate
 #SBATCH --gres=gpu:1
 #SBATCH --nodes=1                # Anzahl Knoten
@@ -54,4 +54,3 @@ python $BASE_DIR/custom/python/train.py \
 KEEP_FILES=("metrics.csv" "results.csv" "last.pt")
 eval find $SAVE_DIR -type f $(printf ' ! -name "%s"' "${KEEP_FILES[@]}") -delete
 find $SAVE_DIR -type d -empty -delete
-f
