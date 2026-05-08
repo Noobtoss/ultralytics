@@ -41,18 +41,22 @@ class DetectionValidator(_DetectionValidator):
         for si, pred in enumerate(preds):
             pbatch = self._prepare_batch(si, batch)
             predn = self._prepare_pred(pred)
+            pbatch = {**pbatch, "cls": pbatch["cls"] * 0}
+            predn = {**predn, "cls": predn["cls"] * 0}
+
             cls = pbatch["cls"].cpu().numpy()
             no_pred = predn["cls"].shape[0] == 0
 
-            # single class — zero out all class ids
-            self.metrics_agnostic.update_stats({
-                **self._process_batch(predn, pbatch),
-                "target_cls": np.zeros_like(cls),
-                "target_img": np.array([0]),
-                "conf": np.zeros(0) if no_pred else predn["conf"].cpu().numpy(),
-                "pred_cls": np.zeros(0) if no_pred else torch.zeros_like(predn["cls"]).cpu().numpy(),
-                "im_name": Path(pbatch["im_file"]).name,
-            })
+            self.metrics_agnostic.update_stats(
+                {
+                    **self._process_batch(predn, pbatch),
+                    "target_cls": cls,
+                    "target_img": np.unique(cls),
+                    "conf": np.zeros(0) if no_pred else predn["conf"].cpu().numpy(),
+                    "pred_cls": np.zeros(0) if no_pred else predn["cls"].cpu().numpy(),
+                    "im_name": Path(pbatch["im_file"]).name,
+                }
+            )
 
     def get_stats(self) -> dict[str, Any]:
         """Calculate and return metrics statistics.
