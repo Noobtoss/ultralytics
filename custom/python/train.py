@@ -5,7 +5,6 @@ import warnings
 import argparse
 from argparse import Namespace
 import csv
-from ultralytics.utils import LOGGER
 
 # When running from inside a local ultralytics repo clone, Python would normally
 # pick up the local folder instead of the conda-installed package. We fix this by
@@ -14,6 +13,7 @@ sys.path.insert(0, site.getsitepackages()[0])
 # Also ensure the directory of this script itself is on the path for local imports.
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+from ultralytics.utils import LOGGER
 from get_eval_metrics import get_eval_metrics
 from mods import YOLO, DetectionTrainer, DetectionValidator, LossGainScheduler
 
@@ -87,16 +87,11 @@ def parse_args():
 def parse_cfg(args: Namespace) -> Namespace:
     cfg = DEFAULT_CFG
 
-    cfg.train_cfg.name = args.exp_name;
-    delattr(args, "exp_name")
-    cfg.train_cfg.save_dir = args.save_dir;
-    delattr(args, "save_dir")
-    cfg.model = args.model;
-    delattr(args, "model")
-    cfg.ckpt = args.ckpt;
-    delattr(args, "ckpt")
-    cfg.train_cfg.data = args.data;
-    delattr(args, "data")
+    cfg.train_cfg.name = args.exp_name;  delattr(args, "exp_name")
+    cfg.train_cfg.save_dir = args.save_dir; delattr(args, "save_dir")
+    cfg.model = args.model; delattr(args, "model")
+    cfg.ckpt = args.ckpt; delattr(args, "ckpt")
+    cfg.train_cfg.data = args.data; delattr(args, "data")
 
     if args.opts:
         it = iter(args.opts)

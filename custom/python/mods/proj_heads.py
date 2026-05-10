@@ -1,26 +1,55 @@
 import torch.nn as nn
+import torch.nn.functional as F
 
 
 class ProjHeadFactory:
     @staticmethod
-    def get(proj_head: str = None, in_channels: int = 80, nl: int = 3, **kwargs):
+    def get(proj_head: str = None, in_channels: int = 2048, nl: int = 3, **kwargs):
         if proj_head is None:
             return None
+
         if proj_head == "s":
+            # 1-layer linear (weak baseline)
             return nn.ModuleList([
                 nn.Sequential(
-                    nn.Conv2d(in_channels, 128, 1),
-                    nn.SiLU(),
-                    nn.Conv2d(128, 128, 1)
+                    nn.Linear(in_channels, 128, bias=False)
                 ) for _ in range(nl)
             ])
+
         if proj_head == "m":
+            # 2-layer MLP (SupCon paper choice)
             return nn.ModuleList([
                 nn.Sequential(
-                    nn.Conv2d(in_channels, 256, 1),
-                    nn.SiLU(),
-                    nn.Conv2d(256, 256, 1)
+                    nn.Linear(in_channels, in_channels, bias=False),
+                    nn.BatchNorm1d(in_channels),
+                    nn.ReLU(inplace=True),
+                    nn.Linear(in_channels, 128, bias=False)
                 ) for _ in range(nl)
             ])
-        else:
-            raise ValueError(f"Unknown proj head type: '{proj_head}'")
+
+        if proj_head == "l":
+            # 2-layer MLP (SupCon paper choice)
+            return nn.ModuleList([
+                nn.Sequential(
+                    nn.Linear(in_channels, in_channels, bias=False),
+                    nn.BatchNorm1d(in_channels),
+                    nn.ReLU(inplace=True),
+                    nn.Linear(in_channels, 256, bias=False)
+                ) for _ in range(nl)
+            ])
+
+        if proj_head == "x":
+            # 3-layer MLP (marginal gains)
+            return nn.ModuleList([
+                nn.Sequential(
+                    nn.Linear(in_channels, in_channels, bias=False),
+                    nn.BatchNorm1d(in_channels),
+                    nn.ReLU(inplace=True),
+                    nn.Linear(in_channels, in_channels, bias=False),
+                    nn.BatchNorm1d(in_channels),
+                    nn.ReLU(inplace=True),
+                    nn.Linear(in_channels, 128, bias=False)
+                ) for _ in range(nl)
+            ])
+
+        raise ValueError(f"Unknown proj head type: '{proj_head}'. Choose from: 's', 'm', 'l', 'x'")
