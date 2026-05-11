@@ -63,7 +63,13 @@ class TrainLoss(v8DetectionLoss):
         loss[1] = bce_loss.sum() / target_scores_sum  # BCE
         # >>> MOD
         if fg_mask.sum():
-            loss[3] = self.cls_feat_loss(cls_feats, target_scores, pred_scores, fg_mask)
+            loss[3] = self.cls_feat_loss(
+                cls_feats[fg_mask],
+                pred_scores[fg_mask].detach(),
+                target_scores[fg_mask].detach(),
+                pred_bboxes[fg_mask].detach(),
+                (target_bboxes / stride_tensor)[fg_mask].detach()
+            )
             logging_loss[3] = loss[3].clone().detach()
             loss[3] *= self.hyp.cls_feat
         # <<< MOD
