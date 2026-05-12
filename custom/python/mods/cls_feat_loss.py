@@ -5,6 +5,7 @@ import torch.nn.functional as F
 from pytorch_metric_learning import losses, reducers
 from ultralytics.utils.metrics import bbox_iou
 
+
 class UnpackReducer(reducers.BaseReducer):
     def element_reduction(self, losses, loss_indices, embeddings, labels):
         sorted_indices = torch.argsort(loss_indices)
@@ -38,6 +39,7 @@ class ClsFeatLossFactory:
             return NormalizeFeats(losses.GeneralizedLiftedStructureLoss(**kwargs, reducer=UnpackReducer()))
         else:
             raise ValueError(f"Unknown feat loss type: '{loss}'")
+
 
 class TALAlignWeighting:
     def __init__(self, alpha: float = 1.0, beta: float = 6.0, **kwargs):
@@ -83,7 +85,6 @@ class ClsFeatLoss(nn.Module):
             target_scores: torch.Tensor,
             pred_bboxes: torch.Tensor,
             target_bboxes: torch.Tensor) -> torch.Tensor:
-
         target_cls = target_scores.max(-1).indices
 
         loss = self.feat_loss(cls_feats, target_cls)

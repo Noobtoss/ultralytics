@@ -43,6 +43,7 @@ DEFAULT_CFG = Namespace(
     train_cfg=DEFAULT_TRAIN_CFG
 )
 
+
 def val_last(trainer):
     if trainer.last.exists():
         LOGGER.info(f"\nValidating {trainer.last}...")

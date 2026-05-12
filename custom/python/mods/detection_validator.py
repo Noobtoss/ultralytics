@@ -1,7 +1,6 @@
 from pathlib import Path
 from typing import Any
 import numpy as np
-import torch
 from ultralytics.engine.validator import BaseValidator as _BaseValidator
 from ultralytics.models.yolo.detect import DetectionValidator as _DetectionValidator
 from ultralytics.utils import LOGGER
@@ -96,7 +95,7 @@ class DetectionValidator(_DetectionValidator):
         # --------------------------------------------------------------------------------------------------------------
 
         LOGGER.info(pf % (
-        "agnostic", self.seen, self.metrics_agnostic.nt_per_class.sum(), *self.metrics_agnostic.mean_results()))
+            "agnostic", self.seen, self.metrics_agnostic.nt_per_class.sum(), *self.metrics_agnostic.mean_results()))
 
         # --------------------------------------------------------------------------------------------------------------
 

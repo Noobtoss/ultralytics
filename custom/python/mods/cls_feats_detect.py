@@ -91,7 +91,7 @@ class ClsFeatsDetect(_Detect):
             for layer in list(cls_head[i])[:-1]:
                 h = layer(h)
             score_i = cls_head[i][-1](h).view(bs, self.nc, -1)
-            cls_feats_i = h# .view(bs, h.shape[1], -1)
+            cls_feats_i = h  # .view(bs, h.shape[1], -1)
             scores.append(score_i)
             """
             # Moved to model level
