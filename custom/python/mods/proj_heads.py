@@ -31,18 +31,4 @@ class ProjHeadFactory:
                 nn.Linear(in_channels, 256, bias=False)
             )
 
-        if proj_head == "x":
-            # 3-layer MLP (marginal gains)
-            return nn.ModuleList([
-                nn.Sequential(
-                    nn.Linear(in_channels, in_channels, bias=False),
-                    nn.BatchNorm1d(in_channels),
-                    nn.ReLU(inplace=True),
-                    nn.Linear(in_channels, in_channels, bias=False),
-                    nn.BatchNorm1d(in_channels),
-                    nn.ReLU(inplace=True),
-                    nn.Linear(in_channels, 128, bias=False)
-                ) for _ in range(nl)
-            ])
-
-        raise ValueError(f"Unknown proj head type: '{proj_head}'. Choose from: 's', 'm', 'l', 'x'")
+        raise ValueError(f"Unknown proj head type: '{proj_head}'. Choose from: 's', 'm', 'l'")
