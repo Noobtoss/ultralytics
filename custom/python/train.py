@@ -32,6 +32,8 @@ DEFAULT_TRAIN_CFG = Namespace(
     cls_feat=0.09,  # 0.5,
     cls_feat_loss="sup_con_loss",
     cls_feat_temperature=0.07,
+    cls_feat_weighting="tal",
+    cls_feat_proj_head="s"
 )
 
 DEFAULT_CFG = Namespace(
@@ -108,9 +110,9 @@ def main():
         args = Namespace(
             exp_name="unnamed_experiment",
             save_dir="/Users/noobtoss/code_nexus/ultralytics/runs/unnamed_experiment",
-            model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feats_yolo26n.yaml",
-            ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/yolo26n.pt",
-            data="/Users/noobtoss/code_nexus/ultralytics/datasets/semmel/Images05MetaFood2026_local.yaml",
+            model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feats_yolo26s.yaml",
+            ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/yolo26s.pt",
+            data="/Users/noobtoss/code_nexus/ultralytics/datasets/semmel/Images05ACCV2026_local.yaml",
             opts="",
         )
 

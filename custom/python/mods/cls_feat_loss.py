@@ -25,7 +25,7 @@ class NormalizeFeats(nn.Module):
 class ClsFeatLossFactory:
     @staticmethod
     def get(loss: str = None, **kwargs):
-        if loss is None:
+        if loss is None or loss == "None":
             return None
         elif loss == "sup_con_loss":
             # https://kevinmusgrave.github.io/pytorch-metric-learning/losses/#supconloss
@@ -40,7 +40,7 @@ class ClsFeatLossFactory:
             raise ValueError(f"Unknown feat loss type: '{loss}'")
 
 class TALAlignWeighting:
-    def __init__(self, alpha: float = 1.0, beta: float = 6.0):
+    def __init__(self, alpha: float = 1.0, beta: float = 6.0, **kwargs):
         self.alpha = alpha
         self.beta = beta
 
@@ -59,12 +59,12 @@ class ConfWeighting:
 class WeightingFactory:
     @staticmethod
     def get(weighting: str = None, **kwargs):
-        if weighting is None:
+        if weighting is None or weighting == "None":
             return None
-        elif weighting == "TAL":
+        elif weighting == "tal":
             # https://arxiv.org/abs/2108.07755
             return TALAlignWeighting(**kwargs)
-        elif weighting == "Conf":
+        elif weighting == "conf":
             return ConfWeighting()
         else:
             raise ValueError(f"Unknown weighting type: '{weighting}'")

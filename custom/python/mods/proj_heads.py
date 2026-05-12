@@ -1,11 +1,10 @@
 import torch.nn as nn
-import torch.nn.functional as F
 
 
 class ProjHeadFactory:
     @staticmethod
-    def get(proj_head: str = None, in_channels: int = 2048, nl: int = 3, **kwargs):
-        if proj_head is None:
+    def get(proj_head: str = None, in_channels: int = 256, nl: int = 3, **kwargs):
+        if proj_head is None or proj_head == "None":
             return None
 
         if proj_head == "s":
