@@ -1,5 +1,4 @@
 from copy import copy
-import torch
 from ultralytics.engine.trainer import BaseTrainer as _BaseTrainer
 from ultralytics.models.yolo.detect import DetectionTrainer as _DetectionTrainer
 from ultralytics.utils import RANK, LOGGER
@@ -46,12 +45,17 @@ class DetectionTrainer(_DetectionTrainer):
         optimizer = super().build_optimizer(model, name=name, lr=lr, momentum=momentum, decay=decay,
                                             iterations=iterations)
         if hasattr(self.args, "cls_feat_proj_head_lr"):
-            proj_head = getattr(unwrap_model(model), 'cls_feat_proj_head', None)
-            if proj_head is not None:
-                proj_head_param_ids = {id(p) for p in proj_head.parameters()}
+            proj_head_param_ids = set()
+            for k, v in unwrap_model(model).named_parameters():
+                if not v.requires_grad:
+                    continue
+                if k.startswith("cls_feat_proj_head"):
+                    proj_head_param_ids.add(id(v))
+
+            if proj_head_param_ids:
                 for group in optimizer.param_groups:
                     group_params = group.get('params', [])
                     if any(id(p) in proj_head_param_ids for p in group_params):
                         group['lr'] = self.args.cls_feat_proj_head_lr
-                        LOGGER.info(f"[Modded] Patched proj_head param group lr to {group['lr']}")
+                        LOGGER.info(f"[Modded] cls_feat_proj_head param group lr to {group['lr']}")
         return optimizer

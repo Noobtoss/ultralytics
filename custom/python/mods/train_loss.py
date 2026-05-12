@@ -9,8 +9,11 @@ from .cls_feat_loss import ClsFeatLoss
 class TrainLoss(v8DetectionLoss):
     def __init__(self, model, *args, **kwargs) -> None:
         LOGGER.warning("[Modded] TrainLoss")
-        super().__init__(model, *args, **kwargs)
         # >>> MOD
+        if hasattr(model.args, 'tal_topk'):
+            kwargs['tal_topk'] = model.args.tal_topk
+        super().__init__(model, *args, **kwargs)
+
         self.hyp.cls_feat = getattr(self.hyp, "cls_feat", 0)
         self.cls_feat_loss = ClsFeatLoss(**{k[len("cls_feat_"):]: v for k, v in vars(self.hyp).items() if
                                             k.startswith("cls_feat_")}).to(self.device)

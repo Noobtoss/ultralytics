@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=ultralytics_train_arr # Kurzname des Jobs
-#SBATCH --array=1-5%4           # 3 Jobs total running 2 at a time
+#SBATCH --array=1-22%4           # 3 Jobs total running 2 at a time
 #SBATCH --output=logs/R-%A-%a.out
 #SBATCH --partition=p1,p2,p3,p4,p5,p6 # p2
 #SBATCH --qos=gpuultimate

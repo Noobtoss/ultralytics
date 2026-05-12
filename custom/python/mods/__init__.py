@@ -21,7 +21,7 @@ def patched_check_dict_alignment(*args, **kwargs):
     pass
 
 
-_cfg.CFG_FLOAT_KEYS |= {"cls_feat", "cls_feat_temperature"}  # just add your keys to the set
+_cfg.CFG_FLOAT_KEYS |= {"cls_feat", "cls_feat_temperature", "cls_feat_proj_head_lr"}  # just add your keys to the set
 _base_check_cfg = _cfg.check_cfg
 
 
