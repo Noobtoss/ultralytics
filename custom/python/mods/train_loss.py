@@ -7,13 +7,14 @@ from .cls_feat_loss import ClsFeatLoss
 
 
 class TrainLoss(v8DetectionLoss):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, model, *args, **kwargs) -> None:
         LOGGER.warning("[Modded] TrainLoss")
-        super().__init__(*args, **kwargs)
+        super().__init__(model, *args, **kwargs)
         # >>> MOD
+        self.hyp.cls_feat = getattr(self.hyp, "cls_feat", 0)
         self.cls_feat_loss = ClsFeatLoss(**{k[len("cls_feat_"):]: v for k, v in vars(self.hyp).items() if
                                             k.startswith("cls_feat_")}).to(self.device)
-        self.hyp.cls_feat = getattr(self.hyp, "cls_feat", 0)
+        self.cls_feat_proj_head = model.cls_feat_proj_head if hasattr(model, 'cls_feat_proj_head') else None
         # <<< MOD
 
     def get_assigned_targets_and_loss(self, preds: dict[str, torch.Tensor], batch: dict[str, any]) -> tuple:
@@ -63,8 +64,11 @@ class TrainLoss(v8DetectionLoss):
         loss[1] = bce_loss.sum() / target_scores_sum  # BCE
         # >>> MOD
         if fg_mask.sum():
+            cls_feats = cls_feats[fg_mask]
+            if self.cls_feat_proj_head is not None:
+                cls_feats = self.cls_feat_proj_head(cls_feats)
             loss[3] = self.cls_feat_loss(
-                cls_feats[fg_mask],
+                cls_feats,
                 pred_scores[fg_mask].detach(),
                 target_scores[fg_mask].detach(),
                 pred_bboxes[fg_mask].detach(),

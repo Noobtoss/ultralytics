@@ -33,7 +33,8 @@ DEFAULT_TRAIN_CFG = Namespace(
     cls_feat_loss="sup_con_loss",
     cls_feat_temperature=0.07,
     cls_feat_weighting="tal",
-    cls_feat_proj_head="s"
+    cls_feat_proj_head="s",
+    cls_feat_proj_head_lr=0.01
 )
 
 DEFAULT_CFG = Namespace(
@@ -41,7 +42,7 @@ DEFAULT_CFG = Namespace(
     train_cfg=DEFAULT_TRAIN_CFG
 )
 
-def val_last_on_train_end(trainer):
+def val_last(trainer):
     if trainer.last.exists():
         LOGGER.info(f"\nValidating {trainer.last}...")
         metrics = trainer.validator(model=trainer.last)
@@ -66,7 +67,7 @@ def train(cfg: Namespace):
     else:
         model = YOLO(cfg.ckpt)
     model.add_callback("on_train_epoch_start", LossGainScheduler())
-    model.add_callback("on_train_end", val_last_on_train_end)
+    model.add_callback("on_train_end", val_last)
     model.train(**vars(cfg.train_cfg), trainer=DetectionTrainer)
 
 
@@ -110,8 +111,8 @@ def main():
         args = Namespace(
             exp_name="unnamed_experiment",
             save_dir="/Users/noobtoss/code_nexus/ultralytics/runs/unnamed_experiment",
-            model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feats_yolo26s.yaml",
-            ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/yolo26s.pt",
+            model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feats_yolo26n.yaml",
+            ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/yolo26n.pt",
             data="/Users/noobtoss/code_nexus/ultralytics/datasets/semmel/Images05ACCV2026_local.yaml",
             opts="",
         )

@@ -9,33 +9,27 @@ class ProjHeadFactory:
 
         if proj_head == "s":
             # 1-layer linear (weak baseline)
-            return nn.ModuleList([
-                nn.Sequential(
-                    nn.Linear(in_channels, 128, bias=False)
-                ) for _ in range(nl)
-            ])
+            return nn.Sequential(
+                nn.Linear(in_channels, 128, bias=False)
+            )
 
         if proj_head == "m":
             # 2-layer MLP (SupCon paper choice)
-            return nn.ModuleList([
-                nn.Sequential(
-                    nn.Linear(in_channels, in_channels, bias=False),
-                    nn.BatchNorm1d(in_channels),
-                    nn.ReLU(inplace=True),
-                    nn.Linear(in_channels, 128, bias=False)
-                ) for _ in range(nl)
-            ])
+            return nn.Sequential(
+                nn.Linear(in_channels, in_channels, bias=False),
+                nn.BatchNorm1d(in_channels),
+                nn.ReLU(inplace=True),
+                nn.Linear(in_channels, 128, bias=False)
+            )
 
         if proj_head == "l":
             # 2-layer MLP (SupCon paper choice)
-            return nn.ModuleList([
-                nn.Sequential(
-                    nn.Linear(in_channels, in_channels, bias=False),
-                    nn.BatchNorm1d(in_channels),
-                    nn.ReLU(inplace=True),
-                    nn.Linear(in_channels, 256, bias=False)
-                ) for _ in range(nl)
-            ])
+            return nn.Sequential(
+                nn.Linear(in_channels, in_channels, bias=False),
+                nn.BatchNorm1d(in_channels),
+                nn.ReLU(inplace=True),
+                nn.Linear(in_channels, 256, bias=False)
+            )
 
         if proj_head == "x":
             # 3-layer MLP (marginal gains)

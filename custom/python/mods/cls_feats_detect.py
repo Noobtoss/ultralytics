@@ -55,7 +55,7 @@ class ClsFeatsDetect(_Detect):
         c2, c3 = max((16, ch[0] // 4, self.reg_max * 4)), max(ch[0], min(self.nc, 100))  # channels
         # >>> MOD
         c3 = c3 * 1  # 64 # 128 # 256
-        self.cls_feat_proj_head = None
+        # self.cls_feat_proj_head = None  # Moved to model level
         # <<< MOD
         self.cv2 = nn.ModuleList(
             nn.Sequential(Conv(x, c2, 3), Conv(c2, c2, 3), nn.Conv2d(c2, 4 * self.reg_max, 1)) for x in ch
@@ -93,8 +93,12 @@ class ClsFeatsDetect(_Detect):
             score_i = cls_head[i][-1](h).view(bs, self.nc, -1)
             cls_feats_i = h# .view(bs, h.shape[1], -1)
             scores.append(score_i)
+            """
+            # Moved to model level
+            # Moved forward to train_loss
             if self.cls_feat_proj_head is not None:
                 cls_feats_i = self.cls_feat_proj_head[i](cls_feats_i)
+            """
             cls_feats.append(cls_feats_i)
 
         scores = torch.cat(scores, dim=-1)
