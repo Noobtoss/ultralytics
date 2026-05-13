@@ -1,0 +1,3 @@
+# Experiments
+exp_name tmp ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.0
+# Experiments End Current
