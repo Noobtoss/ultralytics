@@ -6,12 +6,13 @@ import argparse
 from argparse import Namespace
 import csv
 
-# When running from inside a local ultralytics repo clone, Python would normally
+# When running with a local ultralytics/ directory present, Python would normally
 # pick up the local folder instead of the conda-installed package. We fix this by
-# forcing the conda site-packages to the front of the search path.
-sys.path.insert(0, site.getsitepackages()[0])
-# Also ensure the directory of this script itself is on the path for local imports.
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# manipulating sys.path explicitly — since insert(0, ...) is a stack operation,
+# entries are added in reverse priority order so that conda site-packages lands
+# at index 0 and takes precedence over the local directory.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))  # index 1 — local imports
+sys.path.insert(0, site.getsitepackages()[0])                   # index 0 — conda site-packages (priority)
 
 from ultralytics.utils import LOGGER
 from get_eval_metrics import get_eval_metrics

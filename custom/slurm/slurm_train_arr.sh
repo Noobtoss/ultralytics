@@ -39,6 +39,8 @@ eval "$(conda shell.bash hook)"
 
 conda activate conda-ultralytics
 
+export PYTHONPATH="$BASE_DIR/custom/python"  # "$BASE_DIR/custom/python:$PYTHONPATH"
+
 # ----- WANDB -------------------------------------------------------
 yolo settings wandb=True
 export WANDB_API_KEY=95177947f5f36556806da90ea7a0bf93ed857d58

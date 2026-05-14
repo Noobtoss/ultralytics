@@ -1,4 +1,4 @@
-# Experiments
+# Experiments Init
 exp_name Images05ACCV2026_baseline                  ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.0
 exp_name Images05ACCV2026_01                        ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.1
 exp_name Images05ACCV2026_02                        ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.2
