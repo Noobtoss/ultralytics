@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=ultralytics_train_arr # Kurzname des Jobs
-#SBATCH --array=1-22%4           # 3 Jobs total running 2 at a time
+#SBATCH --array=1-23%4           # 3 Jobs total running 2 at a time
 #SBATCH --output=logs/R-%A-%a.out
 #SBATCH --partition=p2           # p1,p2,p3,p4,p5,p6
 #SBATCH --qos=gpuultimate
@@ -25,6 +25,7 @@ for ((i=0; i<${#ARR[@]}; i+=2)); do
     value="${ARR[$i+1]}"
     KV["$key"]="$value"
 done
+[[ "$PARAMS" != *"seed"* ]] && PARAMS="$PARAMS seed ${SLURM_ARRAY_JOB_ID}0${SLURM_ARRAY_TASK_ID}"
 
 EXP_NAME="${KV[exp_name]:-unnamed_experiment}"
 SAVE_DIR="${BASE_DIR}/runs/${EXP_NAME}"

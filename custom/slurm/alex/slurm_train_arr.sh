@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=ultralytics_train_arr  # Name shown in squeue
-#SBATCH --array=1-22%8       # Job array: tasks 1 to 1, max 4 running at once
+#SBATCH --array=1-23         # Job array: tasks 1 to 23, max 23 running at once
 #SBATCH --output=logs/R-%A-%a.out  # Log file: %A=jobID, %a=array task index
 #SBATCH --gres=gpu:a40:1     # Request 1x A40 GPUs
 #SBATCH --partition=a40      # Submit to the a40 node partition
@@ -27,6 +27,7 @@ for ((i=0; i<${#ARR[@]}; i+=2)); do
     value="${ARR[$i+1]}"
     KV["$key"]="$value"
 done
+[[ "$PARAMS" != *"seed"* ]] && PARAMS="$PARAMS seed ${SLURM_ARRAY_JOB_ID}0${SLURM_ARRAY_TASK_ID}"
 
 EXP_NAME="${KV[exp_name]:-unnamed_experiment}"
 SAVE_DIR="${BASE_DIR}/runs/${EXP_NAME}"
