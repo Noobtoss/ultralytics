@@ -1,7 +1,7 @@
 import torch.nn as nn
 
 
-class ProjHeadFactory:
+class ClsFeatProjHeadFactory:
     @staticmethod
     def get(proj_head: str = None, in_channels: int = 256, **kwargs):
         if proj_head is None or proj_head == "None":

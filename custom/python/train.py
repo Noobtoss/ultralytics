@@ -114,7 +114,7 @@ def main():
         args = Namespace(
             exp_name="unnamed_experiment",
             save_dir="/Users/noobtoss/code_nexus/ultralytics/runs/unnamed_experiment",
-            model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feats_yolo26n.yaml",
+            model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feat_yolo26n.yaml",
             ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/yolo26n.pt",
             data="/Users/noobtoss/code_nexus/ultralytics/datasets/semmel/Images05ACCV2026_local.yaml",
             opts="",

@@ -5,12 +5,12 @@ import ultralytics.nn.tasks as _tasks
 from ultralytics.utils import LOGGER
 
 from .cls_feat_loss import ClsFeatLossFactory, ClsFeatLoss
-from .cls_feats_detect import ClsFeatsDetect
+from .cls_feat_detect import ClsFeatDetect
 from .detection_model import DetectionModel
 from .detection_trainer import DetectionTrainer
 from .detection_validator import DetectionValidator
 from .loss_gain_scheduler import LossGainScheduler
-from .proj_heads import ProjHeadFactory
+from .cls_feat_proj_heads import ClsFeatProjHeadFactory
 from .train_loss import TrainLoss
 from .yolo import YOLO
 
@@ -36,8 +36,8 @@ _trainer.check_cfg = patched_check_cfg
 _trainer.check_dict_alignment = patched_check_dict_alignment
 
 # ── Namespace patches ─────────────────────────────────────────────────────────
-_modules.ClsFeatsDetect = ClsFeatsDetect
-_tasks.ClsFeatsDetect = ClsFeatsDetect
+_modules.ClsFeatsDetect = ClsFeatDetect
+_tasks.ClsFeatsDetect = ClsFeatDetect
 
 # ── parse_model patch ─────────────────────────────────────────────────────────
 _original_parse_model = _tasks.parse_model
@@ -45,7 +45,7 @@ _original_parse_model = _tasks.parse_model
 
 def _patched_parse_model(d, ch, verbose=True):
     _orig_detect = _tasks.Detect
-    _tasks.Detect = ClsFeatsDetect
+    _tasks.Detect = ClsFeatDetect
     result = _original_parse_model(d, ch, verbose)
     _tasks.Detect = _orig_detect
     return result

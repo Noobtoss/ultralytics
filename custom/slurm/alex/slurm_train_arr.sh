@@ -31,7 +31,7 @@ done
 
 EXP_NAME="${KV[exp_name]:-unnamed_experiment}"
 SAVE_DIR="${BASE_DIR}/runs/${EXP_NAME}"
-MODEL="${KV[model]:-custom/cfg/cls_feats_yolo11x.yaml}"
+MODEL="${KV[model]:-custom/cfg/cls_feat_yolo11x.yaml}"
 CKPT="${KV[ckpt]:-checkpoints/yolo11x.pt}"
 DATA="${KV[data]:-datasets/default.yaml}"
 
