@@ -41,7 +41,7 @@ class ClsFeatLossFactory:
             raise ValueError(f"Unknown feat loss type: '{loss}'")
 
 
-class TALAlignWeighting:
+class TALAlignWeight:
     def __init__(self, alpha: float = 1.0, beta: float = 6.0, **kwargs):
         self.alpha = alpha
         self.beta = beta
@@ -53,30 +53,65 @@ class TALAlignWeighting:
         return align_metric
 
 
-class ConfWeighting:
+class ConfWeight:
     def __call__(self, pred_scores, target_scores, pred_bboxes, target_bboxes):
         return pred_scores.sigmoid().max(-1).values
 
 
-class WeightingFactory:
+class WeightFactory:
     @staticmethod
-    def get(weighting: str = None, **kwargs):
-        if weighting is None or weighting == "None":
+    def get(weight: str = None, **kwargs):
+        if weight is None or weight == "None":
             return None
-        elif weighting == "tal":
+        elif weight == "tal":
             # https://arxiv.org/abs/2108.07755
-            return TALAlignWeighting(**kwargs)
-        elif weighting == "conf":
-            return ConfWeighting()
+            return TALAlignWeight(**kwargs)
+        elif weight == "conf":
+            return ConfWeight()
         else:
-            raise ValueError(f"Unknown weighting type: '{weighting}'")
+            raise ValueError(f"Unknown weight type: '{weight}'")
+
+
+class ConfFilter:
+    def __init__(self, top_rel: float = 0.1, min_abs: float = None, **kwargs):
+        self.top_rel = top_rel
+        self.min_abs = min_abs
+
+    def __call__(self, pred_scores, target_scores, pred_bboxes, target_bboxes):
+        conf = pred_scores.sigmoid().max(-1).values
+
+        mask = torch.ones(len(conf), dtype=torch.bool, device=conf.device)
+
+        if self.min_abs is not None:
+            mask = mask & (conf >= self.min_abs)
+
+        if self.top_rel is not None:
+            k = max(1, int(len(conf) * self.top_rel))
+            thresh = conf.topk(k).values[-1]
+            mask = mask & (conf >= thresh)
+
+        return mask
+
+
+class MaskFactory:
+    @staticmethod
+    def get(mask: str = None, **kwargs):
+        if mask is None or mask == "None":
+            return None
+        elif mask == "tal":
+            raise NotImplementedError
+        elif mask == "conf":
+            return ConfFilter(**kwargs)
+        else:
+            raise ValueError(f"Unknown mask type: '{mask}'")
 
 
 class ClsFeatLoss(nn.Module):
-    def __init__(self, loss: str, weighting: str = None, **kwargs):
+    def __init__(self, loss: str, mask: str = None, weight: str = None, **kwargs):
         super().__init__()
         self.feat_loss = ClsFeatLossFactory.get(loss, **kwargs)
-        self.weighting = WeightingFactory.get(weighting, **kwargs)
+        self.mask = MaskFactory.get(mask, **kwargs)
+        self.weight = WeightFactory.get(weight, **kwargs)
 
     def forward(
             self,
@@ -85,11 +120,26 @@ class ClsFeatLoss(nn.Module):
             target_scores: torch.Tensor,
             pred_bboxes: torch.Tensor,
             target_bboxes: torch.Tensor) -> torch.Tensor:
+        loss = torch.zeros(1, device=cls_feats.device)
         target_cls = target_scores.max(-1).indices
 
-        loss = self.feat_loss(cls_feats, target_cls)
-        if self.weighting is not None:
-            weighting = self.weighting(pred_scores, target_scores, pred_bboxes, target_bboxes)
-            loss = loss * weighting / weighting.sum()
+        if self.mask is not None:
+            mask = self.mask(cls_feats, target_cls, pred_bboxes, target_bboxes)
+            if not mask.sum():
+                return loss
+            cls_feats = cls_feats[mask]
+            pred_scores = pred_scores[mask]
+            target_scores = target_scores[mask]
+            pred_bboxes = pred_bboxes[mask]
+            target_bboxes = target_bboxes[mask]
 
-        return loss.mean()
+        loss_per_element = self.feat_loss(cls_feats, target_cls)
+
+        if self.weight is not None:
+            weight = self.weight(pred_scores, target_scores, pred_bboxes, target_bboxes)
+            weight = weight / weight.sum()
+            loss += (loss_per_element * weight).sum()
+        else:
+            loss += loss_per_element.mean()
+
+        return loss

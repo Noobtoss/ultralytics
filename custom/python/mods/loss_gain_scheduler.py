@@ -13,4 +13,8 @@ class LossGainScheduler:
         self.cls_feat = cls_feat
 
     def __call__(self, trainer):
+        """
+        for i, g in enumerate(trainer.optimizer.param_groups):
+            print(f"Group {i} | lr={g['lr']:.6f}")
+        """
         pass

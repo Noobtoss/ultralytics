@@ -45,17 +45,20 @@ class DetectionTrainer(_DetectionTrainer):
         optimizer = super().build_optimizer(model, name=name, lr=lr, momentum=momentum, decay=decay,
                                             iterations=iterations)
         if hasattr(self.args, "cls_feat_proj_head_lr"):
-            proj_head_param_ids = set()
-            for k, v in unwrap_model(model).named_parameters():
-                if not v.requires_grad:
-                    continue
-                if k.startswith("cls_feat_proj_head"):
-                    proj_head_param_ids.add(id(v))
+            proj_head_params = [
+                v for k, v in unwrap_model(model).named_parameters()
+                if v.requires_grad and k.startswith("cls_feat_proj_head")
+            ]
 
-            if proj_head_param_ids:
+            if proj_head_params:
+                proj_head_ids = {id(p) for p in proj_head_params}
                 for group in optimizer.param_groups:
-                    group_params = group.get('params', [])
-                    if any(id(p) in proj_head_param_ids for p in group_params):
-                        group['lr'] = self.args.cls_feat_proj_head_lr
-                        LOGGER.info(f"[Modded] cls_feat_proj_head param group lr to {group['lr']}")
+                    group['params'] = [p for p in group['params'] if id(p) not in proj_head_ids]
+                optimizer.add_param_group({
+                    "params": proj_head_params,
+                    "lr": self.args.cls_feat_proj_head_lr,
+                    "initial_lr": self.args.cls_feat_proj_head_lr,
+                })
+                LOGGER.warning(f"[Modded] Moved cls_feat_proj_head to new group lr={self.args.cls_feat_proj_head_lr}")
+
         return optimizer
