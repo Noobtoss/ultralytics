@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=ultralytics_train_arr  # Name shown in squeue
-#SBATCH --array=1-23         # Job array: tasks 1 to 23, max 23 running at once
+#SBATCH --array=65-69         # Job array: tasks 1 to 23, max 23 running at once
 #SBATCH --output=logs/R-%A-%a.out  # Log file: %A=jobID, %a=array task index
 #SBATCH --gres=gpu:a40:1     # Request 1x A40 GPUs
 #SBATCH --partition=a40      # Submit to the a40 node partition
 #SBATCH --ntasks=1           # 1 process total (not MPI)
 #SBATCH --ntasks-per-node=1  # That 1 process runs on 1 node
 #SBATCH --cpus-per-task=4    # 4 CPU cores for that process (data loading etc)
-#SBATCH --time=02:02:02      # Walltime limit: kill job after 2hr 2min 2sec
+#SBATCH --time=02:32:32      # Walltime limit: kill job after 2hr 32min 32sec
 #SBATCH --mail-type=ALL      # Email on job start, end, fail
 #SBATCH --mail-user=thomas.schmitt@th-nuernberg.de
 
