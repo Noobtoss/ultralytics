@@ -36,8 +36,8 @@ _trainer.check_cfg = patched_check_cfg
 _trainer.check_dict_alignment = patched_check_dict_alignment
 
 # ── Namespace patches ─────────────────────────────────────────────────────────
-_modules.ClsFeatsDetect = ClsFeatDetect
-_tasks.ClsFeatsDetect = ClsFeatDetect
+_modules.ClsFeatDetect = ClsFeatDetect
+_tasks.ClsFeatDetect = ClsFeatDetect
 
 # ── parse_model patch ─────────────────────────────────────────────────────────
 _original_parse_model = _tasks.parse_model
