@@ -114,7 +114,7 @@ class MaskFactory:
 class ClsFeatLoss(nn.Module):
     def __init__(self, loss: str, mask: str = None, weight: str = None, **kwargs):
         super().__init__()
-        self.feat_loss = ClsFeatLossFactory.get(loss, **kwargs)
+        self.loss = ClsFeatLossFactory.get(loss, **kwargs)
         self.mask = MaskFactory.get(mask, **kwargs)
         self.weight = WeightFactory.get(weight, **kwargs)
 
@@ -138,7 +138,7 @@ class ClsFeatLoss(nn.Module):
             pred_bboxes = pred_bboxes[mask]
             target_bboxes = target_bboxes[mask]
 
-        loss_per_element = self.feat_loss(cls_feats, target_cls)
+        loss_per_element = self.loss(cls_feats, target_cls)
 
         if self.weight is not None:
             weight = self.weight(pred_scores, target_scores, pred_bboxes, target_bboxes)
