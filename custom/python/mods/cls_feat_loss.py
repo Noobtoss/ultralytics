@@ -23,7 +23,7 @@ class NormalizeFeats(nn.Module):
         return self.loss(F.normalize(feats, dim=1), *args, **kwargs)
 
 
-class ClsFeatLossFactory:
+class FeatLossFactory:
     @staticmethod
     def get(loss: str = None, **kwargs):
         if loss is None or loss == "None":
@@ -114,7 +114,7 @@ class MaskFactory:
 class ClsFeatLoss(nn.Module):
     def __init__(self, loss: str, mask: str = None, weight: str = None, **kwargs):
         super().__init__()
-        self.loss = ClsFeatLossFactory.get(loss, **kwargs)
+        self.loss = FeatLossFactory.get(loss, **kwargs)
         self.mask = MaskFactory.get(mask, **kwargs)
         self.weight = WeightFactory.get(weight, **kwargs)
 

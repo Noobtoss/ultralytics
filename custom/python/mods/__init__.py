@@ -4,7 +4,7 @@ import ultralytics.nn.modules as _modules
 import ultralytics.nn.tasks as _tasks
 from ultralytics.utils import LOGGER
 
-from .cls_feat_loss import ClsFeatLossFactory, ClsFeatLoss
+from .cls_feat_loss import FeatLossFactory, ClsFeatLoss
 from .cls_feat_detect import ClsFeatDetect
 from .detection_model import DetectionModel
 from .detection_trainer import DetectionTrainer
