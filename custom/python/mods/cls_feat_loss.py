@@ -54,6 +54,9 @@ class TALAlignWeight:
 
 
 class ConfWeight:
+    def __init__(self, **kwargs):
+        pass
+
     def __call__(self, pred_scores, target_scores, pred_bboxes, target_bboxes):
         return pred_scores.sigmoid().max(-1).values
 
@@ -72,25 +75,27 @@ class WeightFactory:
             raise ValueError(f"Unknown weight type: '{weight}'")
 
 
-class ConfFilter:
-    def __init__(self, top_rel: float = 0.1, min_abs: float = None, **kwargs):
+class Masking:
+    def __init__(self, top_rel: float = 0.2, **kwargs):
+        super().__init__(**kwargs)
         self.top_rel = top_rel
-        self.min_abs = min_abs
 
+    def _masking(self, metric):
+        k = max(1, int(len(metric) * self.top_rel))
+        thresh = metric.topk(k).values[-1]
+        return metric >= thresh
+
+
+class TALAlignMask(Masking, TALAlignWeight):
     def __call__(self, pred_scores, target_scores, pred_bboxes, target_bboxes):
-        conf = pred_scores.sigmoid().max(-1).values
+        align_metric = super().__call__(pred_scores, target_scores, pred_bboxes, target_bboxes)
+        return self._masking(align_metric)
 
-        mask = torch.ones(len(conf), dtype=torch.bool, device=conf.device)
 
-        if self.min_abs is not None:
-            mask = mask & (conf >= self.min_abs)
-
-        if self.top_rel is not None:
-            k = max(1, int(len(conf) * self.top_rel))
-            thresh = conf.topk(k).values[-1]
-            mask = mask & (conf >= thresh)
-
-        return mask
+class ConfMask(Masking, ConfWeight):
+    def __call__(self, pred_scores, target_scores, pred_bboxes, target_bboxes):
+        conf = super().__call__(pred_scores, target_scores, pred_bboxes, target_bboxes)
+        return self._masking(conf)
 
 
 class MaskFactory:
@@ -99,9 +104,9 @@ class MaskFactory:
         if mask is None or mask == "None":
             return None
         elif mask == "tal":
-            raise NotImplementedError
+            return TALAlignMask(**kwargs)
         elif mask == "conf":
-            return ConfFilter(**kwargs)
+            return ConfMask(**kwargs)
         else:
             raise ValueError(f"Unknown mask type: '{mask}'")
 
@@ -122,12 +127,12 @@ class ClsFeatLoss(nn.Module):
             target_bboxes: torch.Tensor) -> torch.Tensor:
         loss = torch.zeros(1, device=cls_feats.device)
         target_cls = target_scores.max(-1).indices
-
         if self.mask is not None:
-            mask = self.mask(cls_feats, target_cls, pred_bboxes, target_bboxes)
+            mask = self.mask(cls_feats, target_scores, pred_bboxes, target_bboxes)
             if not mask.sum():
                 return loss
             cls_feats = cls_feats[mask]
+            target_cls = target_cls[mask]
             pred_scores = pred_scores[mask]
             target_scores = target_scores[mask]
             pred_bboxes = pred_bboxes[mask]
