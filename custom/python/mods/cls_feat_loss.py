@@ -124,7 +124,8 @@ class ClsFeatLoss(nn.Module):
             pred_scores: torch.Tensor,
             target_scores: torch.Tensor,
             pred_bboxes: torch.Tensor,
-            target_bboxes: torch.Tensor) -> torch.Tensor:
+            target_bboxes: torch.Tensor
+    ) -> torch.Tensor:
         loss = torch.zeros(1, device=cls_feats.device)
         target_cls = target_scores.max(-1).indices
         if self.mask is not None:
