@@ -1,11 +1,11 @@
-# Experiments Init
+# Experiments ACCV2026
 exp_name Images05ACCV2026_baseline    ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.0
 exp_name Images05ACCV2026_002         ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.02
 exp_name Images05ACCV2026_005         ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.05
 exp_name Images05ACCV2026_01          ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.1
 exp_name Images05ACCV2026_02          ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.2
 exp_name Images05ACCV2026_04          ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.4
-# Experiments Projection Heads
+# Experiments ACCV2026 Projection Heads
 exp_name Images05ACCV2026_002_n       ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.02 cls_feat_proj_head n
 exp_name Images05ACCV2026_005_n       ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.05 cls_feat_proj_head n
 exp_name Images05ACCV2026_01_n        ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_proj_head n
@@ -26,7 +26,7 @@ exp_name Images05ACCV2026_005_l       ckpt checkpoints/yolo11x.pt data datasets_
 exp_name Images05ACCV2026_01_l        ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_proj_head l
 exp_name Images05ACCV2026_02_l        ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.2  cls_feat_proj_head l
 exp_name Images05ACCV2026_04_l        ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.4  cls_feat_proj_head l
-# Experiments Projection Heads LR 001
+# Experiments ACCV2026 Projection Heads LR 001
 exp_name Images05ACCV2026_002_n_001   ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.02 cls_feat_proj_head n cls_feat_proj_head_lr 0.01
 exp_name Images05ACCV2026_005_n_001   ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.05 cls_feat_proj_head n cls_feat_proj_head_lr 0.01
 exp_name Images05ACCV2026_01_n_001    ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_proj_head n cls_feat_proj_head_lr 0.01
@@ -47,7 +47,7 @@ exp_name Images05ACCV2026_005_l_001   ckpt checkpoints/yolo11x.pt data datasets_
 exp_name Images05ACCV2026_01_l_001    ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_proj_head l cls_feat_proj_head_lr 0.01
 exp_name Images05ACCV2026_02_l_001    ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.2  cls_feat_proj_head l cls_feat_proj_head_lr 0.01
 exp_name Images05ACCV2026_04_l_001    ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.4  cls_feat_proj_head l cls_feat_proj_head_lr 0.01
-# Experiments Projection Heads LR 0005
+# Experiments ACCV2026 Projection Heads LR 0005
 exp_name Images05ACCV2026_002_n_0005  ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.02 cls_feat_proj_head n cls_feat_proj_head_lr 0.005
 exp_name Images05ACCV2026_005_n_0005  ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.05 cls_feat_proj_head n cls_feat_proj_head_lr 0.005
 exp_name Images05ACCV2026_01_n_0005   ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_proj_head n cls_feat_proj_head_lr 0.005
@@ -68,7 +68,7 @@ exp_name Images05ACCV2026_005_l_0005  ckpt checkpoints/yolo11x.pt data datasets_
 exp_name Images05ACCV2026_01_l_0005   ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_proj_head l cls_feat_proj_head_lr 0.005
 exp_name Images05ACCV2026_02_l_0005   ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.2  cls_feat_proj_head l cls_feat_proj_head_lr 0.005
 exp_name Images05ACCV2026_04_l_0005   ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.4  cls_feat_proj_head l cls_feat_proj_head_lr 0.005
-# Experiments Projection Heads LR 0001
+# Experiments ACCV2026 Projection Heads LR 0001
 exp_name Images05ACCV2026_002_n_0001  ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.02 cls_feat_proj_head n cls_feat_proj_head_lr 0.001
 exp_name Images05ACCV2026_005_n_0001  ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.05 cls_feat_proj_head n cls_feat_proj_head_lr 0.001
 exp_name Images05ACCV2026_01_n_0001   ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_proj_head n cls_feat_proj_head_lr 0.001
@@ -89,7 +89,7 @@ exp_name Images05ACCV2026_005_l_0001  ckpt checkpoints/yolo11x.pt data datasets_
 exp_name Images05ACCV2026_01_l_0001   ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_proj_head l cls_feat_proj_head_lr 0.001
 exp_name Images05ACCV2026_02_l_0001   ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.2  cls_feat_proj_head l cls_feat_proj_head_lr 0.001
 exp_name Images05ACCV2026_04_l_0001   ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.4  cls_feat_proj_head l cls_feat_proj_head_lr 0.001
-# Experiments tal_topk
+# Experiments ACCV2026 tal_topk
 exp_name Images05ACCV2026_top2_baseline    ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.0  tal_topk 2
 exp_name Images05ACCV2026_top2_002         ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.02 tal_topk 2
 exp_name Images05ACCV2026_top2_005         ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.05 tal_topk 2
@@ -102,7 +102,7 @@ exp_name Images05ACCV2026_top5_005         ckpt checkpoints/yolo11x.pt data data
 exp_name Images05ACCV2026_top5_01          ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.1  tal_topk 5
 exp_name Images05ACCV2026_top5_02          ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.2  tal_topk 5
 exp_name Images05ACCV2026_top5_04          ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.4  tal_topk 5
-# Experiments mask/weight
+# Experiments ACCV2026 mask/weight
 exp_name Images05ACCV2026_baseline           ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.0
 exp_name Images05ACCV2026_mask_conf_02_002   ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.02 cls_feat_mask conf cls_feat_top_rel 0.2
 exp_name Images05ACCV2026_mask_conf_02_005   ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.05 cls_feat_mask conf cls_feat_top_rel 0.2
