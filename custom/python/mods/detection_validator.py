@@ -85,6 +85,8 @@ class DetectionValidator(_DetectionValidator):
                 metrics[f"metrics/mAP50-95(B)_{name}"] = 0.0
 
         # --------------------------------------------------------------------------------------------------------------
+        
+        metrics = {k.replace("(B)", "").replace("metrics/", ""): v for k, v in metrics.items()}
 
         return metrics
 
