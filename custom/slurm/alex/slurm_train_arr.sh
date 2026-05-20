@@ -13,7 +13,7 @@
 
 # ----- BASE_DIR ----------------------------------------------------
 BASE_DIR="$WORK/code_nexus/ultralytics"
-DATA_DIR=$TMPDIR
+JOB_DIR=$TMPDIR
 
 # ----- GET ARGS ----------------------------------------------------
 PARAMS_FILE="$BASE_DIR/custom/slurm/alex/slurm_params.txt"
@@ -58,13 +58,13 @@ export WANDB_CACHE_DIR=/tmp/ths_wandb
 export WANDB_CONFIG_DIR=/tmp/ths_wandb
 
 # ----- ULTRALYTICS SETTINGS-----------------------------------------
-# yolo settings datasets_dir=$DATA_DIR
+# yolo settings datasets_dir=$JOB_DIR
 # yolo settings runs_dir="$BASE_DIR/runs"
 # yolo settings weights_dir="$BASE_DIR/models"
 
 # ----- DATA STAGING ------------------------------------------------
 PATH_TAR=$(grep "^path:" $BASE_DIR/$DATA | cut -d ':' -f2 | xargs)
-tar xf $PATH_TAR --strip-components=1 -C $DATA_DIR \
+tar xf $PATH_TAR --strip-components=1 -C $JOB_DIR \
   --warning=no-unknown-keyword \
   --exclude='._*' \
   --exclude='.DS_Store' \
@@ -72,12 +72,12 @@ tar xf $PATH_TAR --strip-components=1 -C $DATA_DIR \
 
 echo ErrorMessage unpacking: $?  # $? = exit code (0 = success, anything else = error)
 
-cp $BASE_DIR/$DATA $DATA_DIR/
-DATA="$DATA_DIR/$(basename $DATA)"
-sed -i "s|^path:.*|path: $DATA_DIR|" $DATA
+cp $BASE_DIR/$DATA $JOB_DIR/
+DATA="$JOB_DIR/$(basename $DATA)"
+sed -i "s|^path:.*|path: $JOB_DIR|" $DATA
 PARAMS=$(echo "$PARAMS" | sed "s|data [^ ]*|data $DATA|")
 echo $DATA
-echo $DATA_DIR
+echo $JOB_DIR
 
 # ----- TRAINING ----------------------------------------------------
 python $BASE_DIR/custom/python/train.py \
