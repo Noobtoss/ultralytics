@@ -65,7 +65,7 @@ class FeatLossFactory:
             # https://kevinmusgrave.github.io/pytorch-metric-learning/losses/#circleloss
             params = {
                 "m": 0.25,
-                "gamma": 256,
+                "gamma": 64,
             }
             params.update({k: v for k, v in kwargs.items() if k in inspect.signature(losses.CircleLoss).parameters})
             return NormalizeEmbeddingsWrapper(losses.CircleLoss(**params, reducer=UnpackReducer()))
@@ -73,7 +73,7 @@ class FeatLossFactory:
         elif loss == "multi_sim_loss":
             params = {
                 "alpha": 2.0,
-                "beta": 50.0,
+                "beta": 20.0,
                 "base": 0.5,
             }
             params.update({k: v for k, v in kwargs.items() if k in inspect.signature(losses.MultiSimilarityLoss).parameters})

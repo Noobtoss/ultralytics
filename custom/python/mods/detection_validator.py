@@ -86,7 +86,7 @@ class DetectionValidator(_DetectionValidator):
 
         # --------------------------------------------------------------------------------------------------------------
 
-        metrics = {k.replace("(B)", "").replace("metrics/", ""): v for k, v in metrics.items()}
+        metrics = {k.replace("(B)", ""): v for k, v in metrics.items()}
 
         return metrics
 

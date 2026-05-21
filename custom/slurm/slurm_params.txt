@@ -142,15 +142,15 @@ exp_name Images05BMVC2026_scl_01   ckpt checkpoints/yolo11x.pt data datasets/sem
 exp_name Images05BMVC2026_scl_02   ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat 0.2
 exp_name Images05BMVC2026_scl_04   ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat 0.4
 exp_name Images05BMVC2026_baseline ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat_loss circle_loss cls_feat 0
+exp_name Images05BMVC2026_cl_0002  ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat_loss circle_loss cls_feat 0.002
+exp_name Images05BMVC2026_cl_0005  ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat_loss circle_loss cls_feat 0.005
 exp_name Images05BMVC2026_cl_002   ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat_loss circle_loss cls_feat 0.02
 exp_name Images05BMVC2026_cl_005   ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat_loss circle_loss cls_feat 0.05
 exp_name Images05BMVC2026_cl_01    ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat_loss circle_loss cls_feat 0.1
-exp_name Images05BMVC2026_cl_02    ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat_loss circle_loss cls_feat 0.2
-exp_name Images05BMVC2026_cl_04    ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat_loss circle_loss cls_feat 0.4
 exp_name Images05BMVC2026_baseline ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat_loss multi_sim_loss cls_feat 0
-exp_name Images05BMVC2026_msl_002  ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat_loss multi_sim_loss cls_feat 0.02
 exp_name Images05BMVC2026_msl_005  ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat_loss multi_sim_loss cls_feat 0.05
 exp_name Images05BMVC2026_msl_01   ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat_loss multi_sim_loss cls_feat 0.1
 exp_name Images05BMVC2026_msl_02   ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat_loss multi_sim_loss cls_feat 0.2
 exp_name Images05BMVC2026_msl_04   ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat_loss multi_sim_loss cls_feat 0.4
+exp_name Images05BMVC2026_msl_08   ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05MetaFood2026.yaml epochs 100 cls_feat_loss multi_sim_loss cls_feat 0.8
 # Experiments End Current
