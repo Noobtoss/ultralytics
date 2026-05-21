@@ -104,26 +104,26 @@ exp_name Images05ACCV2026_top5_02          ckpt checkpoints/yolo11x.pt data data
 exp_name Images05ACCV2026_top5_04          ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.4  tal_topk 5
 # Experiments ACCV2026 mask/weight
 exp_name Images05ACCV2026_baseline           ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.0
-exp_name Images05ACCV2026_mask_conf_02_002   ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.02 cls_feat_mask conf cls_feat_top_rel 0.2
-exp_name Images05ACCV2026_mask_conf_02_005   ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.05 cls_feat_mask conf cls_feat_top_rel 0.2
-exp_name Images05ACCV2026_mask_conf_02_01    ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_mask conf cls_feat_top_rel 0.2
-exp_name Images05ACCV2026_mask_conf_02_02    ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.2  cls_feat_mask conf cls_feat_top_rel 0.2
-exp_name Images05ACCV2026_mask_conf_02_04    ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.4  cls_feat_mask conf cls_feat_top_rel 0.2
-exp_name Images05ACCV2026_mask_conf_04_002   ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.02 cls_feat_mask conf cls_feat_top_rel 0.4
-exp_name Images05ACCV2026_mask_conf_04_005   ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.05 cls_feat_mask conf cls_feat_top_rel 0.4
-exp_name Images05ACCV2026_mask_conf_04_01    ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_mask conf cls_feat_top_rel 0.4
-exp_name Images05ACCV2026_mask_conf_04_02    ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.2  cls_feat_mask conf cls_feat_top_rel 0.4
-exp_name Images05ACCV2026_mask_conf_04_04    ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.4  cls_feat_mask conf cls_feat_top_rel 0.4
-exp_name Images05ACCV2026_mask_tal_02_002    ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.02 cls_feat_mask tal cls_feat_top_rel 0.2
-exp_name Images05ACCV2026_mask_tal_02_005    ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.05 cls_feat_mask tal cls_feat_top_rel 0.2
-exp_name Images05ACCV2026_mask_tal_02_01     ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_mask tal cls_feat_top_rel 0.2
-exp_name Images05ACCV2026_mask_tal_02_02     ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.2  cls_feat_mask tal cls_feat_top_rel 0.2
-exp_name Images05ACCV2026_mask_tal_02_04     ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.4  cls_feat_mask tal cls_feat_top_rel 0.2
-exp_name Images05ACCV2026_mask_tal_04_002    ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.02 cls_feat_mask tal cls_feat_top_rel 0.4
-exp_name Images05ACCV2026_mask_tal_04_005    ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.05 cls_feat_mask tal cls_feat_top_rel 0.4
-exp_name Images05ACCV2026_mask_tal_04_01     ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_mask tal cls_feat_top_rel 0.4
-exp_name Images05ACCV2026_mask_tal_04_02     ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.2  cls_feat_mask tal cls_feat_top_rel 0.4
-exp_name Images05ACCV2026_mask_tal_04_04     ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.4  cls_feat_mask tal cls_feat_top_rel 0.4
+exp_name Images05ACCV2026_mask_conf_02_002   ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.02 cls_feat_mask conf cls_feat_mask_pct 0.2
+exp_name Images05ACCV2026_mask_conf_02_005   ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.05 cls_feat_mask conf cls_feat_mask_pct 0.2
+exp_name Images05ACCV2026_mask_conf_02_01    ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_mask conf cls_feat_mask_pct 0.2
+exp_name Images05ACCV2026_mask_conf_02_02    ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.2  cls_feat_mask conf cls_feat_mask_pct 0.2
+exp_name Images05ACCV2026_mask_conf_02_04    ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.4  cls_feat_mask conf cls_feat_mask_pct 0.2
+exp_name Images05ACCV2026_mask_conf_04_002   ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.02 cls_feat_mask conf cls_feat_mask_pct 0.4
+exp_name Images05ACCV2026_mask_conf_04_005   ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.05 cls_feat_mask conf cls_feat_mask_pct 0.4
+exp_name Images05ACCV2026_mask_conf_04_01    ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_mask conf cls_feat_mask_pct 0.4
+exp_name Images05ACCV2026_mask_conf_04_02    ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.2  cls_feat_mask conf cls_feat_mask_pct 0.4
+exp_name Images05ACCV2026_mask_conf_04_04    ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.4  cls_feat_mask conf cls_feat_mask_pct 0.4
+exp_name Images05ACCV2026_mask_tal_02_002    ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.02 cls_feat_mask tal cls_feat_mask_pct 0.2
+exp_name Images05ACCV2026_mask_tal_02_005    ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.05 cls_feat_mask tal cls_feat_mask_pct 0.2
+exp_name Images05ACCV2026_mask_tal_02_01     ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_mask tal cls_feat_mask_pct 0.2
+exp_name Images05ACCV2026_mask_tal_02_02     ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.2  cls_feat_mask tal cls_feat_mask_pct 0.2
+exp_name Images05ACCV2026_mask_tal_02_04     ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.4  cls_feat_mask tal cls_feat_mask_pct 0.2
+exp_name Images05ACCV2026_mask_tal_04_002    ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.02 cls_feat_mask tal cls_feat_mask_pct 0.4
+exp_name Images05ACCV2026_mask_tal_04_005    ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.05 cls_feat_mask tal cls_feat_mask_pct 0.4
+exp_name Images05ACCV2026_mask_tal_04_01     ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_mask tal cls_feat_mask_pct 0.4
+exp_name Images05ACCV2026_mask_tal_04_02     ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.2  cls_feat_mask tal cls_feat_mask_pct 0.4
+exp_name Images05ACCV2026_mask_tal_04_04     ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.4  cls_feat_mask tal cls_feat_mask_pct 0.4
 exp_name Images05ACCV2026_weight_conf_02_002 ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.02 cls_feat_weight conf
 exp_name Images05ACCV2026_weight_conf_02_005 ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.05 cls_feat_weight conf
 exp_name Images05ACCV2026_weight_conf_02_01  ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_weight conf

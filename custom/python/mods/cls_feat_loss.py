@@ -76,12 +76,12 @@ class WeightFactory:
 
 
 class Masking:
-    def __init__(self, top_rel: float = 0.2, **kwargs):
+    def __init__(self, mask_pct: float = 0.2, **kwargs):
         super().__init__(**kwargs)
-        self.top_rel = top_rel
+        self.mask_pct = mask_pct
 
     def _masking(self, metric):
-        k = max(1, int(len(metric) * self.top_rel))
+        k = max(1, int(len(metric) * (1 - self.mask_pct)))
         thresh = metric.topk(k).values[-1]
         return metric >= thresh
 
