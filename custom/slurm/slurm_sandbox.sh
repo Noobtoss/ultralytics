@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=ultralytics_train_arr # Kurzname des Jobs
-#SBATCH --array=99
+#SBATCH --array=1
 #SBATCH --output=logs/R-%A-%a.out
 #SBATCH --partition=p2,p3,p4,p5,p6 # p4
 #SBATCH --qos=preemptible          # gpuultimate
