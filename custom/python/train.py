@@ -32,7 +32,6 @@ DEFAULT_TRAIN_CFG = Namespace(
     dfl=1.5,
     cls_feat=0.09,  # 0.5,
     cls_feat_loss="sup_con_loss",
-    cls_feat_temperature=0.07,
     # cls_feat_mask="conf",
     # cls_feat_mask_pct=0.4,
     # cls_feat_weight="conf",
