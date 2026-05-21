@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=ultralytics_train_arr # Kurzname des Jobs
-#SBATCH --array=99-129%3         # 87-98 # 1-86 Job array: tasks 1 to 23, max 8 running at once
+#SBATCH --array=130,132,133,134,138,139,140,144,145,146%8  # Previous runs: 130-147%8 # 87-98%8
 #SBATCH --output=logs/R-%A-%a.out
 #SBATCH --partition=p2           # p1,p2,p3,p4,p5,p6
 #SBATCH --qos=gpuultimate
