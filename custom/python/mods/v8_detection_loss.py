@@ -8,7 +8,7 @@ from .cls_feat_loss import ClsFeatLoss
 
 class v8DetectionLoss(_v8DetectionLoss):
     def __init__(self, model, *args, **kwargs) -> None:
-        LOGGER.warning("[Modded] TrainLoss")
+        LOGGER.warning("[Modded] v8DetectionLoss")
         # >>> MOD
         if hasattr(model.args, 'tal_topk'):
             kwargs['tal_topk'] = model.args.tal_topk

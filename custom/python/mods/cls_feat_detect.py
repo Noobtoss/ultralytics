@@ -49,7 +49,7 @@ def _insanity_check(x, cls_head, nl, nc):
 
 class ClsFeatDetect(_Detect):
     def __init__(self, nc: int = 80, reg_max=16, end2end=False, ch: tuple = ()) -> None:
-        LOGGER.warning("[Modded] ClsFeatDetect")
+        LOGGER.warning("[Modded] Detect")
 
         super().__init__(nc, reg_max, end2end, ch)
         c2, c3 = max((16, ch[0] // 4, self.reg_max * 4)), max(ch[0], min(self.nc, 100))  # channels
@@ -91,14 +91,8 @@ class ClsFeatDetect(_Detect):
             for layer in list(cls_head[i])[:-1]:
                 h = layer(h)
             score_i = cls_head[i][-1](h).view(bs, self.nc, -1)
-            cls_feats_i = h  # .view(bs, h.shape[1], -1)
+            cls_feats_i = h
             scores.append(score_i)
-            """
-            # Moved to model level
-            # Moved forward to train_loss
-            if self.cls_feat_proj_head is not None:
-                cls_feats_i = self.cls_feat_proj_head[i](cls_feats_i)
-            """
             cls_feats.append(cls_feats_i)
 
         scores = torch.cat(scores, dim=-1)
