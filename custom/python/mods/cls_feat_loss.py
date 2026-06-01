@@ -64,8 +64,8 @@ class FeatLossFactory:
         elif loss == "circle_loss":
             # https://kevinmusgrave.github.io/pytorch-metric-learning/losses/#circleloss
             params = {
-                "m": 0.25,
-                "gamma": 64,
+                "m": 0.40,
+                "gamma": 32,
             }
             params.update({k: v for k, v in kwargs.items() if k in inspect.signature(losses.CircleLoss).parameters})
             return NormalizeEmbeddingsWrapper(losses.CircleLoss(**params, reducer=UnpackReducer()))

@@ -53,9 +53,9 @@ export https_proxy=http://proxy:80
 # ----- WANDB -------------------------------------------------------
 yolo settings wandb=True
 export WANDB_API_KEY=95177947f5f36556806da90ea7a0bf93ed857d58
-export WANDB_DIR=/tmp/ths_wandb
-export WANDB_CACHE_DIR=/tmp/ths_wandb
-export WANDB_CONFIG_DIR=/tmp/ths_wandb
+export WANDB_DIR=$TMPDIR
+export WANDB_CACHE_DIR=$TMPDIR
+export WANDB_CONFIG_DIR=$TMPDIR
 
 # ----- ULTRALYTICS SETTINGS-----------------------------------------
 # yolo settings datasets_dir=$JOB_DIR
