@@ -4,15 +4,10 @@ import ultralytics.nn.modules as _modules
 import ultralytics.nn.tasks as _tasks
 from ultralytics.utils import LOGGER
 
-from .cls_feat_loss import FeatLossFactory, ClsFeatLoss
 from .cls_feat_detect import ClsFeatDetect
-from .detection_model import DetectionModel
 from .detection_trainer import DetectionTrainer
 from .detection_validator import DetectionValidator
-from .loss_gain_scheduler import LossGainScheduler
-from .cls_feat_proj_heads import ClsFeatProjHeadFactory
-from .train_loss import TrainLoss
-from .yolo import YOLO
+from .rtdetr_trainer import RTDETRTrainer
 
 
 # ── CFG validation ────────────────────────────────────────────────────────────

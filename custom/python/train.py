@@ -12,11 +12,12 @@ import csv
 # entries are added in reverse priority order so that conda site-packages lands
 # at index 0 and takes precedence over the local directory.
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))  # index 1 — local imports
-sys.path.insert(0, site.getsitepackages()[0])                   # index 0 — conda site-packages (priority)
+sys.path.insert(0, site.getsitepackages()[0])  # index 0 — conda site-packages (priority)
 
 from ultralytics.utils import LOGGER
+from ultralytics import YOLO, RTDETR
 from get_eval_metrics import get_eval_metrics
-from mods import YOLO, DetectionTrainer, DetectionValidator, LossGainScheduler
+from mods import DetectionTrainer, RTDETRTrainer
 
 DEFAULT_TRAIN_CFG = Namespace(
     data="",
@@ -67,14 +68,40 @@ def val_last(trainer):
             LOGGER.info(f"Results saved to {csv_path}")
 
 
-def train(cfg: Namespace):
+def train_yolo(cfg: Namespace):
     if cfg.model is not None:
         model = YOLO(cfg.model).load(cfg.ckpt)
     else:
         model = YOLO(cfg.ckpt)
-    model.add_callback("on_train_epoch_start", LossGainScheduler())
     model.add_callback("on_train_end", val_last)
     model.train(**vars(cfg.train_cfg), trainer=DetectionTrainer)
+
+
+def train_rtdetr(cfg: Namespace):
+    if cfg.model is not None:
+        model = RTDETR(cfg.model).load(cfg.ckpt)
+    else:
+        model = RTDETR(cfg.ckpt)
+    model.add_callback("on_train_end", val_last)
+    model.train(**vars(cfg.train_cfg), trainer=RTDETRTrainer)
+
+
+def train(cfg: Namespace):
+    # cfg.model = "rtdetr-l.yaml"  # tmp
+    # cfg.ckpt = "rtdetr-l.pt"  # tmp
+
+    model_type = "yolo" if "yolo" in (cfg.model or "") else "rtdetr" if "rtdetr" in (cfg.model or "") else None
+    model_type_ckpt = "yolo" if "yolo" in (cfg.ckpt or "") else "rtdetr" if "rtdetr" in (cfg.ckpt or "") else None
+
+    assert model_type or model_type_ckpt, f"Could not determine model type from cfg.model='{cfg.model}' and cfg.ckpt='{cfg.ckpt}'."
+    assert None in (model_type, model_type_ckpt) or model_type == model_type_ckpt, f"Mismatch: '{cfg.model}' vs '{cfg.ckpt}'."
+    model_type = model_type or model_type_ckpt
+
+    if model_type == "yolo":
+        train_yolo(cfg)
+
+    if model_type == "rtdetr":
+        train_rtdetr(cfg)
 
 
 def parse_args():

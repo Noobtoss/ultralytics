@@ -2,7 +2,7 @@ import inspect
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from pytorch_metric_learning import losses, reducers, miners
+from pytorch_metric_learning import losses, reducers
 from ultralytics.utils.metrics import bbox_iou
 
 
@@ -20,33 +20,6 @@ class NormalizeEmbeddingsWrapper(nn.Module):
     def forward(self, embeddings, *args, **kwargs):
         return self.loss(F.normalize(embeddings, dim=1), *args, **kwargs)
 
-"""
-class MinerWrapper(nn.Module):
-    def __init__(self, miner, loss: nn.Module, **kwargs):
-        super().__init__()
-        self.miner = miner
-        self.loss = loss
-
-    def forward(self, embeddings, labels):
-        embeddings = F.normalize(embeddings, dim=1)
-        indices = self.miner(embeddings, labels)
-        return self.loss(embeddings, labels, indices)
-    
-# https://kevinmusgrave.github.io/pytorch-metric-learning/losses/#tripletmarginloss
-params_miner = {
-    "margin": 0.2,
-    "type_of_triplets": "semihard",  # options: "all", "hard", "semihard", "easy"
-}
-params = {
-    "margin": 0.2,
-}
-params_miner.update({k: v for k, v in kwargs.items() if k in inspect.signature(miners.TripletMarginMiner).parameters})
-params.update({k: v for k, v in kwargs.items() if k in inspect.signature(losses.TripletMarginLoss).parameters})
-return MinerWrapper(
-    miner=miners.TripletMarginMiner(**params_miner),
-    loss=losses.TripletMarginLoss(**params, reducer=UnpackReducer())
-)
-"""
 
 class FeatLossFactory:
     @staticmethod

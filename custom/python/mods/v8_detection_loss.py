@@ -1,12 +1,12 @@
 import torch
 from ultralytics.utils import LOGGER
-from ultralytics.utils.loss import v8DetectionLoss
+from ultralytics.utils.loss import v8DetectionLoss as _v8DetectionLoss
 from ultralytics.utils.tal import make_anchors
 
 from .cls_feat_loss import ClsFeatLoss
 
 
-class TrainLoss(v8DetectionLoss):
+class v8DetectionLoss(_v8DetectionLoss):
     def __init__(self, model, *args, **kwargs) -> None:
         LOGGER.warning("[Modded] TrainLoss")
         # >>> MOD
