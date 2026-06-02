@@ -5,6 +5,7 @@ import ultralytics.nn.tasks as _tasks
 from ultralytics.utils import LOGGER
 
 from .cls_feat_detect import ClsFeatDetect
+from .cls_feat_rtdetr_decoder import ClsFeatRTDETRDecoder
 from .detection_trainer import DetectionTrainer
 from .detection_validator import DetectionValidator
 from .rtdetr_trainer import RTDETRTrainer
@@ -36,6 +37,9 @@ _trainer.check_dict_alignment = patched_check_dict_alignment
 _modules.ClsFeatDetect = ClsFeatDetect
 _tasks.ClsFeatDetect = ClsFeatDetect
 
+_modules.ClsFeatRTDETRDecoder = ClsFeatRTDETRDecoder
+_tasks.ClsFeatRTDETRDecoder = ClsFeatRTDETRDecoder
+
 # ── parse_model patch ─────────────────────────────────────────────────────────
 _original_parse_model = _tasks.parse_model
 
@@ -43,8 +47,11 @@ _original_parse_model = _tasks.parse_model
 def _patched_parse_model(d, ch, verbose=True):
     _orig_detect = _tasks.Detect
     _tasks.Detect = ClsFeatDetect
+    _orig_rtdetr = _tasks.RTDETRDecoder
+    _tasks.RTDETRDecoder = ClsFeatRTDETRDecoder
     result = _original_parse_model(d, ch, verbose)
     _tasks.Detect = _orig_detect
+    _tasks.RTDETRDecoder = _orig_rtdetr
     return result
 
 
