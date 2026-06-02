@@ -1,11 +1,13 @@
 import torch
 import torch.nn as nn
+from torch.nn.init import constant_, xavier_uniform_
 
 from ultralytics.utils import LOGGER
 from ultralytics.nn.modules.head import RTDETRDecoder as _RTDETRDecoder
 from ultralytics.nn.modules.transformer import DeformableTransformerDecoder as _DeformableTransformerDecoder
 from ultralytics.nn.modules.transformer import MLP, DeformableTransformerDecoderLayer
 from ultralytics.nn.modules.utils import inverse_sigmoid
+from ultralytics.nn.modules.utils import bias_init_with_prob, linear_init
 
 
 class DeformableTransformerDecoder(_DeformableTransformerDecoder):
@@ -41,6 +43,10 @@ class DeformableTransformerDecoder(_DeformableTransformerDecoder):
         output = embed
         dec_bboxes = []
         dec_cls = []
+        # >>> MOD
+        # DANGER: RT-DETR default score_head has only 1 layer so bbox embedding space == cls embedding space
+        dec_cls_feats = []
+        # <<< MOD
         last_refined_bbox = None
         refer_bbox = refer_bbox.sigmoid()
         for i, layer in enumerate(self.layers):
@@ -50,20 +56,35 @@ class DeformableTransformerDecoder(_DeformableTransformerDecoder):
             refined_bbox = torch.sigmoid(bbox + inverse_sigmoid(refer_bbox))
 
             if self.training:
-                dec_cls.append(score_head[i](output))
+                # >>> MOD
+                # dec_cls.append(score_head[i](output))
+                h = output
+                for layer in list(score_head[i])[:-1]:  # score_head must be nn.Sequential
+                    h = layer(h)
+                dec_cls_feats.append(h)
+                dec_cls.append(score_head[i][-1](h))
+                # <<< MOD
                 if i == 0:
                     dec_bboxes.append(refined_bbox)
                 else:
                     dec_bboxes.append(torch.sigmoid(bbox + inverse_sigmoid(last_refined_bbox)))
             elif i == self.eval_idx:
-                dec_cls.append(score_head[i](output))
+                # >>> MOD
+                # dec_cls.append(score_head[i](output))
+                h = output
+                for layer in list(score_head[i])[:-1]:  # score_head must be nn.Sequential
+                    h = layer(h)
+                dec_cls_feats.append(h)
+                dec_cls.append(score_head[i][-1](h))
+                # <<< MOD
                 dec_bboxes.append(refined_bbox)
                 break
 
             last_refined_bbox = refined_bbox
             refer_bbox = refined_bbox.detach() if self.training else refined_bbox
-
-        return torch.stack(dec_bboxes), torch.stack(dec_cls)
+        # >>> MOD
+        return torch.stack(dec_bboxes), torch.stack(dec_cls), torch.stack(dec_cls_feats)
+        # <<< MOD
 
 
 class RTDETRDecoder(_RTDETRDecoder):
@@ -150,7 +171,10 @@ class RTDETRDecoder(_RTDETRDecoder):
             box_noise_scale (float): Box noise scale.
             learnt_init_query (bool): Whether to learn initial query embeddings.
         """
-        super().__init__()
+        # >>> MOD
+        LOGGER.warning("[Modded] RTDETRDecoder")
+        nn.Module.__init__(self)
+        # <<< MOD
         self.hidden_dim = hd
         self.nhead = nh
         self.nl = len(ch)  # num level
@@ -166,7 +190,6 @@ class RTDETRDecoder(_RTDETRDecoder):
         # Transformer module
         decoder_layer = DeformableTransformerDecoderLayer(hd, nh, d_ffn, dropout, act, self.nl, ndp)
         # >>> MOD
-        LOGGER.warning("[Modded] RTDETRDecoder")
         self.decoder = DeformableTransformerDecoder(hd, decoder_layer, ndl, eval_idx)
         # <<< MOD
 
@@ -188,7 +211,9 @@ class RTDETRDecoder(_RTDETRDecoder):
         self.enc_bbox_head = MLP(hd, hd, 4, num_layers=3)
 
         # Decoder head
-        self.dec_score_head = nn.ModuleList([nn.Linear(hd, nc) for _ in range(ndl)])
+        # >>> MOD
+        self.dec_score_head = nn.ModuleList([nn.Sequential(nn.Linear(hd, nc)) for _ in range(ndl)])
+        # <<< MOD
         self.dec_bbox_head = nn.ModuleList([MLP(hd, hd, 4, num_layers=3) for _ in range(ndl)])
 
         self._reset_parameters()
@@ -221,10 +246,12 @@ class RTDETRDecoder(_RTDETRDecoder):
             self.box_noise_scale,
             self.training,
         )
+
         embed, refer_bbox, enc_bboxes, enc_scores = self._get_decoder_input(feats, shapes, dn_embed, dn_bbox)
 
         # Decoder
-        dec_bboxes, dec_scores = self.decoder(
+        # >>> MOD
+        dec_bboxes, dec_scores, dec_feats = self.decoder(
             embed,
             refer_bbox,
             feats,
@@ -234,12 +261,38 @@ class RTDETRDecoder(_RTDETRDecoder):
             self.query_pos_head,
             attn_mask=attn_mask,
         )
-        for _ in range(10):
-            print("tmp")
         x = dec_bboxes, dec_scores, enc_bboxes, enc_scores, dn_meta
         if self.training:
+            x = x + (dec_feats,)  # this only adds dec_feats to output during training
             return x
+        # <<< MOD
         # (bs, 300, 4+nc)
         y = torch.cat((dec_bboxes.squeeze(0), dec_scores.squeeze(0).sigmoid()), -1)
-        8==D
         return y if self.export else (y, x)
+
+    def _reset_parameters(self):
+        """Initialize or reset the parameters of the model's various components with predefined weights and biases."""
+        # Class and bbox head init
+        bias_cls = bias_init_with_prob(0.01) / 80 * self.nc
+        # NOTE: the weight initialization in `linear_init` would cause NaN when training with custom datasets.
+        # linear_init(self.enc_score_head)
+        constant_(self.enc_score_head.bias, bias_cls)
+        constant_(self.enc_bbox_head.layers[-1].weight, 0.0)
+        constant_(self.enc_bbox_head.layers[-1].bias, 0.0)
+
+        for cls_, reg_ in zip(self.dec_score_head, self.dec_bbox_head):
+            # linear_init(cls_)
+            # >>> MOD
+            constant_(cls_[-1].bias, bias_cls)
+            # <<< MOD
+            constant_(reg_.layers[-1].weight, 0.0)
+            constant_(reg_.layers[-1].bias, 0.0)
+
+        linear_init(self.enc_output[0])
+        xavier_uniform_(self.enc_output[0].weight)
+        if self.learnt_init_query:
+            xavier_uniform_(self.tgt_embed.weight)
+        xavier_uniform_(self.query_pos_head.layers[0].weight)
+        xavier_uniform_(self.query_pos_head.layers[1].weight)
+        for layer in self.input_proj:
+            xavier_uniform_(layer[0].weight)
