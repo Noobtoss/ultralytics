@@ -4,8 +4,8 @@ import ultralytics.nn.modules as _modules
 import ultralytics.nn.tasks as _tasks
 from ultralytics.utils import LOGGER
 
-from .cls_feat_detect import ClsFeatDetect
-from .cls_feat_rtdetr_decoder import ClsFeatRTDETRDecoder
+from .detect import Detect as ClsFeatDetect
+from .rtdetr_decoder import RTDETRDecoder as ClsFeatRTDETRDecoder
 from .detection_trainer import DetectionTrainer
 from .detection_validator import DetectionValidator
 from .rtdetr_trainer import RTDETRTrainer

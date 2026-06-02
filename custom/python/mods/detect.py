@@ -47,7 +47,7 @@ def _insanity_check(x, cls_head, nl, nc):
     raise SystemExit("Receptive field check complete")
 
 
-class ClsFeatDetect(_Detect):
+class Detect(_Detect):
     def __init__(self, nc: int = 80, reg_max=16, end2end=False, ch: tuple = ()) -> None:
         LOGGER.warning("[Modded] Detect")
 

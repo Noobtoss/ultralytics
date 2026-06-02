@@ -3,15 +3,70 @@ import torch.nn as nn
 
 from ultralytics.utils import LOGGER
 from ultralytics.nn.modules.head import RTDETRDecoder as _RTDETRDecoder
-from ultralytics.nn.modules.transformer import MLP, DeformableTransformerDecoderLayer
 from ultralytics.nn.modules.transformer import DeformableTransformerDecoder as _DeformableTransformerDecoder
+from ultralytics.nn.modules.transformer import MLP, DeformableTransformerDecoderLayer
+from ultralytics.nn.modules.utils import inverse_sigmoid
 
 
-class ClsFeatDeformableTransformerDecoder(_DeformableTransformerDecoder):
-    pass
+class DeformableTransformerDecoder(_DeformableTransformerDecoder):
+    def forward(
+            self,
+            embed: torch.Tensor,  # decoder embeddings
+            refer_bbox: torch.Tensor,  # anchor
+            feats: torch.Tensor,  # image features
+            shapes: list,  # feature shapes
+            bbox_head: nn.Module,
+            score_head: nn.Module,
+            pos_mlp: nn.Module,
+            attn_mask: torch.Tensor | None = None,
+            padding_mask: torch.Tensor | None = None,
+    ):
+        """Perform the forward pass through the entire decoder.
+
+        Args:
+            embed (torch.Tensor): Decoder embeddings.
+            refer_bbox (torch.Tensor): Reference bounding boxes.
+            feats (torch.Tensor): Image features.
+            shapes (list): Feature shapes.
+            bbox_head (nn.Module): Bounding box prediction head.
+            score_head (nn.Module): Score prediction head.
+            pos_mlp (nn.Module): Position MLP.
+            attn_mask (torch.Tensor, optional): Attention mask.
+            padding_mask (torch.Tensor, optional): Padding mask.
+
+        Returns:
+            dec_bboxes (torch.Tensor): Decoded bounding boxes.
+            dec_cls (torch.Tensor): Decoded classification scores.
+        """
+        output = embed
+        dec_bboxes = []
+        dec_cls = []
+        last_refined_bbox = None
+        refer_bbox = refer_bbox.sigmoid()
+        for i, layer in enumerate(self.layers):
+            output = layer(output, refer_bbox, feats, shapes, padding_mask, attn_mask, pos_mlp(refer_bbox))
+
+            bbox = bbox_head[i](output)
+            refined_bbox = torch.sigmoid(bbox + inverse_sigmoid(refer_bbox))
+
+            if self.training:
+                dec_cls.append(score_head[i](output))
+                if i == 0:
+                    dec_bboxes.append(refined_bbox)
+                else:
+                    dec_bboxes.append(torch.sigmoid(bbox + inverse_sigmoid(last_refined_bbox)))
+            elif i == self.eval_idx:
+                dec_cls.append(score_head[i](output))
+                dec_bboxes.append(refined_bbox)
+                break
+
+            last_refined_bbox = refined_bbox
+            refer_bbox = refined_bbox.detach() if self.training else refined_bbox
+
+        return torch.stack(dec_bboxes), torch.stack(dec_cls)
 
 
-class ClsFeatRTDETRDecoder(_RTDETRDecoder):
+class RTDETRDecoder(_RTDETRDecoder):
     """Real-Time Deformable Transformer Decoder (RTDETRDecoder) module for object detection.
 
     This decoder module utilizes Transformer architecture along with deformable convolutions to predict bounding boxes
@@ -112,7 +167,7 @@ class ClsFeatRTDETRDecoder(_RTDETRDecoder):
         decoder_layer = DeformableTransformerDecoderLayer(hd, nh, d_ffn, dropout, act, self.nl, ndp)
         # >>> MOD
         LOGGER.warning("[Modded] RTDETRDecoder")
-        self.decoder = ClsFeatDeformableTransformerDecoder(hd, decoder_layer, ndl, eval_idx)
+        self.decoder = DeformableTransformerDecoder(hd, decoder_layer, ndl, eval_idx)
         # <<< MOD
 
         # Denoising part
@@ -166,7 +221,6 @@ class ClsFeatRTDETRDecoder(_RTDETRDecoder):
             self.box_noise_scale,
             self.training,
         )
-
         embed, refer_bbox, enc_bboxes, enc_scores = self._get_decoder_input(feats, shapes, dn_embed, dn_bbox)
 
         # Decoder
@@ -180,9 +234,12 @@ class ClsFeatRTDETRDecoder(_RTDETRDecoder):
             self.query_pos_head,
             attn_mask=attn_mask,
         )
+        for _ in range(10):
+            print("tmp")
         x = dec_bboxes, dec_scores, enc_bboxes, enc_scores, dn_meta
         if self.training:
             return x
         # (bs, 300, 4+nc)
         y = torch.cat((dec_bboxes.squeeze(0), dec_scores.squeeze(0).sigmoid()), -1)
+        8==D
         return y if self.export else (y, x)
