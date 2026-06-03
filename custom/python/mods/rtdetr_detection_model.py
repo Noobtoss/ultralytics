@@ -54,7 +54,10 @@ class RTDETRDetectionModel(_RTDETRDetectionModel):
 
         dec_bboxes = torch.cat([enc_bboxes.unsqueeze(0), dec_bboxes])  # (7, bs, 300, 4)
         dec_scores = torch.cat([enc_scores.unsqueeze(0), dec_scores])
-        dec_cls_feats = dec_cls_feats  # (6, bs, 300, 256)
+        # slot 0 is a zero vector (no encoder cls features by design); keeps indexing symmetric with dec_scores
+        dec_cls_feats = torch.cat(
+            [torch.zeros(1, *dec_cls_feats.shape[1:], device=dec_cls_feats.device, dtype=dec_cls_feats.dtype),
+             dec_cls_feats], dim=0)  # (7, bs, 300, 4)
 
         loss = self.criterion(
             (dec_bboxes, dec_scores, dec_cls_feats),

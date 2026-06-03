@@ -22,7 +22,7 @@ from mods import DetectionTrainer, RTDETRTrainer
 DEFAULT_TRAIN_CFG = Namespace(
     data="",
     epochs=100,
-    imgsz=1280,  # 640
+    imgsz=128, # 0,  # 640
     seed=88888,
     batch=8,
     single_cls=False,
