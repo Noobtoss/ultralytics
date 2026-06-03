@@ -13,7 +13,7 @@ class RTDETRDetectionModel(_RTDETRDetectionModel):
         """Initialize the loss criterion for the RTDETRDetectionModel."""
         from .rtdetr_detection_loss import RTDETRDetectionLoss
 
-        return RTDETRDetectionLoss(nc=self.nc, use_vfl=True)
+        return RTDETRDetectionLoss(nc=self.nc, use_vfl=True, model=self)
 
     def loss(self, batch, preds=None):
         """Compute the loss for the given batch of data.
