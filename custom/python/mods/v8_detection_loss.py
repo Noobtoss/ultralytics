@@ -75,11 +75,11 @@ class v8DetectionLoss(_v8DetectionLoss):
             if self.cls_feat_proj_head is not None:
                 cls_feats = self.cls_feat_proj_head(cls_feats)
             loss[3] = self.cls_feat_loss(
-                cls_feats,
-                pred_scores[fg_mask].detach(),
-                target_scores[fg_mask].detach(),
-                pred_bboxes[fg_mask].detach(),
-                (target_bboxes / stride_tensor)[fg_mask].detach()
+                cls_feats=cls_feats,
+                target_scores=target_scores[fg_mask].detach(),
+                pred_scores=pred_scores[fg_mask].detach(),
+                target_bboxes=(target_bboxes / stride_tensor)[fg_mask].detach(),
+                pred_bboxes=pred_bboxes[fg_mask].detach(),
             )
             logging_loss[3] = loss[3].clone().detach()
             loss[3] *= self.hyp.cls_feat
