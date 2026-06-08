@@ -20,9 +20,9 @@ class DETRLoss(_DETRLoss):
             if k.startswith("cls_feat_")
         }
         self.cls_feat_loss = ClsFeatLoss(**cls_feat_kwargs).to(self.device)
-        n = getattr(hyp, "cls_feat_dec_layers", None)  # hard encoding 6 is bad
+        n = getattr(hyp, "cls_feat_dec_layers", None)
         assert n != 0
-        self.cls_feat_dec_layers = range(5 - n, 5) if n is not None else range(0, 5)
+        self.cls_feat_dec_layers = range(5 - n, 5) if n is not None else range(1, 5)  # hard encoding 5 is bad
 
     def _get_loss_cls_feat(
         self,
