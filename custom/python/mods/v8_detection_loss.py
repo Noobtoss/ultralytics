@@ -8,12 +8,11 @@ from .cls_feat_loss import ClsFeatLoss
 
 class v8DetectionLoss(_v8DetectionLoss):
     def __init__(self, model, *args, **kwargs) -> None:
-        # >>> MOD
         LOGGER.warning("[Modded] v8DetectionLoss")
-        if hasattr(model.args, 'tal_topk'):
-            kwargs['tal_topk'] = model.args.tal_topk
         super().__init__(model, *args, **kwargs)
 
+        if hasattr(model.args, 'tal_topk'):
+            kwargs['tal_topk'] = model.args.tal_topk
         self.hyp.cls_feat = getattr(self.hyp, "cls_feat", 0)
         cls_feat_kwargs = {
             k.removeprefix("cls_feat_"): v
@@ -22,7 +21,6 @@ class v8DetectionLoss(_v8DetectionLoss):
         }
         self.cls_feat_loss = ClsFeatLoss(**cls_feat_kwargs).to(self.device)
         self.cls_feat_proj_head = getattr(model, "cls_feat_proj_head", None)
-        # <<< MOD
 
     def get_assigned_targets_and_loss(self, preds: dict[str, torch.Tensor], batch: dict[str, any]) -> tuple:
         """Calculate the sum of the loss for box, cls and dfl multiplied by batch size and return foreground mask and
