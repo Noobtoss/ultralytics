@@ -13,7 +13,7 @@ from ultralytics.nn.modules.utils import bias_init_with_prob, linear_init
 class DeformableTransformerDecoder(_DeformableTransformerDecoder):
     def __init__(self, *args, **kwargs):
         LOGGER.warning("[Modded] DeformableTransformerDecoder")
-        LOGGER.info("Default DeformableTransformerDecoder: score head uses 1 layer → cls_feat space == bbox_feat space")
+        LOGGER.warning("Default DeformableTransformerDecoder: score head uses 1 layer → cls_feat space == bbox_feat space")
         super().__init__(*args, **kwargs)
 
 
