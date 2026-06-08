@@ -31,7 +31,8 @@ class DetectionTrainer(_DetectionTrainer):
                 for k, v in vars(self.args).items()
                 if k.startswith("cls_feat_")
             }
-            cls_feat_kwargs['dim'] = model.model[-1].cv3[0][-2][-1].conv.out_channels
+            # cls_feat_kwargs['dim'] = model.model[-1].cv3[0][-2][-1].conv.out_channels
+            cls_feat_kwargs['dim'] = model.model[-1].cv3[0][-1].in_channels
             model.cls_feat_proj_head = ClsFeatProjHeadFactory.get(**cls_feat_kwargs)
         if weights:
             model.load(weights)
