@@ -9,7 +9,6 @@ from .cls_feat_loss import ClsFeatLoss
 
 
 class DETRLoss(_DETRLoss):
-    # >>> MOD
     def __init__(self, *args, model, **kwargs) -> None:
         LOGGER.warning("[Modded] DETRLoss")
         super().__init__(*args, **kwargs)
@@ -24,7 +23,6 @@ class DETRLoss(_DETRLoss):
         n = getattr(hyp, "cls_feat_dec_layers", None)  # hard encoding 6 is bad
         assert n != 0
         self.cls_feat_dec_layers = range(5 - n, 5) if n is not None else range(0, 5)
-    # <<< MOD
 
     def _get_loss_cls_feat(
         self,
@@ -74,6 +72,7 @@ class DETRLoss(_DETRLoss):
         match_indices: list[tuple] | None = None,
         cls_feats: torch.Tensor | None = None,
     ) -> dict[str, torch.Tensor]:
+    # <<< MOD
         """Calculate losses for a single prediction layer.
 
         Args:
@@ -106,6 +105,7 @@ class DETRLoss(_DETRLoss):
         if len(gt_bboxes):
             gt_scores[idx] = bbox_iou(pred_bboxes.detach(), gt_bboxes, xywh=True).squeeze(-1)
 
+        # >>> MOD
         loss = {
             **self._get_loss_class(pred_scores, targets, gt_scores, len(gt_bboxes), postfix),
             **self._get_loss_bbox(pred_bboxes, gt_bboxes, postfix),
@@ -115,7 +115,7 @@ class DETRLoss(_DETRLoss):
                 self._get_loss_cls_feat(cls_feats, pred_scores, targets, gt_scores, len(gt_bboxes), postfix)
             )
         return loss
-    # <<< MOD
+        # <<< MOD
 
     # >>> MOD
     def _get_loss_aux(
@@ -131,9 +131,12 @@ class DETRLoss(_DETRLoss):
         gt_mask: torch.Tensor | None = None,
         cls_feats: torch.Tensor | None = None,
     ) -> dict[str, torch.Tensor]:
+    # <<< MOD
         # NOTE: loss class, bbox, giou, mask, dice
         loss = torch.zeros(5 if masks is not None else 3, device=pred_bboxes.device)
+        # >>> MOD
         loss = torch.cat([loss, torch.zeros(1, device=pred_bboxes.device)])
+        # <<< MOD
         if match_indices is None and self.use_uni_match:
             match_indices = self.matcher(
                 pred_bboxes[self.uni_match_ind],
@@ -144,6 +147,7 @@ class DETRLoss(_DETRLoss):
                 masks=masks[self.uni_match_ind] if masks is not None else None,
                 gt_mask=gt_mask,
             )
+        # >>> MOD
         for i, (aux_bboxes, aux_scores, aux_cls_feats) in enumerate(zip(pred_bboxes, pred_scores, cls_feats)):
             aux_masks = masks[i] if masks is not None else None
             loss_ = self._get_loss(
@@ -173,11 +177,11 @@ class DETRLoss(_DETRLoss):
             f"loss_giou_aux{postfix}": loss[2],
             f"loss_cls_feat_aux{postfix}": loss[-1],
         }
+        # <<< MOD
         # if masks is not None and gt_mask is not None:
         #     loss[f'loss_mask_aux{postfix}'] = loss[3]
         #     loss[f'loss_dice_aux{postfix}'] = loss[4]
         return loss
-    # <<< MOD
 
     # >>> MOD
     def forward(
@@ -189,6 +193,7 @@ class DETRLoss(_DETRLoss):
         cls_feats: torch.Tensor = None,
         **kwargs: Any,
     ) -> dict[str, torch.Tensor]:
+    # <<< MOD
         """Calculate loss for predicted bounding boxes and scores.
 
         Args:
@@ -209,35 +214,32 @@ class DETRLoss(_DETRLoss):
         match_indices = kwargs.get("match_indices", None)
         gt_cls, gt_bboxes, gt_groups = batch["cls"], batch["bboxes"], batch["gt_groups"]
 
+        # >>> MOD
         total_loss = self._get_loss(
             pred_bboxes[-1], pred_scores[-1], gt_bboxes, gt_cls, gt_groups, postfix=postfix, match_indices=match_indices, cls_feats=cls_feats[-1]
         )
-        print(total_loss)
-
-        print("THIS CURRENT BREAK ME NEED TO REWORK aux_loss also but not now")
+        # <<< MOD
 
         if self.aux_loss:
+            # >>> MOD
             total_loss.update(
                 self._get_loss_aux(
                     pred_bboxes[:-1], pred_scores[:-1], gt_bboxes, gt_cls, gt_groups, match_indices, postfix, cls_feats=cls_feats[:-1]
                 )
             )
-        print(total_loss)
-        print("THIS CURRENT BREAK ME NEED TO REWORK aux_loss also but not now")
-        8==D
+            # <<< MOD
+
         return total_loss
-    # <<< MOD
 
 _RTDETRDetectionLoss.__bases__ = (DETRLoss,)
 
 
 class RTDETRDetectionLoss(_RTDETRDetectionLoss):
     def __init__(self, *args, **kwargs):
-        # >>> MOD
         LOGGER.warning("[Modded] RTDETRDetectionLoss")
         super().__init__(*args, **kwargs)
-        # <<< MOD
 
+    # >>> MOD
     def forward(
         self,
         preds: tuple[torch.Tensor, torch.Tensor, torch.Tensor],
@@ -247,8 +249,23 @@ class RTDETRDetectionLoss(_RTDETRDetectionLoss):
         dn_meta: dict[str, Any] | None = None,
         dn_cls_feats: torch.Tensor | None = None,
     ) -> dict[str, torch.Tensor]:
+    # <<< MOD
+        """Forward pass to compute detection loss with optional denoising loss.
+
+        Args:
+            preds (tuple[torch.Tensor, torch.Tensor]): Tuple containing predicted bounding boxes and scores.
+            batch (dict[str, Any]): Batch data containing ground truth information.
+            dn_bboxes (torch.Tensor, optional): Denoising bounding boxes.
+            dn_scores (torch.Tensor, optional): Denoising scores.
+            dn_meta (dict[str, Any], optional): Metadata for denoising.
+
+        Returns:
+            (dict[str, torch.Tensor]): Dictionary containing total loss and denoising loss if applicable.
+        """
+        # >>> MOD
         pred_bboxes, pred_scores, cls_feats = preds
         total_loss = DETRLoss.forward(self, pred_bboxes, pred_scores, batch, cls_feats=cls_feats)
+        # <<< MOD
 
         # Check for denoising metadata to compute denoising training loss
         if dn_meta is not None:
@@ -259,7 +276,9 @@ class RTDETRDetectionLoss(_RTDETRDetectionLoss):
             match_indices = self.get_dn_match_indices(dn_pos_idx, dn_num_group, batch["gt_groups"])
 
             # Compute the denoising training loss
+            # >>> MOD
             dn_loss = DETRLoss.forward(self, dn_bboxes, dn_scores, batch, postfix="_dn", match_indices=match_indices, cls_feats=dn_cls_feats)
+            # <<< MOD
             total_loss.update(dn_loss)
         else:
             # If no denoising metadata is provided, set denoising loss to zero
