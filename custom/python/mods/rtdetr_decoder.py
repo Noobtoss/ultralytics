@@ -11,17 +11,23 @@ from ultralytics.nn.modules.utils import bias_init_with_prob, linear_init
 
 
 class DeformableTransformerDecoder(_DeformableTransformerDecoder):
+    def __init__(self, *args, **kwargs):
+        LOGGER.warning("[Modded] DeformableTransformerDecoder")
+        LOGGER.info("Default DeformableTransformerDecoder: score head uses 1 layer → cls_feat space == bbox_feat space")
+        super().__init__(*args, **kwargs)
+
+
     def forward(
-            self,
-            embed: torch.Tensor,  # decoder embeddings
-            refer_bbox: torch.Tensor,  # anchor
-            feats: torch.Tensor,  # image features
-            shapes: list,  # feature shapes
-            bbox_head: nn.Module,
-            score_head: nn.Module,
-            pos_mlp: nn.Module,
-            attn_mask: torch.Tensor | None = None,
-            padding_mask: torch.Tensor | None = None,
+        self,
+        embed: torch.Tensor,  # decoder embeddings
+        refer_bbox: torch.Tensor,  # anchor
+        feats: torch.Tensor,  # image features
+        shapes: list,  # feature shapes
+        bbox_head: nn.Module,
+        score_head: nn.Module,
+        pos_mlp: nn.Module,
+        attn_mask: torch.Tensor | None = None,
+        padding_mask: torch.Tensor | None = None,
     ):
         """Perform the forward pass through the entire decoder.
 
@@ -57,7 +63,6 @@ class DeformableTransformerDecoder(_DeformableTransformerDecoder):
 
             if self.training:
                 # >>> MOD
-                # dec_cls.append(score_head[i](output))
                 h = output
                 for layer in list(score_head[i])[:-1]:  # score_head must be nn.Sequential
                     h = layer(h)
@@ -70,7 +75,6 @@ class DeformableTransformerDecoder(_DeformableTransformerDecoder):
                     dec_bboxes.append(torch.sigmoid(bbox + inverse_sigmoid(last_refined_bbox)))
             elif i == self.eval_idx:
                 # >>> MOD
-                # dec_cls.append(score_head[i](output))
                 h = output
                 for layer in list(score_head[i])[:-1]:  # score_head must be nn.Sequential
                     h = layer(h)
@@ -279,7 +283,6 @@ class RTDETRDecoder(_RTDETRDecoder):
         constant_(self.enc_score_head.bias, bias_cls)
         constant_(self.enc_bbox_head.layers[-1].weight, 0.0)
         constant_(self.enc_bbox_head.layers[-1].bias, 0.0)
-
         for cls_, reg_ in zip(self.dec_score_head, self.dec_bbox_head):
             # linear_init(cls_)
             # >>> MOD
