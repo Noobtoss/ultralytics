@@ -72,7 +72,7 @@ class DETRLoss(_DETRLoss):
         match_indices: list[tuple] | None = None,
         cls_feats: torch.Tensor | None = None,
     ) -> dict[str, torch.Tensor]:
-    # <<< MOD
+        # <<< MOD
         """Calculate losses for a single prediction layer.
 
         Args:
@@ -112,7 +112,7 @@ class DETRLoss(_DETRLoss):
         }
         if cls_feats is not None:
             loss.update(
-                self._get_loss_cls_feat(cls_feats, pred_scores, targets, gt_scores, len(gt_bboxes), postfix)
+                self._get_loss_cls_feat(cls_feats, pred_scores.detach(), targets, gt_scores, len(gt_bboxes), postfix)
             )
         return loss
         # <<< MOD
@@ -131,7 +131,7 @@ class DETRLoss(_DETRLoss):
         gt_mask: torch.Tensor | None = None,
         cls_feats: torch.Tensor | None = None,
     ) -> dict[str, torch.Tensor]:
-    # <<< MOD
+        # <<< MOD
         # NOTE: loss class, bbox, giou, mask, dice
         loss = torch.zeros(5 if masks is not None else 3, device=pred_bboxes.device)
         # >>> MOD
@@ -193,7 +193,7 @@ class DETRLoss(_DETRLoss):
         cls_feats: torch.Tensor = None,
         **kwargs: Any,
     ) -> dict[str, torch.Tensor]:
-    # <<< MOD
+        # <<< MOD
         """Calculate loss for predicted bounding boxes and scores.
 
         Args:
@@ -249,7 +249,7 @@ class RTDETRDetectionLoss(_RTDETRDetectionLoss):
         dn_meta: dict[str, Any] | None = None,
         dn_cls_feats: torch.Tensor | None = None,
     ) -> dict[str, torch.Tensor]:
-    # <<< MOD
+        # <<< MOD
         """Forward pass to compute detection loss with optional denoising loss.
 
         Args:
