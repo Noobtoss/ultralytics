@@ -1,7 +1,9 @@
+from copy import copy
 from ultralytics.utils import RANK, LOGGER
 from ultralytics.models.rtdetr.train import RTDETRTrainer as _RTDETRTrainer
 
 from .rtdetr_detection_model import RTDETRDetectionModel
+from .rtdetr_validator import RTDETRValidator
 from .cls_feat_proj_heads import ClsFeatProjHeadFactory
 
 
@@ -23,3 +25,8 @@ class RTDETRTrainer(_RTDETRTrainer):
         if weights:
             model.load(weights)
         return model
+
+    def get_validator(self):
+        """Return an RTDETRValidator suitable for RT-DETR model validation."""
+        self.loss_names = "giou_loss", "cls_loss", "l1_loss"
+        return RTDETRValidator(self.test_loader, save_dir=self.save_dir, args=copy(self.args))

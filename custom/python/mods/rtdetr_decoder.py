@@ -6,8 +6,7 @@ from ultralytics.utils import LOGGER
 from ultralytics.nn.modules.head import RTDETRDecoder as _RTDETRDecoder
 from ultralytics.nn.modules.transformer import DeformableTransformerDecoder as _DeformableTransformerDecoder
 from ultralytics.nn.modules.transformer import MLP, DeformableTransformerDecoderLayer
-from ultralytics.nn.modules.utils import inverse_sigmoid
-from ultralytics.nn.modules.utils import bias_init_with_prob, linear_init
+from ultralytics.nn.modules.utils import inverse_sigmoid, bias_init_with_prob, linear_init
 
 
 class DeformableTransformerDecoder(_DeformableTransformerDecoder):

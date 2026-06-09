@@ -5,8 +5,8 @@ from ultralytics.utils import RANK, LOGGER
 from ultralytics.utils.torch_utils import unwrap_model
 
 from .detection_model import DetectionModel
-from .cls_feat_proj_heads import ClsFeatProjHeadFactory
 from .detection_validator import DetectionValidator
+from .cls_feat_proj_heads import ClsFeatProjHeadFactory
 
 
 class BaseTrainer(_BaseTrainer):
