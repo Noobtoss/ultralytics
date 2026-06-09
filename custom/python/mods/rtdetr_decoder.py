@@ -267,7 +267,6 @@ class RTDETRDecoder(_RTDETRDecoder):
         x = dec_bboxes, dec_scores, enc_bboxes, enc_scores, dn_meta
         x = x + (dec_cls_feats,)
         if self.training:
-            # x = x + (dec_cls_feats,)  # this only adds dec_cls_feats to output during training
             return x
         # <<< MOD
         # (bs, 300, 4+nc)
