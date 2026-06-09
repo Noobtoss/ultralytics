@@ -22,7 +22,8 @@ class DETRLoss(_DETRLoss):
         self.cls_feat_loss = ClsFeatLoss(**cls_feat_kwargs).to(self.device)
         n = getattr(hyp, "cls_feat_dec_layers", None)
         assert n != 0
-        self.cls_feat_dec_layers = range(5 - n, 5) if n is not None else range(1, 5)  # hard encoding 5 is bad
+        self.cls_feat_dec_layers = range(6 - n, 6) if n is not None else range(1, 6)  # hard encoding 6 is bad
+        self.cls_feat_proj_head = getattr(model, "cls_feat_proj_head", None)
 
     def _get_loss_cls_feat(
         self,
@@ -50,6 +51,9 @@ class DETRLoss(_DETRLoss):
         cls_feats = cls_feats[fg_mask]
         pred_scores = pred_scores[fg_mask]
         gt_scores = gt_scores[fg_mask]
+
+        if self.cls_feat_proj_head is not None:
+            cls_feats = self.cls_feat_proj_head(cls_feats)
 
         loss_cls_feat = self.cls_feat_loss(cls_feats=cls_feats, target_scores=gt_scores, pred_scores=pred_scores)
         # loss_cls_feat uses reduction="mean" over all elements (bs * nq * feats).

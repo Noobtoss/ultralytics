@@ -46,7 +46,7 @@ class RTDETRDetectionModel(_RTDETRDetectionModel):
         # >>> MOD
         dec_bboxes, dec_scores, enc_bboxes, enc_scores, dn_meta, dec_cls_feats = preds if self.training else preds[1]
         if dn_meta is None:
-            dn_bboxes, dn_scores, dec_cls_feats = None, None, None
+            dn_bboxes, dn_scores, dn_cls_feats = None, None, None
         else:
             dn_bboxes, dec_bboxes = torch.split(dec_bboxes, dn_meta["dn_num_split"], dim=2)
             dn_scores, dec_scores = torch.split(dec_scores, dn_meta["dn_num_split"], dim=2)
