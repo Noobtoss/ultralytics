@@ -44,7 +44,7 @@ DEFAULT_TRAIN_CFG = Namespace(
 )
 
 DEFAULT_CFG = Namespace(
-    ckpt="checkpoints/yolo11x.pt",
+    ckpt="checkpoints/yolo11x.pt",  # "checkpoints/rtdetr-x.pt"
     train_cfg=DEFAULT_TRAIN_CFG
 )
 
@@ -87,9 +87,6 @@ def train_rtdetr(cfg: Namespace):
 
 
 def train(cfg: Namespace):
-    cfg.model = "rtdetr-l.yaml"  # tmp
-    cfg.ckpt = "rtdetr-l.pt"  # tmp
-
     model_type = "yolo" if "yolo" in (cfg.model or "") else "rtdetr" if "rtdetr" in (cfg.model or "") else None
     model_type_ckpt = "yolo" if "yolo" in (cfg.ckpt or "") else "rtdetr" if "rtdetr" in (cfg.ckpt or "") else None
 

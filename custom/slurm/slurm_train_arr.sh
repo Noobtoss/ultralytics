@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=ultralytics_train_arr # Kurzname des Jobs
-#SBATCH --array=130,132,133,134,138,139,140,144,145,146%8  # Previous runs: 130-147%8 # 87-98%8
+#SBATCH --array=148-149%2  # Previous runs: 130-147%8 # 87-98%8
 #SBATCH --output=logs/R-%A-%a.out
 #SBATCH --partition=p2,p6        # p1,p2,p3,p4,p5,p6
 #SBATCH --qos=gpuultimate
@@ -8,7 +8,7 @@
 #SBATCH --nodes=1                # Anzahl Knoten
 #SBATCH --ntasks=1               # Gesamtzahl der Tasks über alle Knoten hinweg
 #SBATCH --cpus-per-task=4        # CPU Kerne pro Task (>1 für multi-threaded Tasks)
-#SBATCH --mem=32G                # RAM pro CPU Kern #20G #32G #64G
+#SBATCH --mem=64G                # RAM pro CPU Kern #20G #32G #64G
 
 # ----- BASE_DIR ----------------------------------------------------
 BASE_DIR=/nfs/scratch/staff/schmittth/code_nexus/ultralytics
@@ -36,6 +36,7 @@ DATA="${KV[data]:-datasets/default.yaml}"
 # ----- ENVIRONMENT SETUP -------------------------------------------
 module purge
 module load python/anaconda3
+module load cuda/cuda-11.8.0
 eval "$(conda shell.bash hook)"
 
 conda activate conda-ultralytics
