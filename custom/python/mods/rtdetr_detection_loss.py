@@ -60,7 +60,10 @@ class DETRLoss(_DETRLoss):
         # _get_loss_cls applies .mean(1).sum() over (bs * nq, nc+1), making loss_cls ~ (bs * nq) times larger.
         # Scale loss_cls_feat by (bs * nq) to match loss_cls magnitude might be needed.
 
-        return {name_class: loss_cls_feat.squeeze() * self.loss_gain["cls_feat"]}
+        return {
+            name_class: loss_cls_feat.squeeze() * self.loss_gain["cls_feat"],
+            f"logging_{name_class}": loss_cls_feat.squeeze().clone().detach()
+        }
 
     # >>> MOD
     def _get_loss(

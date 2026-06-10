@@ -63,8 +63,14 @@ class RTDETRDetectionModel(_RTDETRDetectionModel):
             (dec_bboxes, dec_scores, dec_cls_feats),
             targets, dn_bboxes=dn_bboxes, dn_scores=dn_scores, dn_meta=dn_meta, dn_cls_feats=dn_cls_feats,
         )
-        # NOTE: There are like 12 losses in RTDETR, backward with all losses but only show the main three losses.
-        return sum(loss.values()), torch.as_tensor(
-            [loss[k].detach() for k in ["loss_giou", "loss_class", "loss_bbox", "loss_cls_feat"]], device=img.device
+
+        logging_loss = {k[len("logging_"):]: loss.pop(k) for k in list(loss) if k.startswith("logging_")}
+        logging_loss = torch.as_tensor(
+            [loss[k].detach() for k in ["loss_giou", "loss_class", "loss_bbox"]] +
+            [logging_loss["loss_cls_feat"].detach()],
+            device=img.device
         )
+
+        # NOTE: There are like 12 losses in RTDETR, backward with all losses but only show the main three losses.
+        return sum(loss.values()), logging_loss
         # <<< MOD
