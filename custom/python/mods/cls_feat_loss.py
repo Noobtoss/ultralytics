@@ -187,7 +187,7 @@ class ClsFeatLoss(nn.Module):
         loss = torch.tensor(0.0, device=cls_feats.device)
         target_cls = target_scores.max(-1).indices
         if self.mask is not None:
-            mask = self.mask(cls_feats, target_scores, *args, **kwargs)
+            mask = self.mask(cls_feats=cls_feats, target_scores=target_scores, *args, **kwargs)
             if not mask.sum():
                 return loss
             cls_feats = cls_feats[mask]
@@ -196,7 +196,7 @@ class ClsFeatLoss(nn.Module):
         loss_per_element = self.loss(cls_feats, target_cls).squeeze(-1)
 
         if self.weight is not None:
-            weight = self.weight(target_scores, *args, **kwargs)
+            weight = self.weight(target_scores=target_scores, *args, **kwargs)
             weight = weight / weight.sum()
             loss += (loss_per_element * weight).sum()
         else:
