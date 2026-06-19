@@ -14,12 +14,12 @@ class v8DetectionLoss(_v8DetectionLoss):
         if hasattr(model.args, 'tal_topk'):
             kwargs['tal_topk'] = model.args.tal_topk
         self.hyp.cls_feat = getattr(self.hyp, "cls_feat", 0)
-        cls_feat_kwargs = {
+        kwargs = {
             k.removeprefix("cls_feat_"): v
             for k, v in vars(self.hyp).items()
             if k.startswith("cls_feat_")
         }
-        self.cls_feat_loss = ClsFeatLoss(**cls_feat_kwargs).to(self.device)
+        self.cls_feat_loss = ClsFeatLoss(**kwargs).to(self.device)
         self.cls_feat_proj_head = getattr(model, "cls_feat_proj_head", None)
 
     def get_assigned_targets_and_loss(self, preds: dict[str, torch.Tensor], batch: dict[str, any]) -> tuple:

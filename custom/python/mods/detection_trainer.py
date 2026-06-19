@@ -7,6 +7,7 @@ from ultralytics.utils.torch_utils import unwrap_model
 from .detection_model import DetectionModel
 from .detection_validator import DetectionValidator
 from .cls_feat_proj_heads import ClsFeatProjHeadFactory
+from .cls_feat_scheduler import ClsFeatCallback
 
 
 class BaseTrainer(_BaseTrainer):
@@ -23,17 +24,22 @@ class DetectionTrainer(_DetectionTrainer):
         LOGGER.warning("[Modded] DetectionTrainer")
         super().__init__(*args, **kwargs)
 
+    def _setup_train(self):
+        super()._setup_train()
+        if hasattr(self.args, "cls_feat_scheduler"):
+            self.add_callback("on_train_epoch_start", ClsFeatCallback(self))
+
     def get_model(self, cfg=None, weights=None, verbose=True):
         model = DetectionModel(cfg, nc=self.data["nc"], verbose=verbose and RANK == -1)
         if hasattr(self.args, "cls_feat_proj_head"):
-            cls_feat_kwargs = {
+            kwargs = {
                 k.removeprefix("cls_feat_"): v
                 for k, v in vars(self.args).items()
                 if k.startswith("cls_feat_")
             }
-            # cls_feat_kwargs['dim'] = model.model[-1].cv3[0][-2][-1].conv.out_channels
-            cls_feat_kwargs['dim'] = model.model[-1].cv3[0][-1].in_channels
-            model.cls_feat_proj_head = ClsFeatProjHeadFactory.get(**cls_feat_kwargs)
+            # kwargs['dim'] = model.model[-1].cv3[0][-2][-1].conv.out_channels
+            kwargs['dim'] = model.model[-1].cv3[0][-1].in_channels
+            model.cls_feat_proj_head = ClsFeatProjHeadFactory.get(**kwargs)
         if weights:
             model.load(weights)
         return model

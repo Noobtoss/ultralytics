@@ -15,13 +15,13 @@ class RTDETRTrainer(_RTDETRTrainer):
     def get_model(self, cfg: dict | None = None, weights: str | None = None, verbose: bool = True):
         model = RTDETRDetectionModel(cfg, nc=self.data["nc"], ch=self.data["channels"], verbose=verbose and RANK == -1)
         if hasattr(self.args, "cls_feat_proj_head"):
-            cls_feat_kwargs = {
+            kwargs = {
                 k.removeprefix("cls_feat_"): v
                 for k, v in vars(self.args).items()
                 if k.startswith("cls_feat_")
             }
-            cls_feat_kwargs['dim'] = model.model[-1].dec_score_head[0][-1].in_features
-            model.cls_feat_proj_head = ClsFeatProjHeadFactory.get(**cls_feat_kwargs)
+            kwargs['dim'] = model.model[-1].dec_score_head[0][-1].in_features
+            model.cls_feat_proj_head = ClsFeatProjHeadFactory.get(**kwargs)
         if weights:
             model.load(weights)
         return model

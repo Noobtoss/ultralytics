@@ -14,12 +14,12 @@ class DETRLoss(_DETRLoss):
         super().__init__(*args, **kwargs)
         hyp = model.args  # hyperparameters
         self.loss_gain["cls_feat"] = getattr(hyp, "cls_feat", 0)
-        cls_feat_kwargs = {
+        kwargs = {
             k.removeprefix("cls_feat_"): v
             for k, v in vars(hyp).items()
             if k.startswith("cls_feat_")
         }
-        self.cls_feat_loss = ClsFeatLoss(**cls_feat_kwargs).to(self.device)
+        self.cls_feat_loss = ClsFeatLoss(**kwargs).to(self.device)
         n = getattr(hyp, "cls_feat_dec_layers", None)
         assert n != 0
         self.cls_feat_dec_layers = range(6 - n, 6) if n is not None else range(1, 6)  # hard encoding 6 is bad
