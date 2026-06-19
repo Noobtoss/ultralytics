@@ -131,8 +131,8 @@ def parse_cfg(args: Namespace) -> Namespace:
         it = iter(args.opts)
         for k, v in zip(it, it):
             setattr(cfg.train_cfg, k, v)
-    cfg.model_name = Path(getattr(cfg, 'ckpt', None) or getattr(cfg, 'model', None)).stem
-    cfg.dataset = Path(cfg.train_cfg.data).stem
+    cfg.train_cfg.model_name = Path(getattr(cfg, 'ckpt', None) or getattr(cfg, 'model', None)).stem
+    cfg.train_cfg.dataset_name = Path(cfg.train_cfg.data).stem
     return cfg
 
 

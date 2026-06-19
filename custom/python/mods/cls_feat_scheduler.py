@@ -3,6 +3,7 @@ from ultralytics.utils.loss import E2ELoss
 from .v8_detection_loss import v8DetectionLoss
 from .rtdetr_detection_loss import RTDETRDetectionLoss
 
+
 class ClsFeatScheduler:
     def __init__(self, name, cls_feat, total_epochs, **kwargs):
         self.name = name
@@ -56,12 +57,13 @@ _ClsFeatScheduler = ClsFeatScheduler  # alias
 class ClsFeatScheduler:
     def __init__(self, trainer):
         self.scheduler = _ClsFeatScheduler(name=trainer.args.cls_feat_scheduler,
-                                          cls_feat=trainer.args.cls_feat,
-                                          total_epochs=trainer.args.epochs)
+                                           cls_feat=trainer.args.cls_feat,
+                                           total_epochs=trainer.args.epochs)
         self.model_criterion = trainer.model.criterion
-
         valid = False
-        if isinstance(self.model_criterion, E2ELoss):
+        if isinstance(self.model_criterion, v8DetectionLoss):
+            valid = True
+        elif isinstance(self.model_criterion, E2ELoss):
             valid = (isinstance(self.model_criterion.one2many, v8DetectionLoss) and
                      isinstance(self.model_criterion.one2one, v8DetectionLoss))
         elif isinstance(self.model_criterion, RTDETRDetectionLoss):
@@ -71,14 +73,16 @@ class ClsFeatScheduler:
 
     def on_train_epoch_start(self, trainer):
         epoch = trainer.epoch
-        if isinstance(self.model_criterion, E2ELoss):
+        if isinstance(self.model_criterion, v8DetectionLoss):
+            self.model_criterion.hyp.cls_feat = self.scheduler.update_cls_feat(epoch)
+        elif isinstance(self.model_criterion, E2ELoss):
             self.model_criterion.one2many.hyp.cls_feat = self.scheduler.update_cls_feat(epoch)
             self.model_criterion.one2one.hyp.cls_feat = self.scheduler.update_cls_feat(epoch)
         elif isinstance(self.model_criterion, RTDETRDetectionLoss):
             self.model_criterion.loss_gain["cls_feat"] = self.scheduler.update_cls_feat(epoch)
 
     def on_train_epoch_end(self, trainer):
-        print(self.scheduler.update_cls_feat(trainer.epoch))
+        # print(self.scheduler.update_cls_feat(trainer.epoch))
         import wandb as wb
         if wb.run:
             wb.run.log({"train/cls_feat": self.scheduler.update_cls_feat(trainer.epoch)}, step=trainer.epoch + 1)
