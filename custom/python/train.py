@@ -1,10 +1,11 @@
-import os
-import sys
-import site
-import warnings
 import argparse
-from argparse import Namespace
 import csv
+import os
+import site
+import sys
+import warnings
+from argparse import Namespace
+from pathlib import Path
 
 # When running with a local ultralytics/ directory present, Python would normally
 # pick up the local folder instead of the conda-installed package. We fix this by
@@ -130,6 +131,8 @@ def parse_cfg(args: Namespace) -> Namespace:
         it = iter(args.opts)
         for k, v in zip(it, it):
             setattr(cfg.train_cfg, k, v)
+    cfg.model_name = Path(getattr(cfg, 'ckpt', None) or getattr(cfg, 'model', None)).stem
+    cfg.dataset = Path(cfg.train_cfg.data).stem
     return cfg
 
 
@@ -144,7 +147,7 @@ def main():
             model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feat_yolo26n.yaml",
             ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/yolo26n.pt",
             data="/Users/noobtoss/code_nexus/ultralytics/datasets/semmel/Images05ACCV2026_local.yaml",
-            opts=["imgsz", "128"],
+            opts=["imgsz", "128", "cls_feat_scheduler", "inverse_cos_decay"],
         )
         args = Namespace(
             exp_name="unnamed_experiment",
@@ -152,7 +155,7 @@ def main():
             model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feat_rtdetr-l.yaml",
             ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/rtdetr-l.pt",
             data="/Users/noobtoss/code_nexus/ultralytics/datasets/semmel/Images05ACCV2026_local.yaml",
-            opts=["imgsz", "128"],
+            opts=["imgsz", "128", "cls_feat_scheduler", "inverse_cos_decay"],
         )
 
     cfg = parse_cfg(args)

@@ -7,7 +7,7 @@ from ultralytics.utils.torch_utils import unwrap_model
 from .detection_model import DetectionModel
 from .detection_validator import DetectionValidator
 from .cls_feat_proj_head import ClsFeatProjHeadFactory
-from .cls_feat_scheduler import ClsFeatCallback
+from .cls_feat_scheduler import ClsFeatScheduler
 
 
 class BaseTrainer(_BaseTrainer):
@@ -26,8 +26,11 @@ class DetectionTrainer(_DetectionTrainer):
 
     def _setup_train(self):
         super()._setup_train()
+        if getattr(self.model, "criterion", None) is None:  # Default done in BaseModel forward
+            self.model.criterion = self.model.init_criterion()
         if hasattr(self.args, "cls_feat_scheduler"):
-            self.add_callback("on_train_epoch_start", ClsFeatCallback(self))
+            self.add_callback("on_train_epoch_start", ClsFeatScheduler(self).on_train_epoch_start)
+            self.add_callback("on_train_epoch_end", ClsFeatScheduler(self).on_train_epoch_end)
 
     def get_model(self, cfg=None, weights=None, verbose=True):
         model = DetectionModel(cfg, nc=self.data["nc"], verbose=verbose and RANK == -1)

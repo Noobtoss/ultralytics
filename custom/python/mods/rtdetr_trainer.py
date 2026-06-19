@@ -5,12 +5,21 @@ from ultralytics.models.rtdetr.train import RTDETRTrainer as _RTDETRTrainer
 from .rtdetr_detection_model import RTDETRDetectionModel
 from .rtdetr_validator import RTDETRValidator
 from .cls_feat_proj_head import ClsFeatProjHeadFactory
+from .cls_feat_scheduler import ClsFeatScheduler
 
 
 class RTDETRTrainer(_RTDETRTrainer):
     def __init__(self, *args, **kwargs) -> None:
         LOGGER.warning("[Modded] RTDETRTrainer")
         super().__init__(*args, **kwargs)
+
+    def _setup_train(self):
+        super()._setup_train()
+        if getattr(self.model, "criterion", None) is None:  # Default done in BaseModel forward
+            self.model.criterion = self.model.init_criterion()
+        if hasattr(self.args, "cls_feat_scheduler"):
+            self.add_callback("on_train_epoch_start", ClsFeatScheduler(self).on_train_epoch_start)
+            self.add_callback("on_train_epoch_end", ClsFeatScheduler(self).on_train_epoch_end)
 
     def get_model(self, cfg: dict | None = None, weights: str | None = None, verbose: bool = True):
         model = RTDETRDetectionModel(cfg, nc=self.data["nc"], ch=self.data["channels"], verbose=verbose and RANK == -1)
