@@ -16,6 +16,9 @@ def parse_experiments(text: str, task_ids: list[int]) -> list[str]:
     lines = [l.strip() for l in text.splitlines() if l.strip() and not l.strip().startswith('#')]
     experiments = []
     for task_id in task_ids:
+        if task_id - 1 >= len(lines):
+            experiments.append(f"Warning: task_id {task_id} exceeds number of lines ({len(lines)}), skipping.")
+            continue
         line = lines[task_id - 1]
         match = re.search(r'exp_name\s+(\S+)', line)
         if match:
