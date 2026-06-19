@@ -6,7 +6,7 @@ from ultralytics.utils.torch_utils import unwrap_model
 
 from .detection_model import DetectionModel
 from .detection_validator import DetectionValidator
-from .cls_feat_proj_heads import ClsFeatProjHeadFactory
+from .cls_feat_proj_head import ClsFeatProjHeadFactory
 from .cls_feat_scheduler import ClsFeatCallback
 
 

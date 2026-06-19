@@ -4,7 +4,7 @@ from ultralytics.models.rtdetr.train import RTDETRTrainer as _RTDETRTrainer
 
 from .rtdetr_detection_model import RTDETRDetectionModel
 from .rtdetr_validator import RTDETRValidator
-from .cls_feat_proj_heads import ClsFeatProjHeadFactory
+from .cls_feat_proj_head import ClsFeatProjHeadFactory
 
 
 class RTDETRTrainer(_RTDETRTrainer):
