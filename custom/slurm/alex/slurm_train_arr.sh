@@ -7,7 +7,7 @@
 #SBATCH --ntasks=1           # 1 process total (not MPI)
 #SBATCH --ntasks-per-node=1  # That 1 process runs on 1 node
 #SBATCH --cpus-per-task=4    # 4 CPU cores for that process (data loading etc)
-#SBATCH --time=02:32:32      # Walltime limit: kill job after 2hr 32min 32sec
+#SBATCH --time=03:32:32      # Walltime limit: kill job after 3hr 32min 32sec
 #SBATCH --mail-type=ALL      # Email on job start, end, fail
 #SBATCH --mail-user=thomas.schmitt@th-nuernberg.de
 
