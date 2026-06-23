@@ -35,6 +35,7 @@ class DetectionTrainer(_DetectionTrainer):
     def get_model(self, cfg=None, weights=None, verbose=True):
         model = DetectionModel(cfg, nc=self.data["nc"], verbose=verbose and RANK == -1)
         if hasattr(self.args, "cls_feat_proj_head"):
+            LOGGER.warning("[Modded] adding cls_feat_proj_head")
             kwargs = {
                 k.removeprefix("cls_feat_"): v
                 for k, v in vars(self.args).items()

@@ -24,6 +24,7 @@ class RTDETRTrainer(_RTDETRTrainer):
     def get_model(self, cfg: dict | None = None, weights: str | None = None, verbose: bool = True):
         model = RTDETRDetectionModel(cfg, nc=self.data["nc"], ch=self.data["channels"], verbose=verbose and RANK == -1)
         if hasattr(self.args, "cls_feat_proj_head"):
+            LOGGER.warning("[Modded] adding cls_feat_proj_head")
             kwargs = {
                 k.removeprefix("cls_feat_"): v
                 for k, v in vars(self.args).items()
