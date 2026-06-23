@@ -9,28 +9,26 @@ class ClsFeatProjHeadFactory:
 
         if proj_head == "n":
             return nn.Sequential(
-                nn.Linear(dim, 64, bias=False)
+                nn.Linear(dim, 64)
             )
 
         if proj_head == "s":
             return nn.Sequential(
-                nn.Linear(dim, 128, bias=False)
+                nn.Linear(dim, 128)
             )
 
         if proj_head == "m":
             return nn.Sequential(
-                nn.Linear(dim, dim, bias=False),
-                nn.BatchNorm1d(dim),
+                nn.Linear(dim, dim),
                 nn.ReLU(inplace=True),
-                nn.Linear(dim, 128, bias=False)
+                nn.Linear(dim, 128)
             )
 
         if proj_head == "l":
             return nn.Sequential(
-                nn.Linear(dim, dim, bias=False),
-                nn.BatchNorm1d(dim),
+                nn.Linear(dim, dim),
                 nn.ReLU(inplace=True),
-                nn.Linear(dim, 256, bias=False)
+                nn.Linear(dim, 256)
             )
 
         raise ValueError(f"Unknown proj head type: '{proj_head}'. Choose from: 'n', 's', 'm', 'l'")
