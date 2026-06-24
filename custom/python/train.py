@@ -17,7 +17,7 @@ sys.path.insert(0, site.getsitepackages()[0])  # index 0 — conda site-packages
 
 from ultralytics.utils import LOGGER
 from ultralytics import YOLO, RTDETR
-from get_eval_metrics import get_eval_metrics
+from ckpt_detach_mods import ckpt_detach_mods
 from mods import DetectionTrainer, RTDETRTrainer
 
 DEFAULT_TRAIN_CFG = Namespace(
@@ -55,9 +55,11 @@ def val_last(trainer):
         LOGGER.info(f"\nValidating {trainer.last}...")
         metrics = trainer.validator(model=trainer.last)
 
-        for csv_path in [trainer.save_dir.parent / "results.csv",
-                         trainer.save_dir.parent.parent / "results/results.csv",
-                         trainer.save_dir.parent.parent / "results.csv"]:
+        for csv_path in [
+            trainer.save_dir.parent / "results.csv",
+            # trainer.save_dir.parent.parent / "results/results.csv",
+            # trainer.save_dir.parent.parent / "results.csv"
+        ]:
             csv_path.parent.mkdir(parents=True, exist_ok=True)
             row = {"name": trainer.args.name, **{k: round(v, 3) for k, v in metrics.items()}}
             write_header = not csv_path.exists()
@@ -75,6 +77,7 @@ def train_yolo(cfg: Namespace):
     else:
         model = YOLO(cfg.ckpt)
     model.add_callback("on_train_end", val_last)
+    # model.add_callback("on_train_end", lambda trainer: ckpt_detach_mods(trainer.last))
     model.train(**vars(cfg.train_cfg), trainer=DetectionTrainer)
 
 
@@ -84,6 +87,7 @@ def train_rtdetr(cfg: Namespace):
     else:
         model = RTDETR(cfg.ckpt)
     model.add_callback("on_train_end", val_last)
+    # model.add_callback("on_train_end", lambda trainer: ckpt_detach_mods(trainer.last))
     model.train(**vars(cfg.train_cfg), trainer=RTDETRTrainer)
 
 
@@ -160,7 +164,7 @@ def main():
 
     cfg = parse_cfg(args)
     train(cfg)
-    get_eval_metrics(cfg)
+    # get_eval_metrics(cfg)
 
 
 if __name__ == '__main__':
