@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=ultralytics_train_arr # Kurzname des Jobs
-#SBATCH --array=11-16,27-32,43-48,59-64%3
+#SBATCH --array=11-16,27-32%8
 #SBATCH --output=logs/R-%A-%a.out
 #SBATCH --partition=p2,p4,p6        # p1,p2,p3,p4,p5,p6
 #SBATCH --qos=gpuultimate
@@ -61,5 +61,6 @@ python $BASE_DIR/custom/python/train.py \
 
 # ----- CLEANUP -----------------------------------------------------
 KEEP_FILES=("metrics.csv" "results.csv" "last.pt")
+find $SAVE_DIR -type d -name "wandb" -exec rm -rf {} +
 eval find $SAVE_DIR -type f $(printf ' ! -name "%s"' "${KEEP_FILES[@]}") -delete
 find $SAVE_DIR -type d -empty -delete
