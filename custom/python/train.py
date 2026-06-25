@@ -1,6 +1,7 @@
 import argparse
 import csv
 import os
+import shutil
 import site
 import sys
 import warnings
@@ -71,12 +72,20 @@ def val_last(trainer):
             LOGGER.info(f"Results saved to {csv_path}")
 
 
+def move_last_ckpt(trainer):
+    src = trainer.last
+    dst = trainer.save_dir / "last.pt"
+    shutil.move(str(src), str(dst))
+    trainer.last = dst
+
+
 def train_yolo(cfg: Namespace):
     if cfg.model is not None:
         model = YOLO(cfg.model).load(cfg.ckpt)
     else:
         model = YOLO(cfg.ckpt)
     model.add_callback("on_train_end", val_last)
+    model.add_callback("on_train_end", move_last_ckpt)
     # model.add_callback("on_train_end", lambda trainer: ckpt_detach_mods(trainer.last))
     model.train(**vars(cfg.train_cfg), trainer=DetectionTrainer)
 
@@ -87,6 +96,7 @@ def train_rtdetr(cfg: Namespace):
     else:
         model = RTDETR(cfg.ckpt)
     model.add_callback("on_train_end", val_last)
+    model.add_callback("on_train_end", move_last_ckpt)
     # model.add_callback("on_train_end", lambda trainer: ckpt_detach_mods(trainer.last))
     model.train(**vars(cfg.train_cfg), trainer=RTDETRTrainer)
 
@@ -151,7 +161,7 @@ def main():
             model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feat_yolo26n.yaml",
             ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/yolo26n.pt",
             data="/Users/noobtoss/code_nexus/ultralytics/datasets/semmel/Images05ACCV2026_local.yaml",
-            opts=["imgsz", "128", "cls_feat_scheduler", "inverse_cos_decay", "cls_feat_proj_head", "s"],
+            opts=["imgsz", "128", "cls_feat_scheduler", "inverse_cos_decay", "cls_feat_proj_head", "s", "epochs", "14"],
         )
         args = Namespace(
             exp_name="unnamed_experiment",
@@ -159,7 +169,7 @@ def main():
             model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feat_rtdetr-l.yaml",
             ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/rtdetr-l.pt",
             data="/Users/noobtoss/code_nexus/ultralytics/datasets/semmel/Images05ACCV2026_local.yaml",
-            opts=["imgsz", "128", "cls_feat_scheduler", "inverse_cos_decay", "cls_feat_proj_head", "s"],
+            opts=["imgsz", "128", "cls_feat_scheduler", "inverse_cos_decay", "cls_feat_proj_head", "s", "epochs", "14"],
         )
 
     cfg = parse_cfg(args)
