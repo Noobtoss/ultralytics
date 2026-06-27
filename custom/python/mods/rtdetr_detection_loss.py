@@ -19,6 +19,7 @@ class DETRLoss(_DETRLoss):
             for k, v in vars(hyp).items()
             if k.startswith("cls_feat_")
         }
+        LOGGER.warning(kwargs)
         self.cls_feat_loss = ClsFeatLoss(**kwargs).to(self.device)
         n = getattr(hyp, "cls_feat_dec_layers", None)
         assert n != 0

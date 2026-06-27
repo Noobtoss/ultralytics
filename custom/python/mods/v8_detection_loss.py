@@ -19,6 +19,7 @@ class v8DetectionLoss(_v8DetectionLoss):
             for k, v in vars(self.hyp).items()
             if k.startswith("cls_feat_")
         }
+        LOGGER.warning(kwargs)
         self.cls_feat_loss = ClsFeatLoss(**kwargs).to(self.device)
         self.cls_feat_proj_head = getattr(model, "cls_feat_proj_head", None)
 
