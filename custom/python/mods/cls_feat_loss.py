@@ -47,7 +47,7 @@ class FeatLossFactory:
             # https://kevinmusgrave.github.io/pytorch-metric-learning/losses/#multisimilarityloss
             params = {
                 "alpha": 2.0,
-                "beta": 20.0,
+                "beta": 12.0,
                 "base": 0.5,
             }
             params.update(
