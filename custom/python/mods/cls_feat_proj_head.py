@@ -28,7 +28,9 @@ class ClsFeatProjHeadFactory:
             return nn.Sequential(
                 nn.Linear(dim, dim),
                 nn.ReLU(inplace=True),
-                nn.Linear(dim, 256)
+                nn.Linear(dim, dim),
+                nn.ReLU(inplace=True),
+                nn.Linear(dim, 128)
             )
 
         raise ValueError(f"Unknown proj head type: '{proj_head}'. Choose from: 'n', 's', 'm', 'l'")
