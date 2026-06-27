@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=ultralytics_train_arr  # Name shown in squeue
-#SBATCH --array=11-16,27-32%8
+#SBATCH --array=1,20-22,23,43-46%9
 #SBATCH --output=logs/R-%A-%a.out  # Log file: %A=jobID, %a=array task index
 #SBATCH --gres=gpu:a40:1     # Request 1x A40 GPUs
 #SBATCH --partition=a40      # Submit to the a40 node partition
