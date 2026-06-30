@@ -3,7 +3,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from pytorch_metric_learning import losses, reducers
-from ultralytics.utils.metrics import bbox_iou
 
 
 class UnpackReducer(reducers.BaseReducer):
@@ -58,17 +57,6 @@ class FeatLossFactory:
         else:
             raise ValueError(f"Unknown feat loss type: '{loss}'")
 
-class TALAlignWeight:
-    def __init__(self, alpha: float = 1.0, beta: float = 6.0, **kwargs):
-        self.alpha = alpha
-        self.beta = beta
-
-    def __call__(self, target_scores, pred_scores, target_bboxes, pred_bboxes):
-        iou = bbox_iou(pred_bboxes, target_bboxes, xywh=False, CIoU=True).squeeze()
-        pred_scores = pred_scores[torch.arange(len(pred_scores)), target_scores.argmax(-1)].sigmoid()
-        align_metric = pred_scores.pow(self.alpha) * iou.pow(self.beta)
-        return align_metric
-
 
 class ConfWeight:
     def __init__(self, **kwargs):
@@ -83,9 +71,6 @@ class WeightFactory:
     def get(weight: str = None, **kwargs):
         if weight is None or weight == "None":
             return None
-        elif weight == "tal":
-            # https://arxiv.org/abs/2108.07755
-            return TALAlignWeight(**kwargs)
         elif weight == "conf":
             return ConfWeight()
         else:
@@ -93,7 +78,7 @@ class WeightFactory:
 
 
 class Masking:
-    def __init__(self, mask_pct: float = 0.2, **kwargs):
+    def __init__(self, mask_pct: float = 0.4, **kwargs):
         super().__init__(**kwargs)
         self.mask_pct = mask_pct
 
@@ -101,12 +86,6 @@ class Masking:
         k = max(1, int(len(metric) * (1 - self.mask_pct)))
         thresh = metric.topk(k).values[-1]
         return metric >= thresh
-
-
-class TALAlignMask(Masking, TALAlignWeight):
-    def __call__(self, target_scores, pred_scores, target_bboxes, pred_bboxes):
-        align_metric = super().__call__(target_scores, pred_scores, target_bboxes, pred_bboxes)
-        return self._masking(align_metric)
 
 
 class ConfMask(Masking, ConfWeight):
