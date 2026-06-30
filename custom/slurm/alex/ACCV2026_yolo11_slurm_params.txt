@@ -94,3 +94,4 @@ exp_name Images05ACCV2026Plus_scl06_head_s_weight ckpt checkpoints/yolo11x.pt da
 exp_name Images05ACCV2026Plus_scl02_head_m_weight ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026Plus.yaml epochs 100 cls_feat 0.2 cls_feat_proj_head m cls_feat_weight conf
 exp_name Images05ACCV2026Plus_scl04_head_m_weight ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026Plus.yaml epochs 100 cls_feat 0.4 cls_feat_proj_head m cls_feat_weight conf
 exp_name Images05ACCV2026Plus_scl06_head_m_weight ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/Images05ACCV2026Plus.yaml epochs 100 cls_feat 0.6 cls_feat_proj_head m cls_feat_weight conf
+# Experiments End Current
