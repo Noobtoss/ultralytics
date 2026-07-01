@@ -87,7 +87,7 @@ def train_yolo(cfg: Namespace):
     model.add_callback("on_train_end", val_last)
     model.add_callback("on_train_end", move_last_ckpt)
     # model.add_callback("on_train_end", lambda trainer: ckpt_detach_mods(trainer.last))
-    model.train(**vars(cfg.train_cfg), trainer=DetectionTrainer)
+    model.train(**vars(cfg.train_cfg), trainer=DetectionTrainer, plots=False)
 
 
 def train_rtdetr(cfg: Namespace):
@@ -98,7 +98,7 @@ def train_rtdetr(cfg: Namespace):
     model.add_callback("on_train_end", val_last)
     model.add_callback("on_train_end", move_last_ckpt)
     # model.add_callback("on_train_end", lambda trainer: ckpt_detach_mods(trainer.last))
-    model.train(**vars(cfg.train_cfg), trainer=RTDETRTrainer)
+    model.train(**vars(cfg.train_cfg), trainer=RTDETRTrainer, plots=False)
 
 
 def train(cfg: Namespace):
