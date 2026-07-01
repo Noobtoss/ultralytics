@@ -31,6 +31,8 @@ def ckpt_detach_mods(ckpt):
     model_nc = model.model.nc
 
     model_yaml = model.model.yaml.get("yaml_file")
+    model_scale = model.model.yaml.get("scale")
+    model_names = model.names
     assert model_yaml is not None, f"Could not find yaml_file in model.model.yaml, keys: {list(model.model.yaml.keys())}"
     model_yaml = detach_yaml(model_yaml)
     assert model_yaml is not None, f"Could not match yaml_file to any ultralytics default yaml"
@@ -45,9 +47,20 @@ def ckpt_detach_mods(ckpt):
         "from ultralytics import YOLO, RTDETR\n"
         f"model = YOLO('{model_yaml}')\n"
         f"model.overrides['nc'] = {model_nc}\n"
-        f"model.model = model.model.__class__(model.model.yaml | {{'nc': {model_nc}}})\n"
+        f"model.model = model.model.__class__(model.model.yaml | {{'nc': {model_nc}, 'scale': '{model_scale}'}})\n"
         f"state = torch.load('{str(ckpt_detached)}')\n"
         "model.model.load_state_dict(state, strict=True)\n"
+        f"model.model.names = {model_names!r}\n"
+        "model.overrides['names'] = model.model.names\n"
         f"model.save('{str(ckpt_detached)}')\n"
     )
     subprocess.run([sys.executable, "-c", script], check=True)
+
+
+def main():
+    ckpt = "last.pt"
+    ckpt_detach_mods(ckpt)
+
+
+if __name__ == "__main__":
+    main()
