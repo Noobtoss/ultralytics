@@ -1,0 +1,25 @@
+# Experiments YOLO26 - ACCV2026 - SupConLoss
+exp_name Images05ACCV2026_baseline      model custom/cfg/cls_feat_yolo26x.yaml ckpt checkpoints/yolo26x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0
+exp_name Images05ACCV2026_scl006        model custom/cfg/cls_feat_yolo26x.yaml ckpt checkpoints/yolo26x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.06
+exp_name Images05ACCV2026_scl01         model custom/cfg/cls_feat_yolo26x.yaml ckpt checkpoints/yolo26x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.1
+exp_name Images05ACCV2026_scl02         model custom/cfg/cls_feat_yolo26x.yaml ckpt checkpoints/yolo26x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.2
+exp_name Images05ACCV2026_scl04         model custom/cfg/cls_feat_yolo26x.yaml ckpt checkpoints/yolo26x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.4
+exp_name Images05ACCV2026_scl01_head_s  model custom/cfg/cls_feat_yolo26x.yaml ckpt checkpoints/yolo26x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.1 cls_feat_proj_head s
+exp_name Images05ACCV2026_scl02_head_s  model custom/cfg/cls_feat_yolo26x.yaml ckpt checkpoints/yolo26x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.2 cls_feat_proj_head s
+exp_name Images05ACCV2026_scl04_head_s  model custom/cfg/cls_feat_yolo26x.yaml ckpt checkpoints/yolo26x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.4 cls_feat_proj_head s
+exp_name Images05ACCV2026_scl01_head_m  model custom/cfg/cls_feat_yolo26x.yaml ckpt checkpoints/yolo26x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.1 cls_feat_proj_head m
+exp_name Images05ACCV2026_scl02_head_m  model custom/cfg/cls_feat_yolo26x.yaml ckpt checkpoints/yolo26x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.2 cls_feat_proj_head m
+exp_name Images05ACCV2026_scl04_head_m  model custom/cfg/cls_feat_yolo26x.yaml ckpt checkpoints/yolo26x.pt data datasets_tar/semmel/Images05ACCV2026.yaml epochs 100 cls_feat 0.4 cls_feat_proj_head m
+# Experiments YOLO11x - ACCV2026Plus - SupConLoss
+exp_name Images05ACCV2026Plus_baseline      model custom/cfg/cls_feat_yolo26x.yaml ckpt checkpoints/yolo26x.pt data datasets_tar/semmel/Images05ACCV2026Plus.yaml epochs 100 cls_feat 0
+exp_name Images05ACCV2026Plus_scl006        model custom/cfg/cls_feat_yolo26x.yaml ckpt checkpoints/yolo26x.pt data datasets_tar/semmel/Images05ACCV2026Plus.yaml epochs 100 cls_feat 0.06
+exp_name Images05ACCV2026Plus_scl01         model custom/cfg/cls_feat_yolo26x.yaml ckpt checkpoints/yolo26x.pt data datasets_tar/semmel/Images05ACCV2026Plus.yaml epochs 100 cls_feat 0.1
+exp_name Images05ACCV2026Plus_scl02         model custom/cfg/cls_feat_yolo26x.yaml ckpt checkpoints/yolo26x.pt data datasets_tar/semmel/Images05ACCV2026Plus.yaml epochs 100 cls_feat 0.2
+exp_name Images05ACCV2026Plus_scl04         model custom/cfg/cls_feat_yolo26x.yaml ckpt checkpoints/yolo26x.pt data datasets_tar/semmel/Images05ACCV2026Plus.yaml epochs 100 cls_feat 0.4
+exp_name Images05ACCV2026Plus_scl01_head_s  model custom/cfg/cls_feat_yolo26x.yaml ckpt checkpoints/yolo26x.pt data datasets_tar/semmel/Images05ACCV2026Plus.yaml epochs 100 cls_feat 0.1 cls_feat_proj_head s
+exp_name Images05ACCV2026Plus_scl02_head_s  model custom/cfg/cls_feat_yolo26x.yaml ckpt checkpoints/yolo26x.pt data datasets_tar/semmel/Images05ACCV2026Plus.yaml epochs 100 cls_feat 0.2 cls_feat_proj_head s
+exp_name Images05ACCV2026Plus_scl04_head_s  model custom/cfg/cls_feat_yolo26x.yaml ckpt checkpoints/yolo26x.pt data datasets_tar/semmel/Images05ACCV2026Plus.yaml epochs 100 cls_feat 0.4 cls_feat_proj_head s
+exp_name Images05ACCV2026Plus_scl01_head_m  model custom/cfg/cls_feat_yolo26x.yaml ckpt checkpoints/yolo26x.pt data datasets_tar/semmel/Images05ACCV2026Plus.yaml epochs 100 cls_feat 0.1 cls_feat_proj_head m
+exp_name Images05ACCV2026Plus_scl02_head_m  model custom/cfg/cls_feat_yolo26x.yaml ckpt checkpoints/yolo26x.pt data datasets_tar/semmel/Images05ACCV2026Plus.yaml epochs 100 cls_feat 0.2 cls_feat_proj_head m
+exp_name Images05ACCV2026Plus_scl04_head_m  model custom/cfg/cls_feat_yolo26x.yaml ckpt checkpoints/yolo26x.pt data datasets_tar/semmel/Images05ACCV2026Plus.yaml epochs 100 cls_feat 0.4 cls_feat_proj_head m
+# Experiments End Current
