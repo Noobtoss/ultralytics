@@ -89,8 +89,8 @@ python $BASE_DIR/custom/python/train.py \
        $PARAMS
 
 # ----- CLEANUP -----------------------------------------------------
-KEEP_FILES=("metrics.csv" "results.csv" "last.pt")
 wandb sync --sync-all || true
+KEEP_FILES=("metrics.csv" "results.csv" "last.pt")
 rm -rf "$SAVE_DIR/wandb"
 eval find $SAVE_DIR -type f $(printf ' ! -name "%s"' "${KEEP_FILES[@]}") -delete
 find $SAVE_DIR -type d -empty -delete
