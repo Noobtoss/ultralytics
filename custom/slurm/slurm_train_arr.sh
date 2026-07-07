@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=ultralytics_train_arr # Kurzname des Jobs
-#SBATCH --array=11-16,27-32%8
+#SBATCH --array=1%8
 #SBATCH --output=logs/R-%A-%a.out
 #SBATCH --partition=p2,p4,p6        # p1,p2,p3,p4,p5,p6
 #SBATCH --qos=gpuultimate
@@ -43,12 +43,15 @@ conda activate conda-ultralytics
 
 export PYTHONPATH="$BASE_DIR/custom/python"  # "$BASE_DIR/custom/python:$PYTHONPATH"
 
+export TMPDIR=$(mktemp -d "${TMPDIR:-/tmp}/ultralytics_${SLURM_JOB_ID}_XXXXXX")
+
 # ----- WANDB -------------------------------------------------------
 yolo settings wandb=True
 export WANDB_API_KEY=95177947f5f36556806da90ea7a0bf93ed857d58
-export WANDB_DIR=/nfs/scratch/staff/schmittth/tmp
-export WANDB_CACHE_DIR=/nfs/scratch/staff/schmittth/tmp
-export WANDB_CONFIG_DIR=/nfs/scratch/staff/schmittth/tmp
+export WANDB_CACHE_DIR=$TMPDIR
+export WANDB_DATA_DIR=$TMPDIR
+export WANDB_DIR=$TMPDIR
+export WANDB_CONFIG_DIR=$TMPDIR
 
 # ----- TRAINING ----------------------------------------------------
 python $BASE_DIR/custom/python/train.py \
@@ -61,6 +64,7 @@ python $BASE_DIR/custom/python/train.py \
 
 # ----- CLEANUP -----------------------------------------------------
 wandb sync --sync-all || true
+rm -rf "$TMPDIR"
 KEEP_FILES=("metrics.csv" "results.csv" "last.pt")
 rm -rf "$SAVE_DIR/wandb"
 eval find $SAVE_DIR -type f $(printf ' ! -name "%s"' "${KEEP_FILES[@]}") -delete

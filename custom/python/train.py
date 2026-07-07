@@ -1,7 +1,5 @@
 import argparse
-import csv
 import os
-import shutil
 import site
 import sys
 import warnings
@@ -16,10 +14,9 @@ from pathlib import Path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))  # index 1 — local imports
 sys.path.insert(0, site.getsitepackages()[0])  # index 0 — conda site-packages (priority)
 
-from ultralytics.utils import LOGGER
 from ultralytics import YOLO, RTDETR
-from ckpt_detach_mods import ckpt_detach_mods
 from mods import DetectionTrainer, RTDETRTrainer
+from callbacks import eval_last, move_last_ckpt, wb_callbacks
 
 DEFAULT_TRAIN_CFG = Namespace(
     data="",
@@ -51,42 +48,15 @@ DEFAULT_CFG = Namespace(
 )
 
 
-def val_last(trainer):
-    if trainer.last.exists():
-        LOGGER.info(f"\nValidating {trainer.last}...")
-        metrics = trainer.validator(model=trainer.last)
-
-        for csv_path in [
-            trainer.save_dir.parent / "results.csv",
-            # trainer.save_dir.parent.parent / "results/results.csv",
-            # trainer.save_dir.parent.parent / "results.csv"
-        ]:
-            csv_path.parent.mkdir(parents=True, exist_ok=True)
-            row = {"name": trainer.args.name, **{k: round(v, 3) for k, v in metrics.items()}}
-            write_header = not csv_path.exists()
-            with open(csv_path, "a", newline="") as f:
-                writer = csv.DictWriter(f, fieldnames=row.keys())
-                if write_header:
-                    writer.writeheader()
-                writer.writerow(row)
-            LOGGER.info(f"Results saved to {csv_path}")
-
-
-def move_last_ckpt(trainer):
-    src = trainer.last
-    dst = trainer.save_dir / "last.pt"
-    shutil.move(str(src), str(dst))
-    trainer.last = dst
-
-
 def train_yolo(cfg: Namespace):
     if cfg.model is not None:
         model = YOLO(cfg.model).load(cfg.ckpt)
     else:
         model = YOLO(cfg.ckpt)
-    model.add_callback("on_train_end", val_last)
+    model.add_callback("on_train_end", eval_last)
     model.add_callback("on_train_end", move_last_ckpt)
-    # model.add_callback("on_train_end", lambda trainer: ckpt_detach_mods(trainer.last))
+    for event, callback in wb_callbacks.items():
+        model.add_callback(event, callback)
     model.train(**vars(cfg.train_cfg), trainer=DetectionTrainer, plots=False)
 
 
@@ -95,9 +65,10 @@ def train_rtdetr(cfg: Namespace):
         model = RTDETR(cfg.model).load(cfg.ckpt)
     else:
         model = RTDETR(cfg.ckpt)
-    model.add_callback("on_train_end", val_last)
+    model.add_callback("on_train_end", eval_last)
     model.add_callback("on_train_end", move_last_ckpt)
-    # model.add_callback("on_train_end", lambda trainer: ckpt_detach_mods(trainer.last))
+    for event, callback in wb_callbacks.items():
+        model.add_callback(event, callback)
     model.train(**vars(cfg.train_cfg), trainer=RTDETRTrainer, plots=False)
 
 
@@ -151,6 +122,11 @@ def parse_cfg(args: Namespace) -> Namespace:
 
 
 def main():
+    from ultralytics.utils import SETTINGS
+    print(SETTINGS)
+    SETTINGS["wandb"] = False
+    print(SETTINGS)
+
     if len(sys.argv) > 1:
         args = parse_args()
     else:
