@@ -1,50 +1,50 @@
 # Experiments RT-DETR - ACCV2026 - SupConLoss
-exp_name 05ACCV2026_baseline      model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0
-exp_name 05ACCV2026_scl006        model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.06
-exp_name 05ACCV2026_scl01         model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.1
-exp_name 05ACCV2026_scl02         model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.2
-exp_name 05ACCV2026_scl04         model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.4
-exp_name 05ACCV2026_scl006_head_s model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.06 cls_feat_proj_head s
-exp_name 05ACCV2026_scl01_head_s  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_proj_head s
-exp_name 05ACCV2026_scl02_head_s  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.2  cls_feat_proj_head s
-exp_name 05ACCV2026_scl04_head_s  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.4  cls_feat_proj_head s
-exp_name 05ACCV2026_scl003_head_m model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.03 cls_feat_proj_head m
-exp_name 05ACCV2026_scl006_head_m model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.06 cls_feat_proj_head m
-exp_name 05ACCV2026_scl01_head_m  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_proj_head m
-exp_name 05ACCV2026_scl02_head_m  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.2  cls_feat_proj_head m
-exp_name 05ACCV2026_scl04_head_m  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.4  cls_feat_proj_head m
+exp_name ACCV2026_baseline      model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0
+exp_name ACCV2026_scl006        model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.06
+exp_name ACCV2026_scl01         model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.1
+exp_name ACCV2026_scl02         model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.2
+exp_name ACCV2026_scl04         model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.4
+exp_name ACCV2026_scl006_head_s model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.06 cls_feat_proj_head s
+exp_name ACCV2026_scl01_head_s  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_proj_head s
+exp_name ACCV2026_scl02_head_s  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.2  cls_feat_proj_head s
+exp_name ACCV2026_scl04_head_s  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.4  cls_feat_proj_head s
+exp_name ACCV2026_scl003_head_m model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.03 cls_feat_proj_head m
+exp_name ACCV2026_scl006_head_m model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.06 cls_feat_proj_head m
+exp_name ACCV2026_scl01_head_m  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_proj_head m
+exp_name ACCV2026_scl02_head_m  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.2  cls_feat_proj_head m
+exp_name ACCV2026_scl04_head_m  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.4  cls_feat_proj_head m
 # Experiments RT-DETR - ACCV2026Plus - SupConLoss
-exp_name 05ACCV2026Plus_baseline      model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0
-exp_name 05ACCV2026Plus_scl01         model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.1
-exp_name 05ACCV2026Plus_scl02         model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.2
-exp_name 05ACCV2026Plus_scl04         model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.4
-exp_name 05ACCV2026Plus_scl006_head_s model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.06 cls_feat_proj_head s
-exp_name 05ACCV2026Plus_scl01_head_s  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.1  cls_feat_proj_head s
-exp_name 05ACCV2026Plus_scl02_head_s  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.2  cls_feat_proj_head s
-exp_name 05ACCV2026Plus_scl04_head_s  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.4  cls_feat_proj_head s
-exp_name 05ACCV2026Plus_scl06_head_s  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.6  cls_feat_proj_head s
-exp_name 05ACCV2026Plus_scl01_head_m  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.1  cls_feat_proj_head m
-exp_name 05ACCV2026Plus_scl02_head_m  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.2  cls_feat_proj_head m
-exp_name 05ACCV2026Plus_scl04_head_m  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.4  cls_feat_proj_head m
-exp_name 05ACCV2026Plus_scl06_head_m  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.6  cls_feat_proj_head m
+exp_name ACCV2026Plus_baseline      model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0
+exp_name ACCV2026Plus_scl01         model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.1
+exp_name ACCV2026Plus_scl02         model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.2
+exp_name ACCV2026Plus_scl04         model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.4
+exp_name ACCV2026Plus_scl006_head_s model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.06 cls_feat_proj_head s
+exp_name ACCV2026Plus_scl01_head_s  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.1  cls_feat_proj_head s
+exp_name ACCV2026Plus_scl02_head_s  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.2  cls_feat_proj_head s
+exp_name ACCV2026Plus_scl04_head_s  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.4  cls_feat_proj_head s
+exp_name ACCV2026Plus_scl06_head_s  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.6  cls_feat_proj_head s
+exp_name ACCV2026Plus_scl01_head_m  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.1  cls_feat_proj_head m
+exp_name ACCV2026Plus_scl02_head_m  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.2  cls_feat_proj_head m
+exp_name ACCV2026Plus_scl04_head_m  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.4  cls_feat_proj_head m
+exp_name ACCV2026Plus_scl06_head_m  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.6  cls_feat_proj_head m
 # Experiments RT-DETR - ACCV2026 - MultiSimLoss
-exp_name 05ACCV2026_msl006        model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.06 cls_feat_loss multi_sim_loss
-exp_name 05ACCV2026_msl01         model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_loss multi_sim_loss
-exp_name 05ACCV2026_msl02         model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.2  cls_feat_loss multi_sim_loss
-exp_name 05ACCV2026_msl006_head_s model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.06 cls_feat_loss multi_sim_loss cls_feat_proj_head s
-exp_name 05ACCV2026_msl01_head_s  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_loss multi_sim_loss cls_feat_proj_head s
-exp_name 05ACCV2026_msl02_head_s  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.2  cls_feat_loss multi_sim_loss cls_feat_proj_head s
-exp_name 05ACCV2026_msl003_head_m model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.03 cls_feat_loss multi_sim_loss cls_feat_proj_head m
-exp_name 05ACCV2026_msl006_head_m model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.06 cls_feat_loss multi_sim_loss cls_feat_proj_head m
-exp_name 05ACCV2026_msl01_head_m  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_loss multi_sim_loss cls_feat_proj_head m
+exp_name ACCV2026_msl006        model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.06 cls_feat_loss multi_sim_loss
+exp_name ACCV2026_msl01         model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_loss multi_sim_loss
+exp_name ACCV2026_msl02         model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.2  cls_feat_loss multi_sim_loss
+exp_name ACCV2026_msl006_head_s model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.06 cls_feat_loss multi_sim_loss cls_feat_proj_head s
+exp_name ACCV2026_msl01_head_s  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_loss multi_sim_loss cls_feat_proj_head s
+exp_name ACCV2026_msl02_head_s  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.2  cls_feat_loss multi_sim_loss cls_feat_proj_head s
+exp_name ACCV2026_msl003_head_m model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.03 cls_feat_loss multi_sim_loss cls_feat_proj_head m
+exp_name ACCV2026_msl006_head_m model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.06 cls_feat_loss multi_sim_loss cls_feat_proj_head m
+exp_name ACCV2026_msl01_head_m  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026.yaml epochs 100 cls_feat 0.1  cls_feat_loss multi_sim_loss cls_feat_proj_head m
 # Experiments RT-DETR - ACCV2026Plus - MultiSimLoss
-exp_name 05ACCV2026Plus_msl006        model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.06 cls_feat_loss multi_sim_loss
-exp_name 05ACCV2026Plus_msl01         model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.1  cls_feat_loss multi_sim_loss
-exp_name 05ACCV2026Plus_msl02         model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.2  cls_feat_loss multi_sim_loss
-exp_name 05ACCV2026Plus_msl006_head_s model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.06 cls_feat_loss multi_sim_loss cls_feat_proj_head s
-exp_name 05ACCV2026Plus_msl01_head_s  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.1  cls_feat_loss multi_sim_loss cls_feat_proj_head s
-exp_name 05ACCV2026Plus_msl02_head_s  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.2  cls_feat_loss multi_sim_loss cls_feat_proj_head s
-exp_name 05ACCV2026Plus_msl01_head_m  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.1  cls_feat_loss multi_sim_loss cls_feat_proj_head m
-exp_name 05ACCV2026Plus_msl02_head_m  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.2  cls_feat_loss multi_sim_loss cls_feat_proj_head m
-exp_name 05ACCV2026Plus_msl04_head_m  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.4  cls_feat_loss multi_sim_loss cls_feat_proj_head m
+exp_name ACCV2026Plus_msl006        model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.06 cls_feat_loss multi_sim_loss
+exp_name ACCV2026Plus_msl01         model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.1  cls_feat_loss multi_sim_loss
+exp_name ACCV2026Plus_msl02         model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.2  cls_feat_loss multi_sim_loss
+exp_name ACCV2026Plus_msl006_head_s model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.06 cls_feat_loss multi_sim_loss cls_feat_proj_head s
+exp_name ACCV2026Plus_msl01_head_s  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.1  cls_feat_loss multi_sim_loss cls_feat_proj_head s
+exp_name ACCV2026Plus_msl02_head_s  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.2  cls_feat_loss multi_sim_loss cls_feat_proj_head s
+exp_name ACCV2026Plus_msl01_head_m  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.1  cls_feat_loss multi_sim_loss cls_feat_proj_head m
+exp_name ACCV2026Plus_msl02_head_m  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.2  cls_feat_loss multi_sim_loss cls_feat_proj_head m
+exp_name ACCV2026Plus_msl04_head_m  model custom/cfg/cls_feat_rtdetr-x.yaml ckpt checkpoints/rtdetr-x.pt data datasets_tar/semmel/05ACCV2026Plus.yaml epochs 100 cls_feat 0.4  cls_feat_loss multi_sim_loss cls_feat_proj_head m
 # Experiments End Current
