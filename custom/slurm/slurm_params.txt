@@ -1,2 +1,2 @@
 # Experiments YOLO11x - ACCV2026
-exp_name Images05ACCV2026_baseline      ckpt checkpoints/yolo11x.pt data datasets/semmel/Images05ACCV2026.yaml epochs 5 cls_feat 0
+exp_name 05ACCV2026_baseline      ckpt checkpoints/yolo11x.pt data datasets/semmel/05ACCV2026.yaml epochs 5 cls_feat 0

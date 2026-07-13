@@ -136,7 +136,7 @@ def main():
             save_dir="/Users/noobtoss/code_nexus/ultralytics/runs/unnamed_experiment",
             model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feat_yolo26n.yaml",
             ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/yolo26n.pt",
-            data="/Users/noobtoss/code_nexus/ultralytics/datasets/semmel/Images05ACCV2026_local.yaml",
+            data="/Users/noobtoss/code_nexus/ultralytics/datasets/semmel/05ACCV2026_local.yaml",
             opts=["imgsz", "128", "cls_feat_scheduler", "inverse_cos_decay", "cls_feat_proj_head", "s", "epochs", "14"],
         )
         args = Namespace(
@@ -144,7 +144,7 @@ def main():
             save_dir="/Users/noobtoss/code_nexus/ultralytics/runs/unnamed_experiment",
             model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feat_rtdetr-l.yaml",
             ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/rtdetr-l.pt",
-            data="/Users/noobtoss/code_nexus/ultralytics/datasets/semmel/Images05ACCV2026_local.yaml",
+            data="/Users/noobtoss/code_nexus/ultralytics/datasets/semmel/05ACCV2026_local.yaml",
             opts=["imgsz", "128", "cls_feat_scheduler", "inverse_cos_decay", "cls_feat_proj_head", "s", "epochs", "14"],
         )
 
