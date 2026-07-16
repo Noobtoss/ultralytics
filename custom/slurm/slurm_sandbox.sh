@@ -40,7 +40,7 @@ eval "$(conda shell.bash hook)"
 
 conda activate conda-ultralytics
 
-export PYTHONPATH="$ROOT_DIR/custom/python"  # "$ROOT_DIR/custom/python:$PYTHONPATH"
+export PYTHONPATH="$ROOT_DIR/custom/src"  # "$ROOT_DIR/custom/src:$PYTHONPATH"
 
 # ----- WANDB -------------------------------------------------------
 yolo settings wandb=True
@@ -50,7 +50,7 @@ export WANDB_CACHE_DIR=/nfs/scratch/staff/schmittth/tmp
 export WANDB_CONFIG_DIR=/nfs/scratch/staff/schmittth/tmp
 
 # ----- TRAINING ----------------------------------------------------
-python $ROOT_DIR/custom/python/train.py \
+python $ROOT_DIR/custom/src/train.py \
        --exp_name $EXP_NAME \
        --save_dir $OUT_DIR \
        --model    $ROOT_DIR/$MODEL \

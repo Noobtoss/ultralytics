@@ -41,7 +41,7 @@ eval "$(conda shell.bash hook)"
 
 conda activate conda-ultralytics
 
-export PYTHONPATH="$ROOT_DIR/custom/python"  # "$ROOT_DIR/custom/python:$PYTHONPATH"
+export PYTHONPATH="$ROOT_DIR/custom/src"  # "$ROOT_DIR/custom/src:$PYTHONPATH"
 
 export TMPDIR=$(mktemp -d "${TMPDIR:-/tmp}/ultralytics_${SLURM_JOB_ID}_XXXXXX")
 
@@ -54,7 +54,7 @@ export WANDB_DIR=$TMPDIR
 export WANDB_CONFIG_DIR=$TMPDIR
 
 # ----- TRAINING ----------------------------------------------------
-python $ROOT_DIR/custom/python/train.py \
+python $ROOT_DIR/custom/src/train.py \
        --exp_name $EXP_NAME \
        --save_dir $OUT_DIR \
        --model    $ROOT_DIR/$MODEL \

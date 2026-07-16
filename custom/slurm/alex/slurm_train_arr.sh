@@ -44,7 +44,7 @@ module load cuda/12.8.1
 
 conda activate conda-ultralytics
 
-export PYTHONPATH="$ROOT_DIR/custom/python"  # "$ROOT_DIR/custom/python:$PYTHONPATH"
+export PYTHONPATH="$ROOT_DIR/custom/src"  # "$ROOT_DIR/custom/src:$PYTHONPATH"
 
 # --- PROXY  --------------------------------------------------------
 export http_proxy=http://proxy:80
@@ -81,7 +81,7 @@ echo $DATA
 echo $JOB_DIR
 
 # ----- TRAINING ----------------------------------------------------
-python $ROOT_DIR/custom/python/train.py \
+python $ROOT_DIR/custom/src/train.py \
        --exp_name $EXP_NAME \
        --save_dir $OUT_DIR \
        --model    $ROOT_DIR/$MODEL \
