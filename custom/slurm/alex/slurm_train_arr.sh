@@ -11,12 +11,12 @@
 #SBATCH --mail-type=ALL      # Email on job start, end, fail
 #SBATCH --mail-user=thomas.schmitt@th-nuernberg.de
 
-# ----- BASE_DIR ----------------------------------------------------
-BASE_DIR="$WORK/code_nexus/ultralytics"
+# ----- ROOT_DIR ----------------------------------------------------
+ROOT_DIR="$WORK/code_nexus/ultralytics"
 JOB_DIR=$TMPDIR
 
 # ----- GET ARGS ----------------------------------------------------
-PARAMS_FILE="$BASE_DIR/custom/slurm/alex/slurm_params.txt"
+PARAMS_FILE="$ROOT_DIR/custom/slurm/alex/slurm_params.txt"
 PARAMS=$(grep -v '^[[:space:]]*#' "$PARAMS_FILE" | sed -n "$((SLURM_ARRAY_TASK_ID))p")
 
 PARAMS=$(echo "$PARAMS" | sed -E "s/(exp_name[[:space:]]+[^[:space:]]+)/\1_${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}/")
@@ -30,7 +30,7 @@ done
 [[ "$PARAMS" != *"seed"* ]] && PARAMS="$PARAMS seed ${SLURM_ARRAY_JOB_ID}"
 
 EXP_NAME="${KV[exp_name]:-unnamed_experiment}"
-SAVE_DIR="${BASE_DIR}/runs/${EXP_NAME}"
+SAVE_DIR="${ROOT_DIR}/runs/${EXP_NAME}"
 MODEL="${KV[model]:-custom/cfg/cls_feat_yolo11x.yaml}"
 CKPT="${KV[ckpt]:-checkpoints/yolo11x.pt}"
 DATA="${KV[data]:-datasets/default.yaml}"
@@ -44,7 +44,7 @@ module load cuda/12.8.1
 
 conda activate conda-ultralytics
 
-export PYTHONPATH="$BASE_DIR/custom/python"  # "$BASE_DIR/custom/python:$PYTHONPATH"
+export PYTHONPATH="$ROOT_DIR/custom/python"  # "$ROOT_DIR/custom/python:$PYTHONPATH"
 
 # --- PROXY  --------------------------------------------------------
 export http_proxy=http://proxy:80
@@ -60,11 +60,11 @@ export WANDB_CONFIG_DIR=$TMPDIR
 
 # ----- ULTRALYTICS SETTINGS-----------------------------------------
 # yolo settings datasets_dir=$JOB_DIR
-# yolo settings runs_dir="$BASE_DIR/runs"
-# yolo settings weights_dir="$BASE_DIR/models"
+# yolo settings runs_dir="$ROOT_DIR/runs"
+# yolo settings weights_dir="$ROOT_DIR/models"
 
 # ----- DATA STAGING ------------------------------------------------
-PATH_TAR=$(grep "^path:" $BASE_DIR/$DATA | cut -d ':' -f2 | xargs)
+PATH_TAR=$(grep "^path:" $ROOT_DIR/$DATA | cut -d ':' -f2 | xargs)
 tar xf $PATH_TAR --strip-components=1 -C $JOB_DIR \
   --warning=no-unknown-keyword \
   --exclude='._*' \
@@ -73,7 +73,7 @@ tar xf $PATH_TAR --strip-components=1 -C $JOB_DIR \
 
 echo ErrorMessage unpacking: $?  # $? = exit code (0 = success, anything else = error)
 
-cp $BASE_DIR/$DATA $JOB_DIR/
+cp $ROOT_DIR/$DATA $JOB_DIR/
 DATA="$JOB_DIR/$(basename $DATA)"
 sed -i "s|^path:.*|path: $JOB_DIR|" $DATA
 PARAMS=$(echo "$PARAMS" | sed "s|data [^ ]*|data $DATA|")
@@ -81,11 +81,11 @@ echo $DATA
 echo $JOB_DIR
 
 # ----- TRAINING ----------------------------------------------------
-python $BASE_DIR/custom/python/train.py \
+python $ROOT_DIR/custom/python/train.py \
        --exp_name $EXP_NAME \
        --save_dir $SAVE_DIR \
-       --model    $BASE_DIR/$MODEL \
-       --ckpt     $BASE_DIR/$CKPT \
+       --model    $ROOT_DIR/$MODEL \
+       --ckpt     $ROOT_DIR/$CKPT \
        --data     $DATA  \
        $PARAMS
 

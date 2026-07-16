@@ -10,11 +10,11 @@
 #SBATCH --cpus-per-task=4          # CPU Kerne pro Task (>1 für multi-threaded Tasks)
 #SBATCH --mem=32G                  # RAM pro CPU Kern #20G #32G #64G
 
-# ----- BASE_DIR ----------------------------------------------------
-BASE_DIR=/nfs/scratch/staff/schmittth/code_nexus/ultralytics
+# ----- ROOT_DIR ----------------------------------------------------
+ROOT_DIR=/nfs/scratch/staff/schmittth/code_nexus/ultralytics
 
 # ----- GET ARGS ----------------------------------------------------
-PARAMS_FILE="$BASE_DIR/custom/slurm/slurm_params.txt"
+PARAMS_FILE="$ROOT_DIR/custom/slurm/slurm_params.txt"
 PARAMS=$(grep -v '^[[:space:]]*#' "$PARAMS_FILE" | sed -n "$((SLURM_ARRAY_TASK_ID))p")
 
 PARAMS=$(echo "$PARAMS" | sed -E "s/(exp_name[[:space:]]+[^[:space:]]+)/\1_${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}/")
@@ -28,7 +28,7 @@ done
 [[ "$PARAMS" != *"seed"* ]] && PARAMS="$PARAMS seed ${SLURM_ARRAY_JOB_ID}"
 
 EXP_NAME="${KV[exp_name]:-unnamed_experiment}"
-SAVE_DIR="${BASE_DIR}/runs/${EXP_NAME}"
+SAVE_DIR="${ROOT_DIR}/runs/${EXP_NAME}"
 MODEL="${KV[model]:-custom/cfg/cls_feat_yolo11x.yaml}"
 CKPT="${KV[ckpt]:-checkpoints/yolo11x.pt}"
 DATA="${KV[data]:-datasets/default.yaml}"
@@ -40,7 +40,7 @@ eval "$(conda shell.bash hook)"
 
 conda activate conda-ultralytics
 
-export PYTHONPATH="$BASE_DIR/custom/python"  # "$BASE_DIR/custom/python:$PYTHONPATH"
+export PYTHONPATH="$ROOT_DIR/custom/python"  # "$ROOT_DIR/custom/python:$PYTHONPATH"
 
 # ----- WANDB -------------------------------------------------------
 yolo settings wandb=True
@@ -50,12 +50,12 @@ export WANDB_CACHE_DIR=/nfs/scratch/staff/schmittth/tmp
 export WANDB_CONFIG_DIR=/nfs/scratch/staff/schmittth/tmp
 
 # ----- TRAINING ----------------------------------------------------
-python $BASE_DIR/custom/python/train.py \
+python $ROOT_DIR/custom/python/train.py \
        --exp_name $EXP_NAME \
        --save_dir $SAVE_DIR \
-       --model    $BASE_DIR/$MODEL \
-       --ckpt     $BASE_DIR/$CKPT \
-       --data     $BASE_DIR/$DATA  \
+       --model    $ROOT_DIR/$MODEL \
+       --ckpt     $ROOT_DIR/$CKPT \
+       --data     $ROOT_DIR/$DATA  \
        $PARAMS
 
 # ----- CLEANUP -----------------------------------------------------
