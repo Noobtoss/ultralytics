@@ -28,7 +28,7 @@ done
 [[ "$PARAMS" != *"seed"* ]] && PARAMS="$PARAMS seed ${SLURM_ARRAY_JOB_ID}"
 
 EXP_NAME="${KV[exp_name]:-unnamed_experiment}"
-SAVE_DIR="${ROOT_DIR}/runs/${EXP_NAME}"
+OUT_DIR="${ROOT_DIR}/runs/${EXP_NAME}"
 MODEL="${KV[model]:-custom/cfg/cls_feat_yolo11x.yaml}"
 CKPT="${KV[ckpt]:-checkpoints/yolo11x.pt}"
 DATA="${KV[data]:-datasets/default.yaml}"
@@ -52,7 +52,7 @@ export WANDB_CONFIG_DIR=/nfs/scratch/staff/schmittth/tmp
 # ----- TRAINING ----------------------------------------------------
 python $ROOT_DIR/custom/python/train.py \
        --exp_name $EXP_NAME \
-       --save_dir $SAVE_DIR \
+       --save_dir $OUT_DIR \
        --model    $ROOT_DIR/$MODEL \
        --ckpt     $ROOT_DIR/$CKPT \
        --data     $ROOT_DIR/$DATA  \
@@ -60,5 +60,5 @@ python $ROOT_DIR/custom/python/train.py \
 
 # ----- CLEANUP -----------------------------------------------------
 KEEP_FILES=("metrics.csv" "results.csv" "last.pt")
-eval find $SAVE_DIR -type f $(printf ' ! -name "%s"' "${KEEP_FILES[@]}") -delete
-find $SAVE_DIR -type d -empty -delete
+eval find $OUT_DIR -type f $(printf ' ! -name "%s"' "${KEEP_FILES[@]}") -delete
+find $OUT_DIR -type d -empty -delete
