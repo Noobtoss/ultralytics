@@ -44,7 +44,7 @@ module load cuda/12.8.1
 
 conda activate conda-ultralytics
 
-export PYTHONPATH="$ROOT_DIR/custom/src"  # "$ROOT_DIR/custom/src:$PYTHONPATH"
+export PYTHONPATH="$ROOT_DIR/custom/src:$PYTHONPATH"
 
 # --- PROXY  --------------------------------------------------------
 export http_proxy=http://proxy:80

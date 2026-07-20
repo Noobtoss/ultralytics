@@ -41,8 +41,7 @@ eval "$(conda shell.bash hook)"
 
 conda activate conda-ultralytics
 
-export PYTHONPATH="$ROOT_DIR/custom/src"  # "$ROOT_DIR/custom/src:$PYTHONPATH"
-
+export PYTHONPATH="$ROOT_DIR/custom/src:$PYTHONPATH"
 export TMPDIR=$(mktemp -d "${TMPDIR:-/tmp}/ultralytics_${SLURM_JOB_ID}_XXXXXX")
 
 # ----- WANDB -------------------------------------------------------
