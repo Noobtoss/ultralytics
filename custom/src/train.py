@@ -89,7 +89,7 @@ def train(cfg: Namespace):
 
 def parse_args():
     parser = argparse.ArgumentParser("ultralytics train parser")
-    parser.add_argument("--run_name", type=str, help="exp name")
+    parser.add_argument("--run_name", type=str, help="run name")
     parser.add_argument("--save_dir", type=str, help="save dir")
     parser.add_argument("--model", type=str, default=None, help="path to model")
     parser.add_argument("--ckpt", type=str, help="path to ckpt")
@@ -131,7 +131,7 @@ def main():
         warnings.warn("⚠️ Running with hardcoded test args")
         args = Namespace(
             run_name="unnamed_run",
-            save_dir="/Users/noobtoss/code_nexus/ultralytics/runs/unnamed_experiment",
+            save_dir="/Users/noobtoss/code_nexus/ultralytics/runs/unnamed_run",
             model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feat_yolo26n.yaml",
             ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/yolo26n.pt",
             data="/Users/noobtoss/code_nexus/ultralytics/datasets/semmel/05ACCV2026_local.yaml",
@@ -139,7 +139,7 @@ def main():
         )
         args = Namespace(
             run_name="unnamed_run",
-            save_dir="/Users/noobtoss/code_nexus/ultralytics/runs/unnamed_experiment",
+            save_dir="/Users/noobtoss/code_nexus/ultralytics/runs/unnamed_run",
             model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feat_rtdetr-l.yaml",
             ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/rtdetr-l.pt",
             data="/Users/noobtoss/code_nexus/ultralytics/datasets/semmel/05ACCV2026_local.yaml",
