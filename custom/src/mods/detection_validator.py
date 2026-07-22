@@ -29,8 +29,8 @@ class DetectionValidator(_DetectionValidator):
         if not self.mAP_subsets:
             all_classes = list(range(self.nc))
             self.mAP_subsets = {
-                "No0": all_classes[1:],
-                "New": all_classes[21:],
+                "0p": all_classes[1:],
+                "22p": all_classes[21:],
             }
 
     def update_metrics(self, preds, batch):
