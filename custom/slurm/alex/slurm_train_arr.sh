@@ -19,7 +19,6 @@ JOB_DIR=$TMPDIR
 PARAMS_FILE="$ROOT_DIR/custom/slurm/alex/slurm_params.txt"
 PARAMS=$(grep -v '^[[:space:]]*#' "$PARAMS_FILE" | sed -n "$((SLURM_ARRAY_TASK_ID))p")
 
-PARAMS=$(echo "$PARAMS" | sed -E "s/(exp_name[[:space:]]+[^[:space:]]+)/\1_${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}/")
 declare -A KV
 read -r -a ARR <<< "$PARAMS"
 for ((i=0; i<${#ARR[@]}; i+=2)); do
@@ -29,8 +28,9 @@ for ((i=0; i<${#ARR[@]}; i+=2)); do
 done
 [[ "$PARAMS" != *"seed"* ]] && PARAMS="$PARAMS seed ${SLURM_ARRAY_JOB_ID}"
 
-EXP_NAME="${KV[exp_name]:-unnamed_experiment}"
-OUT_DIR="${ROOT_DIR}/runs/${EXP_NAME}"
+RUN_NAME="${KV[exp_name]:-unnamed_experiment}"
+RUN_NAME="${RUN_NAME}_${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}"
+OUT_DIR="${ROOT_DIR}/runs/${RUN_NAME}"
 MODEL="${KV[model]:-custom/cfg/cls_feat_yolo11x.yaml}"
 CKPT="${KV[ckpt]:-checkpoints/yolo11x.pt}"
 DATA="${KV[data]:-datasets/default.yaml}"
@@ -82,7 +82,7 @@ echo $JOB_DIR
 
 # ----- TRAINING ----------------------------------------------------
 python $ROOT_DIR/custom/src/train.py \
-       --exp_name $EXP_NAME \
+       --run_name $RUN_NAME \
        --save_dir $OUT_DIR \
        --model    $ROOT_DIR/$MODEL \
        --ckpt     $ROOT_DIR/$CKPT \

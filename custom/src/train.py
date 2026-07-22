@@ -89,7 +89,7 @@ def train(cfg: Namespace):
 
 def parse_args():
     parser = argparse.ArgumentParser("ultralytics train parser")
-    parser.add_argument("--exp_name", type=str, help="exp name")
+    parser.add_argument("--run_name", type=str, help="exp name")
     parser.add_argument("--save_dir", type=str, help="save dir")
     parser.add_argument("--model", type=str, default=None, help="path to model")
     parser.add_argument("--ckpt", type=str, help="path to ckpt")
@@ -106,7 +106,7 @@ def parse_args():
 def parse_cfg(args: Namespace) -> Namespace:
     cfg = DEFAULT_CFG
 
-    cfg.train_cfg.name = args.exp_name;  delattr(args, "exp_name")
+    cfg.train_cfg.name = args.run_name;  delattr(args, "run_name")
     cfg.train_cfg.save_dir = args.save_dir; delattr(args, "save_dir")
     cfg.model = args.model; delattr(args, "model")
     cfg.ckpt = args.ckpt; delattr(args, "ckpt")
@@ -130,7 +130,7 @@ def main():
     else:
         warnings.warn("⚠️ Running with hardcoded test args")
         args = Namespace(
-            exp_name="unnamed_experiment",
+            run_name="unnamed_run",
             save_dir="/Users/noobtoss/code_nexus/ultralytics/runs/unnamed_experiment",
             model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feat_yolo26n.yaml",
             ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/yolo26n.pt",
@@ -138,7 +138,7 @@ def main():
             opts=["imgsz", "128", "cls_feat_scheduler", "inverse_cos_decay", "cls_feat_proj_head", "s", "epochs", "14"],
         )
         args = Namespace(
-            exp_name="unnamed_experiment",
+            run_name="unnamed_run",
             save_dir="/Users/noobtoss/code_nexus/ultralytics/runs/unnamed_experiment",
             model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feat_rtdetr-l.yaml",
             ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/rtdetr-l.pt",
