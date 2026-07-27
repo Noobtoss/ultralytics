@@ -60,5 +60,6 @@ python $ROOT_DIR/custom/src/train.py \
 
 # ----- CLEANUP -----------------------------------------------------
 KEEP_FILES=("metrics.csv" "results.csv" "last.pt")
+
 find "$OUT_DIR" -type f $(printf ' ! -name %s' "${KEEP_FILES[@]}") -delete
 find "$OUT_DIR" -type d -empty -delete

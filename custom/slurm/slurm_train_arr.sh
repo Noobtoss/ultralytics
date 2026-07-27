@@ -62,9 +62,10 @@ python $ROOT_DIR/custom/src/train.py \
        $PARAMS
 
 # ----- CLEANUP -----------------------------------------------------
+KEEP_FILES=("metrics.csv" "results.csv" "last.pt")
+
 wandb sync --sync-all || true
 rm -rf "$TMPDIR"
-KEEP_FILES=("metrics.csv" "results.csv" "last.pt")
 rm -rf "$OUT_DIR/wandb"
 find "$OUT_DIR" -type f $(printf ' ! -name %s' "${KEEP_FILES[@]}") -delete
 find "$OUT_DIR" -type d -empty -delete
