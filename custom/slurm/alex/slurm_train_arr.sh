@@ -93,5 +93,5 @@ python $ROOT_DIR/custom/src/train.py \
 wandb sync --sync-all || true
 KEEP_FILES=("metrics.csv" "results.csv" "last.pt")
 rm -rf "$OUT_DIR/wandb"
-eval find $OUT_DIR -type f $(printf ' ! -name "%s"' "${KEEP_FILES[@]}") -delete
+find $OUT_DIR -type f $(printf ' ! -name "%s"' "${KEEP_FILES[@]}") -delete
 find $OUT_DIR -type d -empty -delete
