@@ -77,8 +77,6 @@ cp $ROOT_DIR/$DATA $JOB_DIR/
 DATA="$JOB_DIR/$(basename $DATA)"
 sed -i "s|^path:.*|path: $JOB_DIR|" $DATA
 PARAMS=$(echo "$PARAMS" | sed "s|data [^ ]*|data $DATA|")
-echo $DATA
-echo $JOB_DIR
 
 # ----- TRAINING ----------------------------------------------------
 python $ROOT_DIR/custom/src/train.py \
