@@ -10,8 +10,9 @@
 #SBATCH --cpus-per-task=4        # CPU Kerne pro Task (>1 für multi-threaded Tasks)
 #SBATCH --mem=64G                # RAM pro CPU Kern #20G #32G #64G
 
-# ----- ROOT_DIR ----------------------------------------------------
+# ----- DIRS --------------------------------------------------------
 ROOT_DIR=/nfs/scratch/staff/schmittth/code_nexus/ultralytics
+export TMPDIR=$(mktemp -d "${TMPDIR:-/tmp}/ultralytics_${SLURM_JOB_ID}_XXXXXX")
 
 # ----- GET ARGS ----------------------------------------------------
 PARAMS_FILE="$ROOT_DIR/custom/slurm/slurm_params.txt"
@@ -42,7 +43,6 @@ eval "$(conda shell.bash hook)"
 conda activate conda-ultralytics
 
 export PYTHONPATH="$ROOT_DIR/custom/src:$PYTHONPATH"
-export TMPDIR=$(mktemp -d "${TMPDIR:-/tmp}/ultralytics_${SLURM_JOB_ID}_XXXXXX")
 
 # ----- WANDB -------------------------------------------------------
 yolo settings wandb=True

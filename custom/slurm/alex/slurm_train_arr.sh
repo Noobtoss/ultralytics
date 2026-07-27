@@ -11,7 +11,7 @@
 #SBATCH --mail-type=ALL      # Email on job start, end, fail
 #SBATCH --mail-user=thomas.schmitt@th-nuernberg.de
 
-# ----- ROOT_DIR ----------------------------------------------------
+# ----- DIRS --------------------------------------------------------
 ROOT_DIR="$WORK/code_nexus/ultralytics"
 JOB_DIR=$TMPDIR
 

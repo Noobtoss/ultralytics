@@ -10,7 +10,7 @@
 #SBATCH --cpus-per-task=4          # CPU Kerne pro Task (>1 für multi-threaded Tasks)
 #SBATCH --mem=32G                  # RAM pro CPU Kern #20G #32G #64G
 
-# ----- ROOT_DIR ----------------------------------------------------
+# ----- DIRS --------------------------------------------------------
 ROOT_DIR=/nfs/scratch/staff/schmittth/code_nexus/ultralytics
 
 # ----- GET ARGS ----------------------------------------------------
