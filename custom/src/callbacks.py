@@ -72,7 +72,7 @@ def on_pretrain_routine_start(trainer):
         latest_run = wandb_dir / "wandb" / "latest-run"
         resuming = trainer.args.resume and latest_run.exists()
         wb.init(
-            project=str(trainer.args.project).replace("/", "-") if trainer.args.project else "Ultralytics",
+            project=str(trainer.args.project).replace("/", "-") + "-ultralytics" if trainer.args.project else "Ultralytics",
             name=name,
             config=vars(trainer.args),
             id=latest_run.resolve().name.split("-", 2)[2]
