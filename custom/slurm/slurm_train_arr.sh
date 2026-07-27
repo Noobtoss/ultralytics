@@ -38,8 +38,8 @@ DATA="${KV[data]:-datasets/default.yaml}"
 module purge
 module load python/anaconda3
 module load cuda/cuda-11.8.0
-eval "$(conda shell.bash hook)"
 
+eval "$(conda shell.bash hook)"
 conda activate conda-ultralytics
 
 export PYTHONPATH="$ROOT_DIR/custom/src:$PYTHONPATH"

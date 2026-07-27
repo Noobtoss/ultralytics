@@ -42,6 +42,7 @@ module purge
 module load python/3.12-base
 module load cuda/12.8.1
 
+eval "$(conda shell.bash hook)"
 conda activate conda-ultralytics
 
 export PYTHONPATH="$ROOT_DIR/custom/src:$PYTHONPATH"
