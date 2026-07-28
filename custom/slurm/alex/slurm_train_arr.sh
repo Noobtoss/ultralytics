@@ -28,7 +28,7 @@ for ((i=0; i<${#ARR[@]}; i+=2)); do
 done
 [[ "$PARAMS" != *"seed"* ]] && PARAMS="$PARAMS seed ${SLURM_ARRAY_JOB_ID}"
 
-RUN_NAME="${KV[exp_name]:-unnamed_experiment}"
+RUN_NAME="${KV[exp_name]:-unnamed_run}"
 RUN_NAME="${RUN_NAME}_${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}"
 OUT_DIR="${ROOT_DIR}/runs/${RUN_NAME}"
 MODEL="${KV[model]:-custom/cfg/cls_feat_yolo11x.yaml}"
