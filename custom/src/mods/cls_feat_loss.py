@@ -62,7 +62,7 @@ class ConfWeight:
     def __init__(self, **kwargs):
         pass
 
-    def __call__(self, target_scores, pred_scores, *args, **kwargs):
+    def __call__(self, target_cls, pred_scores, *args, **kwargs):
         return pred_scores.sigmoid().max(-1).values
 
 
@@ -89,8 +89,8 @@ class Masking:
 
 
 class ConfMask(Masking, ConfWeight):
-    def __call__(self, target_scores, pred_scores, *args, **kwargs):
-        conf = super().__call__(target_scores, pred_scores, *args, **kwargs)
+    def __call__(self, target_cls, pred_scores, *args, **kwargs):
+        conf = super().__call__(target_cls, pred_scores, *args, **kwargs)
         return self._masking(conf)
 
 
@@ -98,10 +98,10 @@ class RandMask:
     def __init__(self, mask_pct: float = 0.4, **kwargs):
         self.mask_pct = mask_pct
 
-    def __call__(self, target_scores, pred_scores=None):
-        k = max(1, int(target_scores.shape[0] * self.mask_pct))
-        mask = torch.zeros(target_scores.shape[0], dtype=torch.bool)
-        indices = torch.randperm(target_scores.shape[0])[:k]
+    def __call__(self, target_cls, pred_scores=None):
+        k = max(1, int(target_cls.shape[0] * self.mask_pct))
+        mask = torch.zeros(target_cls.shape[0], dtype=torch.bool)
+        indices = torch.randperm(target_cls.shape[0])[:k]
         mask[indices] = True
         return ~mask
 
@@ -111,9 +111,8 @@ class RandMaskBalanced:
         self.mask_pct = mask_pct
         self.min_per_class = min_per_class
 
-    def __call__(self, target_scores, pred_scores=None):
-        target_cls = target_scores.max(-1).indices
-        n = target_scores.shape[0]
+    def __call__(self, target_cls, pred_scores=None):
+        n = target_cls.shape[0]
         k = max(1, int(n * self.mask_pct))
         mask = torch.zeros(n, dtype=torch.bool)
 
@@ -168,7 +167,7 @@ class ClsFeatLoss(nn.Module):
             target_cls = target_scores.max(-1).indices
         loss = torch.tensor(0.0, device=cls_feats.device)
         if self.mask is not None:
-            mask = self.mask(cls_feats=cls_feats, target_scores=target_scores, *args, **kwargs)
+            mask = self.mask(cls_feats=cls_feats, target_cls=target_cls, *args, **kwargs)
             if not mask.sum():
                 return loss
             cls_feats = cls_feats[mask]
@@ -177,7 +176,7 @@ class ClsFeatLoss(nn.Module):
         loss_per_element = self.loss(cls_feats, target_cls).squeeze(-1)
 
         if self.weight is not None:
-            weight = self.weight(target_scores=target_scores, *args, **kwargs)
+            weight = self.weight(target_cls=target_cls, *args, **kwargs)
             weight = weight / weight.sum()
             loss += (loss_per_element * weight).sum()
         else:
