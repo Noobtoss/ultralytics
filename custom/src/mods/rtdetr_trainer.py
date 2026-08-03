@@ -4,7 +4,7 @@ from ultralytics.models.rtdetr.train import RTDETRTrainer as _RTDETRTrainer
 
 from .rtdetr_detection_model import RTDETRDetectionModel
 from .rtdetr_validator import RTDETRValidator
-from .cls_feat_proj_head import ClsFeatProjHeadFactory
+from .cls_feat_proj_head import ClsFeatProjHead
 from .cls_feat_scheduler import ClsFeatScheduler
 
 
@@ -31,7 +31,7 @@ class RTDETRTrainer(_RTDETRTrainer):
                 if k.startswith("cls_feat_")
             }
             kwargs['dim'] = model.model[-1].dec_score_head[0][-1].in_features
-            model.cls_feat_proj_head = ClsFeatProjHeadFactory.get(**kwargs)
+            model.cls_feat_proj_head = ClsFeatProjHead(**kwargs) if kwargs["proj_head"] is not None else None
         if weights:
             model.load(weights)
         return model

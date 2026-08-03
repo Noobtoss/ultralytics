@@ -6,7 +6,7 @@ from ultralytics.utils.torch_utils import unwrap_model
 
 from .detection_model import DetectionModel
 from .detection_validator import DetectionValidator
-from .cls_feat_proj_head import ClsFeatProjHeadFactory
+from .cls_feat_proj_head import ClsFeatProjHead
 from .cls_feat_scheduler import ClsFeatScheduler
 
 
@@ -43,7 +43,7 @@ class DetectionTrainer(_DetectionTrainer):
             }
             # kwargs['dim'] = model.model[-1].cv3[0][-2][-1].conv.out_channels
             kwargs['dim'] = model.model[-1].cv3[0][-1].in_channels
-            model.cls_feat_proj_head = ClsFeatProjHeadFactory.get(**kwargs)
+            model.cls_feat_proj_head = ClsFeatProjHead(**kwargs) if kwargs["proj_head"] is not None else None
         if weights:
             model.load(weights)
         return model
