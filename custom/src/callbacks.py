@@ -14,8 +14,6 @@ sys.path.insert(0, site.getsitepackages()[0])  # index 0 — conda site-packages
 
 from ultralytics.utils import LOGGER
 from ultralytics.utils import SETTINGS, TESTS_RUNNING
-from ultralytics.utils.torch_utils import model_info_for_loggers
-from ultralytics.utils.callbacks.wb import _plot_curve, _log_plots
 
 try:
     assert not TESTS_RUNNING  # do not log pytest
@@ -27,8 +25,13 @@ try:
 except (ImportError, AssertionError):
     wb = None
 
+# must happen before: from ultralytics.utils.callbacks.wb import _plot_curve, _log_plots
+
 SETTINGS["wandb"] = False
 VERBOSE = 0
+
+from ultralytics.utils.torch_utils import model_info_for_loggers
+from ultralytics.utils.callbacks.wb import _plot_curve, _log_plots
 
 
 def eval_last(trainer):

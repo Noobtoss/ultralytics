@@ -122,9 +122,6 @@ def parse_cfg(args: Namespace) -> Namespace:
 
 
 def main():
-    from ultralytics.utils import SETTINGS
-    SETTINGS["wandb"] = False
-
     if len(sys.argv) > 1:
         args = parse_args()
     else:
