@@ -1,1 +1,5 @@
+# Experiments YOLO11x - 06Aufsatz
+exp_name 06Aufsatz                  ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/06Aufsatz.yaml                  epochs 100
+exp_name 06AufsatzCopyPaste         ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/06AufsatzCopyPaste.yaml         epochs 100
+exp_name 06AufsatzCopyPasteExtended ckpt checkpoints/yolo11x.pt data datasets_tar/semmel/06AufsatzCopyPasteExtended.yaml epochs 100
 # Experiments End Current
