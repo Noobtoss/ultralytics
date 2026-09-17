@@ -66,18 +66,22 @@ export WANDB_CONFIG_DIR=$TMPDIR
 
 # ----- DATA STAGING ------------------------------------------------
 PATH_TAR=$(grep "^path:" $ROOT_DIR/$DATA | cut -d ':' -f2 | xargs)
-tar xf $PATH_TAR --strip-components=1 -C $JOB_DIR \
-  --warning=no-unknown-keyword \
-  --exclude='._*' \
-  --exclude='.DS_Store' \
-  --exclude='__MACOSX'
+if [[ "$PATH_TAR" == *.tar ]]; then
+    tar xf $PATH_TAR --strip-components=1 -C $JOB_DIR \
+      --warning=no-unknown-keyword \
+      --exclude='._*' \
+      --exclude='.DS_Store' \
+      --exclude='__MACOSX'
 
-echo ErrorMessage unpacking: $?  # $? = exit code (0 = success, anything else = error)
+    echo ErrorMessage unpacking: $?  # $? = exit code (0 = success, anything else = error)
 
-cp $ROOT_DIR/$DATA $JOB_DIR/
-DATA="$JOB_DIR/$(basename $DATA)"
-sed -i "s|^path:.*|path: $JOB_DIR|" $DATA
-PARAMS=$(echo "$PARAMS" | sed "s|data [^ ]*|data $DATA|")
+    cp $ROOT_DIR/$DATA $JOB_DIR/
+    DATA="$JOB_DIR/$(basename $DATA)"
+    sed -i "s|^path:.*|path: $JOB_DIR|" $DATA
+    PARAMS=$(echo "$PARAMS" | sed "s|data [^ ]*|data $DATA|")
+else
+    DATA="$ROOT_DIR/$DATA"
+fi
 
 # ----- TRAINING ----------------------------------------------------
 python $ROOT_DIR/custom/src/train.py \
