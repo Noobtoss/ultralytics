@@ -18,6 +18,25 @@ from ultralytics import YOLO, RTDETR
 from mods import DetectionTrainer, RTDETRTrainer
 from callbacks import eval_last, move_last_ckpt, wb_callbacks
 
+DEFAULT_ARGS = {
+    "yolo26": Namespace(
+            run_name="unnamed_run",
+            save_dir="/Users/noobtoss/code_nexus/ultralytics/runs/unnamed_run",
+            model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feat_yolo26n.yaml",
+            ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/yolo26n.pt",
+            data="/Users/noobtoss/code_nexus/ultralytics/datasets/semmel/05ACCV2026_local.yaml",
+            opts=["imgsz", "128", "cls_feat_scheduler", "inverse_cos_decay", "cls_feat_proj_head", "s", "epochs", "14"],
+    ),
+    "rtdetr": Namespace(
+            run_name="unnamed_run",
+            save_dir="/Users/noobtoss/code_nexus/ultralytics/runs/unnamed_run",
+            model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feat_rtdetr-l.yaml",
+            ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/rtdetr-l.pt",
+            data="/Users/noobtoss/code_nexus/ultralytics/datasets/semmel/05ACCV2026_local.yaml",
+            opts=["imgsz", "128", "cls_feat_scheduler", "inverse_cos_decay", "cls_feat_proj_head", "s", "epochs", "14"],
+    ),
+}
+
 DEFAULT_TRAIN_CFG = Namespace(
     data="",
     epochs=100,
@@ -32,9 +51,6 @@ DEFAULT_TRAIN_CFG = Namespace(
     dfl=1.5,
     cls_feat=0.09,  # 0.5,
     cls_feat_loss="sup_con_loss",
-    # cls_feat_mask="conf",
-    # cls_feat_mask_pct=0.4,
-    # cls_feat_weight="conf",
     # cls_feat_alpha=1.0,
     # cls_feat_beta=6.0,
     # cls_feat_proj_head="s",
@@ -126,22 +142,7 @@ def main():
         args = parse_args()
     else:
         warnings.warn("⚠️ Running with hardcoded test args")
-        args = Namespace(
-            run_name="unnamed_run",
-            save_dir="/Users/noobtoss/code_nexus/ultralytics/runs/unnamed_run",
-            model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feat_yolo26n.yaml",
-            ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/yolo26n.pt",
-            data="/Users/noobtoss/code_nexus/ultralytics/datasets/semmel/05ACCV2026_local.yaml",
-            opts=["imgsz", "128", "cls_feat_scheduler", "inverse_cos_decay", "cls_feat_proj_head", "s", "epochs", "14"],
-        )
-        args = Namespace(
-            run_name="unnamed_run",
-            save_dir="/Users/noobtoss/code_nexus/ultralytics/runs/unnamed_run",
-            model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feat_rtdetr-l.yaml",
-            ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/rtdetr-l.pt",
-            data="/Users/noobtoss/code_nexus/ultralytics/datasets/semmel/05ACCV2026_local.yaml",
-            opts=["imgsz", "128", "cls_feat_scheduler", "inverse_cos_decay", "cls_feat_proj_head", "s", "epochs", "14"],
-        )
+        args = DEFAULT_ARGS["yolo26"]
 
     cfg = parse_cfg(args)
     train(cfg)
