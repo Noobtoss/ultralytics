@@ -56,7 +56,7 @@ class DETRLoss(_DETRLoss):
         if self.cls_feat_proj_head is not None:
             cls_feats = self.cls_feat_proj_head(cls_feats)
 
-        loss_cls_feat = self.cls_feat_loss(cls_feats=cls_feats, target_scores=gt_scores, pred_scores=pred_scores)
+        loss_cls_feat = self.cls_feat_loss(cls_feats=cls_feats, target_scores=gt_scores)
         # loss_cls_feat uses reduction="mean" over all elements (bs * nq * feats).
         # _get_loss_cls applies .mean(1).sum() over (bs * nq, nc+1), making loss_cls ~ (bs * nq) times larger.
         # Scale loss_cls_feat by (bs * nq) to match loss_cls magnitude might be needed.
