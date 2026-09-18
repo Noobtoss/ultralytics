@@ -3,6 +3,7 @@ from ultralytics.utils import LOGGER
 from ultralytics.utils.loss import v8DetectionLoss as _v8DetectionLoss
 from ultralytics.utils.tal import make_anchors
 
+from .cls_weighted_loss import ClsWeightedLoss
 from .cls_feat_loss import ClsFeatLoss
 
 
@@ -20,6 +21,7 @@ class v8DetectionLoss(_v8DetectionLoss):
             if k.startswith("cls_feat_")
         }
         LOGGER.warning(kwargs)
+        self.cls_loss = ClsWeightedLoss().to(self.device)
         self.cls_feat_loss = ClsFeatLoss(**kwargs).to(self.device)
         self.cls_feat_proj_head = getattr(model, "cls_feat_proj_head", None)
 
@@ -64,10 +66,14 @@ class v8DetectionLoss(_v8DetectionLoss):
         target_scores_sum = max(target_scores.sum(), 1)
 
         # Cls loss with optional class weighting
-        bce_loss = self.bce(pred_scores, target_scores.to(dtype))  # (bs, num_anchors, nc)
-        if self.class_weights is not None:
-            bce_loss *= self.class_weights
-        loss[1] = bce_loss.sum() / target_scores_sum  # BCE
+        # >>> MOD
+        # bce_loss = self.bce(pred_scores, target_scores.to(dtype))  # (bs, num_anchors, nc)
+        # if self.class_weights is not None:
+        #     bce_loss *= self.class_weights
+        # loss[1] = bce_loss.sum() / target_scores_sum  # BCE
+        cls_loss = self.cls_loss(pred_scores.view(-1, self.nc), target_scores.to(dtype).view(-1, self.nc))  # (bs*num_anchors, nc)
+        loss[1] = cls_loss.sum() / target_scores_sum
+        # <<< MOD
         # >>> MOD
         if fg_mask.sum():
             cls_feats = cls_feats[fg_mask]
