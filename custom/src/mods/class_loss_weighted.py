@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 
-class ClassWeightedLoss(nn.Module):
+class ClassLossWeighted(nn.Module):
     def __init__(self,
                  loss: nn.Module = nn.BCEWithLogitsLoss(reduction="none"),
                  class_weights: torch.Tensor = None,
