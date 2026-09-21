@@ -1,7 +1,7 @@
 # Experiments YOLO11x - 06Aufsatz
-exp_name 06Aufsatz                   ckpt checkpoints/yolo11x.pt data datasets/semmel/06Aufsatz.yaml                  epochs 100
-exp_name 06AufsatzCopyPaste          ckpt checkpoints/yolo11x.pt data datasets/semmel/06AufsatzCopyPaste.yaml         epochs 100
-exp_name 06AufsatzCopyPasteExtended  ckpt checkpoints/yolo11x.pt data datasets/semmel/06AufsatzCopyPasteExtended.yaml epochs 100
+exp_name 06Aufsatz                  ckpt checkpoints/yolo11x.pt data datasets/semmel/06Aufsatz.yaml                  epochs 100
+exp_name 06AufsatzCopyPaste         ckpt checkpoints/yolo11x.pt data datasets/semmel/06AufsatzCopyPaste.yaml         epochs 100
+exp_name 06AufsatzCopyPasteExtended ckpt checkpoints/yolo11x.pt data datasets/semmel/06AufsatzCopyPasteExtended.yaml epochs 100
 # Experiments SAC2027
 exp_name 05SAC2027_baseline         ckpt checkpoints/yolo11x.pt data datasets/semmel/05ACCV2026.yaml epochs 100 cls_feat 0
 exp_name 05SAC2027_class_sim        ckpt checkpoints/yolo11x.pt data datasets/semmel/05ACCV2026.yaml epochs 100 cls_feat 0 class_weights class_sim
