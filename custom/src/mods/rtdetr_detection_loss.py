@@ -6,7 +6,7 @@ from ultralytics.models.utils.loss import RTDETRDetectionLoss as _RTDETRDetectio
 from ultralytics.models.utils.loss import DETRLoss as _DETRLoss
 
 from .class_losses_weighted import BCEWithLogitsLossWeighted, FocalLossWeighted, VarifocalLossWeighted
-from .class_weights import class_weights as _class_weights
+from .class_weights import class_weights
 from .cls_feat_loss import ClsFeatLoss
 
 
@@ -34,10 +34,10 @@ class DETRLoss(_DETRLoss):
             if k.startswith("cls_feat_")
         }
         LOGGER.warning(kwargs)
-        class_weights = _class_weights[getattr(model.args, "class_weights", None)]
-        self.bce_loss = BCEWithLogitsLossWeighted(**class_weights).to(self.device)
-        self.fl = FocalLossWeighted(gamma, alpha, **class_weights) if use_fl else None
-        self.vfl = VarifocalLossWeighted(gamma, alpha, **class_weights) if use_vfl else None
+        weights = class_weights[getattr(model.args, "class_weights", None)]
+        self.bce_loss = BCEWithLogitsLossWeighted(**weights).to(self.device)
+        self.fl = FocalLossWeighted(gamma, alpha, **weights) if use_fl else None
+        self.vfl = VarifocalLossWeighted(gamma, alpha, **weights) if use_vfl else None
 
         self.cls_feat_loss = ClsFeatLoss(**kwargs).to(self.device)
         n = getattr(hyp, "cls_feat_dec_layers", None)
