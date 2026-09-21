@@ -50,7 +50,6 @@ class DETRLoss(_DETRLoss):
         fg_mask = targets != self.nc
         fg_mask = fg_mask.view(-1)
         cls_feats = cls_feats[fg_mask]
-        pred_scores = pred_scores[fg_mask]
         gt_scores = gt_scores[fg_mask]
 
         if self.cls_feat_proj_head is not None:
