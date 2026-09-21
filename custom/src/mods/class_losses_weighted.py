@@ -17,11 +17,9 @@ class BCEWithLogitsLossWeighted(nn.Module):
 
     def forward(self, pred_scores: torch.Tensor, target_scores: torch.Tensor) -> torch.Tensor:
         loss = self.loss(pred_scores, target_scores)
-        loss = loss.view(-1, loss.shape[-1])
         if self.class_weights is not None:
             loss = loss * self.class_weights
         if self.class_weights_matrix is not None:
-            target_scores = target_scores.view(-1, target_scores.shape[-1])
             gt_cls = target_scores.argmax(dim=-1)
             weight_per_sample = self.class_weights_matrix[gt_cls]
             loss = loss * weight_per_sample
