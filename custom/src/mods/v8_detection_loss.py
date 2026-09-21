@@ -72,7 +72,7 @@ class v8DetectionLoss(_v8DetectionLoss):
         # if self.class_weights is not None:
         #     bce_loss *= self.class_weights
         # loss[1] = bce_loss.sum() / target_scores_sum  # BCE
-        class_loss = self.bce_loss(pred_scores.view(-1, self.nc), target_scores.to(dtype).view(-1, self.nc))  # (bs*num_anchors, nc)
+        class_loss = self.bce_loss(pred_scores, target_scores.to(dtype))  # (bs*num_anchors, nc)
         loss[1] = class_loss.sum() / target_scores_sum
         # <<< MOD
         # >>> MOD

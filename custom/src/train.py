@@ -40,6 +40,7 @@ DEFAULT_ARGS = {
             opts=["imgsz", "128",
                   "cls_feat_scheduler", "inverse_cos_decay",
                   "cls_feat_proj_head", "s",
+                  "class_weights", "class_sim_matrix",
                   "epochs", "14"],
     ),
 }
@@ -148,7 +149,7 @@ def main():
         args = parse_args()
     else:
         warnings.warn("⚠️ Running with hardcoded test args")
-        args = DEFAULT_ARGS["yolo26"]
+        args = DEFAULT_ARGS["rtdetr"]
 
     cfg = parse_cfg(args)
     train(cfg)
