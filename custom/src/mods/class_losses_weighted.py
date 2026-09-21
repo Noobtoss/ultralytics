@@ -2,14 +2,13 @@ import torch
 import torch.nn as nn
 
 
-class ClassLossWeighted(nn.Module):
+class BCEWithLogitsLossWeighted(nn.Module):
     def __init__(self,
-                 loss: nn.Module = nn.BCEWithLogitsLoss(reduction="none"),
                  class_weights: torch.Tensor = None,
                  class_weights_matrix: torch.Tensor = None
                  ) -> None:
         super().__init__()
-        self.loss = loss
+        self.loss = nn.BCEWithLogitsLoss(reduction="none")
 
         self.register_buffer("class_weights", class_weights)
         self.register_buffer("class_weights_matrix", class_weights_matrix)
