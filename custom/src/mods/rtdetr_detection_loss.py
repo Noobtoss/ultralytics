@@ -5,13 +5,27 @@ from ultralytics.utils.metrics import bbox_iou
 from ultralytics.models.utils.loss import RTDETRDetectionLoss as _RTDETRDetectionLoss
 from ultralytics.models.utils.loss import DETRLoss as _DETRLoss
 
+from .class_losses_weighted import BCEWithLogitsLossWeighted, FocalLossWeighted, VarifocalLossWeighted
+from .class_weights import class_weights as _class_weights
 from .cls_feat_loss import ClsFeatLoss
 
 
 class DETRLoss(_DETRLoss):
-    def __init__(self, *args, model, **kwargs) -> None:
+    def __init__(
+        self,
+        model,
+        nc: int = 80,
+        loss_gain: dict[str, float] | None = None,
+        aux_loss: bool = True,
+        use_fl: bool = True,
+        use_vfl: bool = False,
+        use_uni_match: bool = False,
+        uni_match_ind: int = 0,
+        gamma: float = 1.5,
+        alpha: float = 0.25,
+    ) -> None:
         LOGGER.warning("[Modded] DETRLoss")
-        super().__init__(*args, **kwargs)
+        super().__init__(nc, loss_gain, aux_loss, use_fl, use_vfl, use_uni_match, uni_match_ind, gamma, alpha)
         hyp = model.args  # hyperparameters
         self.loss_gain["cls_feat"] = getattr(hyp, "cls_feat", 0)
         kwargs = {
@@ -20,11 +34,59 @@ class DETRLoss(_DETRLoss):
             if k.startswith("cls_feat_")
         }
         LOGGER.warning(kwargs)
+        class_weights = _class_weights[getattr(model.args, "class_weights", None)]
+        self.bce_loss = BCEWithLogitsLossWeighted(**class_weights).to(self.device)
+        self.fl = FocalLossWeighted(gamma, alpha, **class_weights) if use_fl else None
+        self.vfl = VarifocalLossWeighted(gamma, alpha, **class_weights) if use_vfl else None
+
         self.cls_feat_loss = ClsFeatLoss(**kwargs).to(self.device)
         n = getattr(hyp, "cls_feat_dec_layers", None)
         assert n != 0
         self.cls_feat_dec_layers = range(6 - n, 6) if n is not None else range(1, 6)  # hard encoding 6 is bad
         self.cls_feat_proj_head = getattr(model, "cls_feat_proj_head", None)
+
+    def _get_loss_class(
+        self, pred_scores: torch.Tensor, targets: torch.Tensor, gt_scores: torch.Tensor, num_gts: int, postfix: str = ""
+    ) -> dict[str, torch.Tensor]:
+        """Compute classification loss based on predictions, target values, and ground truth scores.
+
+        Args:
+            pred_scores (torch.Tensor): Predicted class scores with shape (B, N, C).
+            targets (torch.Tensor): Target class indices with shape (B, N).
+            gt_scores (torch.Tensor): Ground truth confidence scores with shape (B, N).
+            num_gts (int): Number of ground truth objects.
+            postfix (str, optional): String to append to the loss name for identification in multi-loss scenarios.
+
+        Returns:
+            (dict[str, torch.Tensor]): Dictionary containing classification loss value.
+
+        Notes:
+            The function supports different classification loss types:
+            - Varifocal Loss (if self.vfl is not None and num_gts > 0)
+            - Focal Loss (if self.fl is not None)
+            - BCE Loss (default fallback)
+        """
+        # Logits: [b, query, num_classes], gt_class: list[[n, 1]]
+        name_class = f"loss_class{postfix}"
+        bs, nq = pred_scores.shape[:2]
+        # one_hot = F.one_hot(targets, self.nc + 1)[..., :-1]  # (bs, num_queries, num_classes)
+        one_hot = torch.zeros((bs, nq, self.nc + 1), dtype=torch.int64, device=targets.device)
+        one_hot.scatter_(2, targets.unsqueeze(-1), 1)
+        one_hot = one_hot[..., :-1]
+        gt_scores = gt_scores.view(bs, nq, 1) * one_hot
+
+        if self.fl:
+            if num_gts and self.vfl:
+                loss_cls = self.vfl(pred_scores, gt_scores, one_hot)
+            else:
+                loss_cls = self.fl(pred_scores, one_hot.float())
+            loss_cls /= max(num_gts, 1) / nq
+        else:
+            # >>> MOD
+            loss_cls = self.bce_loss(pred_scores, gt_scores).mean(1).sum()  # YOLO CLS loss
+            # <<< MOD
+
+        return {name_class: loss_cls.squeeze() * self.loss_gain["class"]}
 
     def _get_loss_cls_feat(
         self,
