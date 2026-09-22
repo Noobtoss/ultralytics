@@ -36,8 +36,8 @@ class DETRLoss(_DETRLoss):
         LOGGER.warning(kwargs)
         weights = class_weights[getattr(model.args, "class_weights", None)]
         self.bce_loss = BCEWithLogitsLossWeighted(**weights).to(self.device)
-        self.fl = FocalLossWeighted(gamma, alpha, **weights) if use_fl else None
-        self.vfl = VarifocalLossWeighted(gamma, alpha, **weights) if use_vfl else None
+        self.fl = FocalLossWeighted(gamma, alpha, **weights).to(self.device) if use_fl else None
+        self.vfl = VarifocalLossWeighted(gamma, alpha, **weights).to(self.device) if use_vfl else None
 
         self.cls_feat_loss = ClsFeatLoss(**kwargs).to(self.device)
         n = getattr(hyp, "cls_feat_dec_layers", None)
