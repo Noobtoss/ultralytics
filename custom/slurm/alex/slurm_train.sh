@@ -95,7 +95,13 @@ python $ROOT_DIR/custom/src/train.py \
 # ----- CLEANUP -----------------------------------------------------
 KEEP_FILES=("metrics.csv" "results.csv" "last.pt")
 
-wandb sync --sync-all || true
+for i in 1 2 3 4 5; do
+    wandb sync --sync-all && break
+    echo "sync attempt $i failed, retrying..."
+    sleep 20
+done
+
+rm -rf "$TMPDIR"
 rm -rf "$OUT_DIR/wandb"
 find "$OUT_DIR" -type f $(printf ' ! -name %s' "${KEEP_FILES[@]}") -delete
 find "$OUT_DIR" -type d -empty -delete
