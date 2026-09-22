@@ -26,6 +26,7 @@ class DETRLoss(_DETRLoss):
     ) -> None:
         LOGGER.warning("[Modded] DETRLoss")
         super().__init__(nc, loss_gain, aux_loss, use_fl, use_vfl, use_uni_match, uni_match_ind, gamma, alpha)
+        self.device = next(model.parameters()).device  # parent leaves self.device=None; set it before .to()
         hyp = model.args  # hyperparameters
         self.loss_gain["cls_feat"] = getattr(hyp, "cls_feat", 0)
         kwargs = {
