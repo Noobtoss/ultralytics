@@ -3,7 +3,7 @@ from ultralytics.utils import LOGGER
 from ultralytics.utils.loss import v8DetectionLoss as _v8DetectionLoss
 from ultralytics.utils.tal import make_anchors
 
-from .class_losses_weighted import BCEWithLogitsLossWeighted
+from .class_losses_weighted import ClassLossWeighted
 from .class_weights import class_weights
 from .cls_feat_loss import ClsFeatLoss
 
@@ -22,7 +22,7 @@ class v8DetectionLoss(_v8DetectionLoss):
             if k.startswith("cls_feat_")
         }
         LOGGER.warning(kwargs)
-        self.bce_loss = BCEWithLogitsLossWeighted(**class_weights[getattr(model.args, "class_weights", None)]).to(self.device)
+        self.bce_loss = ClassLossWeighted(**class_weights[getattr(model.args, "class_weights", None)]).to(self.device)
         self.cls_feat_loss = ClsFeatLoss(**kwargs).to(self.device)
         self.cls_feat_proj_head = getattr(model, "cls_feat_proj_head", None)
 

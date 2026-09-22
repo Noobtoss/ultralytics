@@ -4,13 +4,14 @@ import torch.nn.functional as F
 from ultralytics.utils.torch_utils import autocast
 
 
-class BCEWithLogitsLossWeighted(nn.Module):
+class ClassLossWeighted(nn.Module):
     def __init__(self,
+                 loss = nn.BCEWithLogitsLoss(reduction="none"),
                  class_weights: torch.Tensor = None,
                  class_weights_matrix: torch.Tensor = None
                  ) -> None:
         super().__init__()
-        self.loss = nn.BCEWithLogitsLoss(reduction="none")
+        self.loss = loss
 
         self.register_buffer("class_weights", class_weights)
         self.register_buffer("class_weights_matrix", class_weights_matrix)
