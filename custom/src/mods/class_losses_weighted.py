@@ -6,7 +6,7 @@ from ultralytics.utils.torch_utils import autocast
 
 class ClassLossWeighted(nn.Module):
     def __init__(self,
-                 loss = nn.BCEWithLogitsLoss(reduction="none"),
+                 loss: nn.Module = nn.BCEWithLogitsLoss(reduction="none"),
                  class_weights: torch.Tensor = None,
                  class_weights_matrix: torch.Tensor = None
                  ) -> None:
