@@ -2,7 +2,7 @@
 #SBATCH --job-name=ultralytics_train # Kurzname des Jobs
 #SBATCH --array=4-9%3
 #SBATCH --output=logs/R_%A_%a.out
-#SBATCH --partition=p2,p4,p6        # p1,p2,p3,p4,p5,p6
+#SBATCH --partition=p6        # p1,p2,p3,p4,p5,p6
 #SBATCH --qos=gpuultimate
 #SBATCH --gres=gpu:1
 #SBATCH --nodes=1                # Anzahl Knoten
