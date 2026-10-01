@@ -114,11 +114,18 @@ class DETRLoss(_DETRLoss):
         fg_mask = fg_mask.view(-1)
         cls_feats = cls_feats[fg_mask]
         gt_scores = gt_scores[fg_mask]
+        # Exclude zero-IoU matches: their class targets are all zero.
+        nonzero_iou_mask = gt_scores.any(dim=-1)
 
         if self.cls_feat_proj_head is not None:
             cls_feats = self.cls_feat_proj_head(cls_feats)
 
-        loss_cls_feat = self.cls_feat_loss(cls_feats=cls_feats, target_scores=gt_scores)
+        loss_cls_feat = cls_feats.new_zeros(())
+        if nonzero_iou_mask.sum():
+            loss_cls_feat = self.cls_feat_loss(
+                cls_feats=cls_feats[nonzero_iou_mask],
+                target_scores=gt_scores[nonzero_iou_mask],
+            )
         # loss_cls_feat uses reduction="mean" over all elements (bs * nq * feats).
         # _get_loss_cls applies .mean(1).sum() over (bs * nq, nc+1), making loss_cls ~ (bs * nq) times larger.
         # Scale loss_cls_feat by (bs * nq) to match loss_cls magnitude might be needed.

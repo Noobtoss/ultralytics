@@ -78,9 +78,16 @@ class v8DetectionLoss(_v8DetectionLoss):
         # >>> MOD
         if fg_mask.sum():
             cls_feats = cls_feats[fg_mask]
+            # Exclude foreground matches whose class target scores are all zero.
+            nonzero_iou_mask = target_scores[fg_mask].any(dim=-1)
             if self.cls_feat_proj_head is not None:
                 cls_feats = self.cls_feat_proj_head(cls_feats)
-            loss[3] = self.cls_feat_loss(cls_feats=cls_feats, target_scores=target_scores[fg_mask].detach())
+            # loss[3] = loss[3] = self.cls_feat_loss(cls_feats=cls_feats, target_scores=target_scores[fg_mask].detach())
+            if nonzero_iou_mask.sum():
+                loss[3] = self.cls_feat_loss(
+                    cls_feats=cls_feats[nonzero_iou_mask],
+                    target_scores=target_scores[fg_mask][nonzero_iou_mask].detach(),
+                )
             logging_loss[3] = loss[3].clone().detach()
             loss[3] *= self.hyp.cls_feat
         # <<< MOD
