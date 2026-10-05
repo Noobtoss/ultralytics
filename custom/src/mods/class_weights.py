@@ -53,6 +53,11 @@ CLASS_SIM_MATRIX = CLASS_SIM_MATRIX / CLASS_SIM_MATRIX[CLASS_SIM_MATRIX >= 0].me
 CLASS_SIM_MATRIX[CLASS_SIM_MATRIX <= 0] = 1  # -1.0 = classes only in dataset.categories -> weight=1 (trains as negative, weight=0 wouldn't)
 
 class_weights = {
+    'None':
+        {
+            "class_weights": None,
+            "class_weights_matrix": None,
+        },
     None:
         {
             "class_weights": None,
