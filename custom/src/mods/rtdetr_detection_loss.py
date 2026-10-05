@@ -212,6 +212,7 @@ class DETRLoss(_DETRLoss):
         masks: torch.Tensor | None = None,
         gt_mask: torch.Tensor | None = None,
         cls_feats: torch.Tensor | None = None,
+        has_encoder: bool = False,
     ) -> dict[str, torch.Tensor]:
         # <<< MOD
         # NOTE: loss class, bbox, giou, mask, dice
@@ -242,7 +243,8 @@ class DETRLoss(_DETRLoss):
                 gt_mask=gt_mask,
                 postfix=postfix,
                 match_indices=match_indices,
-                cls_feats=aux_cls_feats if i in self.cls_feat_dec_layers else None,
+                # Encoder slot 0 maps to -1, outside the decoder range.
+                cls_feats=aux_cls_feats if i - int(has_encoder) in self.cls_feat_dec_layers else None,
             )
             loss[0] += loss_[f"loss_class{postfix}"]
             loss[1] += loss_[f"loss_bbox{postfix}"]
@@ -273,6 +275,7 @@ class DETRLoss(_DETRLoss):
         batch: dict[str, Any],
         postfix: str = "",
         cls_feats: torch.Tensor = None,
+        has_encoder: bool = False,
         **kwargs: Any,
     ) -> dict[str, torch.Tensor]:
         # <<< MOD
@@ -306,7 +309,8 @@ class DETRLoss(_DETRLoss):
             # >>> MOD
             total_loss.update(
                 self._get_loss_aux(
-                    pred_bboxes[:-1], pred_scores[:-1], gt_bboxes, gt_cls, gt_groups, match_indices, postfix, cls_feats=cls_feats[:-1]
+                    pred_bboxes[:-1], pred_scores[:-1], gt_bboxes, gt_cls, gt_groups, match_indices, postfix,
+                    cls_feats=cls_feats[:-1], has_encoder=has_encoder,
                 )
             )
             # <<< MOD
@@ -346,7 +350,7 @@ class RTDETRDetectionLoss(_RTDETRDetectionLoss):
         """
         # >>> MOD
         pred_bboxes, pred_scores, cls_feats = preds
-        total_loss = DETRLoss.forward(self, pred_bboxes, pred_scores, batch, cls_feats=cls_feats)
+        total_loss = DETRLoss.forward(self, pred_bboxes, pred_scores, batch, cls_feats=cls_feats, has_encoder=True)
         # <<< MOD
 
         # Check for denoising metadata to compute denoising training loss
