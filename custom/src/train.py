@@ -62,7 +62,6 @@ DEFAULT_TRAIN_CFG = Namespace(
     cls_feat_loss="sup_con_loss",
     # cls_feat_proj_head="s",
     # cls_feat_proj_head_lr=0.001,
-    # tal_topk=10,
 )
 
 DEFAULT_CFG = Namespace(

@@ -13,8 +13,6 @@ class v8DetectionLoss(_v8DetectionLoss):
         LOGGER.warning("[Modded] v8DetectionLoss")
         super().__init__(model, *args, **kwargs)
 
-        if hasattr(model.args, 'tal_topk'):
-            kwargs['tal_topk'] = model.args.tal_topk
         self.hyp.cls_feat = getattr(self.hyp, "cls_feat", 0)
         kwargs = {
             k.removeprefix("cls_feat_"): v
