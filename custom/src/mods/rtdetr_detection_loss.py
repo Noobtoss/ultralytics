@@ -42,8 +42,13 @@ class DETRLoss(_DETRLoss):
 
         self.cls_feat_loss = ClsFeatLoss(**kwargs).to(self.device)
         n = getattr(hyp, "cls_feat_dec_layers", None)
-        assert n != 0
-        self.cls_feat_dec_layers = range(6 - n, 6) if n is not None else range(1, 6)  # hard encoding 6 is bad
+        # self.cls_feat_dec_layers = range(6 - n, 6) if n is not None else range(1, 6)  # hard encoding 6 is bad
+        num_decoder_layers = model.model[-1].num_decoder_layers
+        if n is None:
+            n = num_decoder_layers
+        if isinstance(n, bool) or not isinstance(n, int) or not 1 <= n <= num_decoder_layers:
+            raise ValueError(f"cls_feat_dec_layers must be an integer between 1 and {num_decoder_layers}, got {n!r}")
+        self.cls_feat_dec_layers = range(num_decoder_layers - n, num_decoder_layers)
         self.cls_feat_proj_head = getattr(model, "cls_feat_proj_head", None)
 
     def _get_loss_class(

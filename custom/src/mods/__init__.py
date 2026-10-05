@@ -18,6 +18,7 @@ def patched_check_dict_alignment(*args, **kwargs):
 
 
 _cfg.CFG_FLOAT_KEYS |= {"cls_feat", "cls_feat_temperature", "cls_feat_proj_head_lr"}
+_cfg.CFG_INT_KEYS |= {"cls_feat_dec_layers"}
 _base_check_cfg = _cfg.check_cfg
 
 
