@@ -44,6 +44,7 @@ class VarifocalLossWeighted(VarifocalLoss):
         self.register_buffer("class_weights_matrix", class_weights_matrix)
 
     def forward(self, pred_score: torch.Tensor, gt_score: torch.Tensor, label: torch.Tensor) -> torch.Tensor:
+        """Compute varifocal loss between predictions and ground truth."""
         weight = self.alpha * pred_score.sigmoid().pow(self.gamma) * (1 - label) + gt_score * label
         with autocast(enabled=False):
             # >>> MOD
