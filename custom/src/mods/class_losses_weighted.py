@@ -19,8 +19,10 @@ class ClassLossWeighted(nn.Module):
     def forward(self, pred_scores: torch.Tensor, target_scores: torch.Tensor, *args, **kwargs) -> torch.Tensor:
         loss = self.loss(pred_scores, target_scores, *args, **kwargs)
         if self.class_weights is not None:
+            self.class_weights = self.class_weights.to(device=pred_scores.device)
             loss = loss * self.class_weights
         if self.class_weights_matrix is not None:
+            self.class_weights_matrix = self.class_weights_matrix.to(device=pred_scores.device)
             labels = target_scores.argmax(dim=-1)
             weight_per_sample = self.class_weights_matrix[labels]
             weight_per_sample = torch.where(
@@ -50,8 +52,10 @@ class VarifocalLossWeighted(VarifocalLoss):
             # >>> MOD
             loss = F.binary_cross_entropy_with_logits(pred_score.float(), gt_score.float(), reduction="none") * weight
             if self.class_weights is not None:
+                self.class_weights = self.class_weights.to(device=pred_score.device)
                 loss = loss * self.class_weights
             if self.class_weights_matrix is not None:
+                self.class_weights_matrix = self.class_weights_matrix.to(device=pred_score.device)
                 gt_cls = label.argmax(dim=-1)
                 weight_per_sample = self.class_weights_matrix[gt_cls]
                 weight_per_sample = torch.where(
@@ -93,8 +97,10 @@ class FocalLossWeighted(FocalLoss):
             loss *= alpha_factor
         # >>> MOD
         if self.class_weights is not None:
+            self.class_weights = self.class_weights.to(device=pred.device)
             loss = loss * self.class_weights
         if self.class_weights_matrix is not None:
+            self.class_weights_matrix = self.class_weights_matrix.to(device=pred.device)
             gt_cls = label.argmax(dim=-1)
             weight_per_sample = self.class_weights_matrix[gt_cls]
             weight_per_sample = torch.where(
