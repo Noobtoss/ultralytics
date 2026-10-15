@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=ultralytics_train # Kurzname des Jobs
+#SBATCH --job-name=ultralytics # Kurzname des Jobs
 #SBATCH --array=4-9%3
 #SBATCH --output=logs/R_%A_%a.out
 #SBATCH --partition=p4,p6        # p1,p2,p3,p4,p5,p6
