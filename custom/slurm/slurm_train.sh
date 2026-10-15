@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=ultralytics # Kurzname des Jobs
 #SBATCH --array=4-9%3
-#SBATCH --output=logs/R_%A_%a.out
+#SBATCH --output=logs/%A_%a.out
 #SBATCH --partition=p4,p6        # p1,p2,p3,p4,p5,p6
 #SBATCH --qos=gpuultimate
 #SBATCH --gres=gpu:1

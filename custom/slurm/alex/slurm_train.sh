@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=ultralytics  # Name shown in squeue
 #SBATCH --array=4-9%6
-#SBATCH --output=logs/R_%A_%a.out  # Log file: %A=jobID, %a=array task index
+#SBATCH --output=logs/%A_%a.out  # Log file: %A=jobID, %a=array task index
 #SBATCH --gres=gpu:a40:1     # Request 1x A40 GPUs
 #SBATCH --partition=a40      # Submit to the a40 node partition
 #SBATCH --ntasks=1           # 1 process total (not MPI)
