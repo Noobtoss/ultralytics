@@ -9,15 +9,15 @@ from ultralytics import YOLO
 
 # === Configuration ===
 MODEL = "checkpoints/yolo11x.pt"
-DATA = ["datasets/semmel/04/semmel61.yaml",
-        "datasets/semmel/04/semmel64.yaml",
-        "datasets/semmel/04/semmel65.yaml",
-        "datasets/semmel/04/semmel66.yaml",
-        "datasets/semmel/04/semmel67.yaml",
-        "datasets/semmel/04/semmel68.yaml",
-        "datasets/semmel/04/semmel81.yaml",
-        "datasets/semmel/04/semmel82.yaml",
-        "datasets/semmel/04/semmel83.yaml"
+DATA = ["datasets/04/semmel61.yaml",
+        "datasets/04/semmel64.yaml",
+        "datasets/04/semmel65.yaml",
+        "datasets/04/semmel66.yaml",
+        "datasets/04/semmel67.yaml",
+        "datasets/04/semmel68.yaml",
+        "datasets/04/semmel81.yaml",
+        "datasets/04/semmel82.yaml",
+        "datasets/04/semmel83.yaml"
         ]
 EPOCHS = 200
 SEEDS = 6666
@@ -25,10 +25,10 @@ IMGSZ = 1280  # 640
 
 # === Configuration ===
 MODEL = "checkpoints/yolo11x.pt"
-DATA = ["datasets/semmel/05Machine/semmel75.yaml",
-        "datasets/semmel/05Machine/semmel76.yaml",
-        "datasets/semmel/05Machine/semmel77.yaml",
-        "datasets/semmel/05Machine/semmel78.yaml"
+DATA = ["datasets/05Machine/semmel75.yaml",
+        "datasets/05Machine/semmel76.yaml",
+        "datasets/05Machine/semmel77.yaml",
+        "datasets/05Machine/semmel78.yaml"
         ]
 EPOCHS = 100
 SEEDS = 6666
@@ -36,17 +36,17 @@ IMGSZ = 1280  # 640
 
 # === Configuration ===
 MODEL = "checkpoints/yolo11x.pt"
-DATA = ["datasets/semmel/05fzi2025/semmel94.yaml",
-        "datasets/semmel/05fzi2025/semmel93.yaml",
-        "datasets/semmel/05fzi2025/semmel92.yaml",
-        "datasets/semmel/05fzi2025/semmel91.yaml",
-        "datasets/semmel/05fzi2025/semmel90.yaml",
-        "datasets/semmel/05fzi2025/semmel89.yaml",
-        "datasets/semmel/05fzi2025/semmel88.yaml",
-        "datasets/semmel/05fzi2025/semmel87.yaml",
-        "datasets/semmel/05fzi2025/semmel86.yaml",
-        "datasets/semmel/05fzi2025/semmel85.yaml",
-        "datasets/semmel/05fzi2025/semmel84.yaml"
+DATA = ["datasets/05fzi2025/semmel94.yaml",
+        "datasets/05fzi2025/semmel93.yaml",
+        "datasets/05fzi2025/semmel92.yaml",
+        "datasets/05fzi2025/semmel91.yaml",
+        "datasets/05fzi2025/semmel90.yaml",
+        "datasets/05fzi2025/semmel89.yaml",
+        "datasets/05fzi2025/semmel88.yaml",
+        "datasets/05fzi2025/semmel87.yaml",
+        "datasets/05fzi2025/semmel86.yaml",
+        "datasets/05fzi2025/semmel85.yaml",
+        "datasets/05fzi2025/semmel84.yaml"
         ]
 EPOCHS = 100
 SEEDS = [886666, 881313, 888888, 884040]
@@ -54,15 +54,15 @@ IMGSZ = 1280
 
 # === Configuration ===
 MODEL = "checkpoints/yolo11x.pt"
-DATA = ["datasets/semmel/05Ostern/semmel95.yaml",
-        "datasets/semmel/05Ostern/semmel96.yaml",
-        "datasets/semmel/05Ostern/semmel97.yaml",
-        "datasets/semmel/05Ostern/semmel98.yaml",
-        "datasets/semmel/05Ostern/semmel99.yaml",
-        "datasets/semmel/05Ostern/semmelDemo04.yaml",
-        "datasets/semmel/05Ostern/semmel100.yaml",
-        "datasets/semmel/05Ostern/semmel101.yaml",
-        "datasets/semmel/05Ostern/semmel102.yaml"
+DATA = ["datasets/05Ostern/semmel95.yaml",
+        "datasets/05Ostern/semmel96.yaml",
+        "datasets/05Ostern/semmel97.yaml",
+        "datasets/05Ostern/semmel98.yaml",
+        "datasets/05Ostern/semmel99.yaml",
+        "datasets/05Ostern/semmelDemo04.yaml",
+        "datasets/05Ostern/semmel100.yaml",
+        "datasets/05Ostern/semmel101.yaml",
+        "datasets/05Ostern/semmel102.yaml"
         ]
 EPOCHS = 100
 SEEDS = [886666, 881313, 888888, 884040]
@@ -70,14 +70,14 @@ IMGSZ = 1280
 
 # === Configuration ===
 MODEL = "checkpoints/yolo11x.pt"
-DATA = ["datasets/semmel/05Zucker/semmel103.yaml",
-        "datasets/semmel/05Zucker/semmel104.yaml",
-        "datasets/semmel/05Zucker/semmel105.yaml",
-        "datasets/semmel/05Zucker/semmel106.yaml",
-        "datasets/semmel/05Zucker/semmel107.yaml",
-        "datasets/semmel/05Zucker/semmel108.yaml",
-        "datasets/semmel/05Zucker/semmel109.yaml",
-        "datasets/semmel/05Zucker/semmel110.yaml"
+DATA = ["datasets/05Zucker/semmel103.yaml",
+        "datasets/05Zucker/semmel104.yaml",
+        "datasets/05Zucker/semmel105.yaml",
+        "datasets/05Zucker/semmel106.yaml",
+        "datasets/05Zucker/semmel107.yaml",
+        "datasets/05Zucker/semmel108.yaml",
+        "datasets/05Zucker/semmel109.yaml",
+        "datasets/05Zucker/semmel110.yaml"
         ]
 EPOCHS = 100
 SEEDS = [886666, 881313, 888888, 884040]
@@ -85,10 +85,10 @@ IMGSZ = 1280
 
 # === Configuration ===
 MODEL = "checkpoints/semmel125.pt"  # "checkpoints/yolo11x.pt" #
-DATA = ["datasets/semmel/05SAC/semmel121Mono_ann.yaml",
-        "datasets/semmel/05SAC/semmel120Mono_owl.yaml",
-        "datasets/semmel/05SAC/semmel119Mono_dino.yaml",
-        "datasets/semmel/05SAC/semmel113Baseline.yaml",
+DATA = ["datasets/05SAC/semmel121Mono_ann.yaml",
+        "datasets/05SAC/semmel120Mono_owl.yaml",
+        "datasets/05SAC/semmel119Mono_dino.yaml",
+        "datasets/05SAC/semmel113Baseline.yaml",
         ]
 EPOCHS = [200, 200, 200, 100]
 SEEDS = 888888
@@ -96,11 +96,11 @@ IMGSZ = 1280
 
 # === Configuration ===
 MODEL = "checkpoints/semmel113.pt"  # "checkpoints/yolo11x.pt"
-DATA = ["datasets/semmel/06SAC/semmel118Videos06Train_semmel113_plus.yaml",
-        "datasets/semmel/06SAC/semmel117Videos06Train_semmel113.yaml",
-        "datasets/semmel/06SAC/semmel116Videos06Train_ann0_plus.yaml",
-        "datasets/semmel/06SAC/semmel115Videos06Train_ann0.yaml",
-        "datasets/semmel/06SAC/semmel114Baseline.yaml"
+DATA = ["datasets/06SAC/semmel118Videos06Train_semmel113_plus.yaml",
+        "datasets/06SAC/semmel117Videos06Train_semmel113.yaml",
+        "datasets/06SAC/semmel116Videos06Train_ann0_plus.yaml",
+        "datasets/06SAC/semmel115Videos06Train_ann0.yaml",
+        "datasets/06SAC/semmel114Baseline.yaml"
         ]
 EPOCHS = 100
 SEEDS = 888888
@@ -108,10 +108,10 @@ IMGSZ = 1280
 
 # === Configuration ===
 MODEL = "checkpoints/semmel119.pt"  # "checkpoints/yolo11x.pt"
-DATA = ["datasets/semmel/06SAC/semmel127Videos06Train_semmel119_plus.yaml",
-        "datasets/semmel/06SAC/semmel126Videos06Train_semmel119.yaml",
-        "datasets/semmel/06SAC/semmel129Videos06Train_ann0_Mono.yaml",
-        "datasets/semmel/06SAC/semmel128Mono.yaml",
+DATA = ["datasets/06SAC/semmel127Videos06Train_semmel119_plus.yaml",
+        "datasets/06SAC/semmel126Videos06Train_semmel119.yaml",
+        "datasets/06SAC/semmel129Videos06Train_ann0_Mono.yaml",
+        "datasets/06SAC/semmel128Mono.yaml",
         ]
 EPOCHS = 100
 SEEDS = 888888
@@ -119,8 +119,8 @@ IMGSZ = 1280
 
 # === Configuration ===
 MODEL = "checkpoints/yolo11x.pt"
-DATA = ["datasets/semmel/05Zucker/semmelDemo04.yaml",
-        "datasets/semmel/05Zucker/semmelDemo04.yaml",
+DATA = ["datasets/05Zucker/semmelDemo04.yaml",
+        "datasets/05Zucker/semmelDemo04.yaml",
         ]
 EPOCHS = 100
 SEEDS = 888888

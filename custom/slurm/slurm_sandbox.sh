@@ -11,10 +11,10 @@
 #SBATCH --mem=32G                  # RAM pro CPU Kern #20G #32G #64G
 
 # ----- DIRS --------------------------------------------------------
-ROOT_DIR=/nfs/scratch/staff/schmittth/code_nexus/ultralytics
+ROOT=/nfs/scratch/staff/schmittth/code_nexus/ultralytics
 
 # ----- GET ARGS ----------------------------------------------------
-PARAMS_FILE="$ROOT_DIR/custom/slurm/slurm_params.txt"
+PARAMS_FILE="$ROOT/custom/slurm/slurm_params.txt"
 PARAMS=$(grep -v '^[[:space:]]*#' "$PARAMS_FILE" | sed -n "$((SLURM_ARRAY_TASK_ID))p")
 
 declare -A KV
@@ -28,7 +28,7 @@ done
 
 RUN_NAME="${KV[exp_name]:-unnamed_experiment}"
 RUN_NAME="${RUN_NAME}_${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}"
-OUT_DIR="${ROOT_DIR}/runs/${RUN_NAME}"
+OUT_DIR="${ROOT}/runs/${RUN_NAME}"
 MODEL="${KV[model]:-custom/cfg/cls_feat_yolo11x.yaml}"
 CKPT="${KV[ckpt]:-checkpoints/yolo11x.pt}"
 DATA="${KV[data]:-datasets/default.yaml}"
@@ -40,7 +40,7 @@ module load python/anaconda3
 eval "$(conda shell.bash hook)"
 conda activate conda-ultralytics
 
-export PYTHONPATH="$ROOT_DIR/custom/src:$PYTHONPATH"
+export PYTHONPATH="$ROOT/custom/src:$PYTHONPATH"
 
 # ----- WANDB -------------------------------------------------------
 yolo settings wandb=True
@@ -50,12 +50,12 @@ export WANDB_CACHE_DIR=/nfs/scratch/staff/schmittth/tmp
 export WANDB_CONFIG_DIR=/nfs/scratch/staff/schmittth/tmp
 
 # ----- TRAINING ----------------------------------------------------
-python $ROOT_DIR/custom/src/train.py \
+python $ROOT/custom/src/train.py \
        --run_name $RUN_NAME \
        --save_dir $OUT_DIR \
-       --model    $ROOT_DIR/$MODEL \
-       --ckpt     $ROOT_DIR/$CKPT \
-       --data     $ROOT_DIR/$DATA  \
+       --model    $ROOT/$MODEL \
+       --ckpt     $ROOT/$CKPT \
+       --data     $ROOT/$DATA  \
        $PARAMS
 
 # ----- CLEANUP -----------------------------------------------------
