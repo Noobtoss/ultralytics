@@ -33,7 +33,10 @@ RUN_NAME="${RUN_NAME}_${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}"
 OUT_DIR="${ROOT}/runs/${RUN_NAME}"
 MODEL="${KV[model]:-custom/cfg/cls_feat_yolo11x.yaml}"
 CKPT="${KV[ckpt]:-checkpoints/yolo11x.pt}"
-DATA="${KV[data]:-datasets/default.yaml}"
+DATA_DIR="$ROOT/${KV[data_dir]:-../../data_nexus}"
+DATA="${KV[data]}"
+COCO_TRAIN="${KV[coco_train]}"
+COCO_TEST="${KV[coco_test]:-${KV[coco_val]}}"
 
 # ----- ENVIRONMENT SETUP -------------------------------------------
 unset SLURM_EXPORT_ENV
@@ -65,31 +68,36 @@ export WANDB_CONFIG_DIR=$TMPDIR
 # yolo settings weights_dir="$ROOT/models"
 
 # ----- DATA STAGING ------------------------------------------------
-PATH_TAR=$(grep "^path:" $ROOT/$DATA | cut -d ':' -f2 | xargs)
-if [[ "$PATH_TAR" == *.tar ]]; then
-    tar xf $PATH_TAR --strip-components=1 -C $JOB_DIR \
-      --warning=no-unknown-keyword \
-      --exclude='._*' \
-      --exclude='.DS_Store' \
-      --exclude='__MACOSX'
+if [[ -n "$DATA" ]]; then
+    PATH_TAR=$(grep "^path:" "$DATA_DIR/$DATA" | cut -d ':' -f2 | xargs)
+    if [[ "$PATH_TAR" == *.tar ]]; then
+        tar xf $PATH_TAR --strip-components=1 -C $JOB_DIR \
+            --warning=no-unknown-keyword \
+            --exclude='._*' \
+            --exclude='.DS_Store' \
+            --exclude='__MACOSX'
 
-    echo ErrorMessage unpacking: $?  # $? = exit code (0 = success, anything else = error)
+        echo ErrorMessage unpacking: $?  # $? = exit code (0 = success, anything else = error)
 
-    cp $ROOT/$DATA $JOB_DIR/
-    DATA="$JOB_DIR/$(basename $DATA)"
-    sed -i "s|^path:.*|path: $JOB_DIR|" $DATA
-    PARAMS=$(echo "$PARAMS" | sed "s|data [^ ]*|data $DATA|")
-else
-    DATA="$ROOT/$DATA"
+        cp "$DATA_DIR/$DATA" $JOB_DIR/
+        DATA="$JOB_DIR/$(basename $DATA)"
+        sed -i "s|^path:.*|path: $JOB_DIR|" $DATA
+        PARAMS=$(echo "$PARAMS" | sed "s|data [^ ]*|data $DATA|")
+    else
+        DATA="$DATA_DIR/$DATA"
+    fi
 fi
 
 # ----- TRAINING ----------------------------------------------------
 python $ROOT/custom/src/train.py \
-       --run_name $RUN_NAME \
-       --save_dir $OUT_DIR \
-       --model    $ROOT/$MODEL \
-       --ckpt     $ROOT/$CKPT \
-       --data     $DATA  \
+       --run_name "$RUN_NAME" \
+       --save_dir "$OUT_DIR" \
+       --model    "$ROOT/$MODEL" \
+       --ckpt     "$ROOT/$CKPT" \
+       --data_dir "$DATA_DIR" \
+       --data     "$DATA"  \
+       --coco_train "$COCO_TRAIN" \
+       --coco_test  "$COCO_TEST" \
        $PARAMS
 
 # ----- CLEANUP -----------------------------------------------------

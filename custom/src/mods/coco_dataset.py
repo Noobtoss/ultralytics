@@ -115,9 +115,9 @@ def resolve_data(args):
     """Return the YAML path or an in-memory COCO dataset configuration."""
     if not getattr(args, "coco_train", None):
         return args.data
-    paths = [Path(path).expanduser().resolve() for path in (args.coco_train, args.coco_val)]
-    imgs_dir = getattr(args, "coco_imgs_dir", None)
-    imgs_dir = str(Path(imgs_dir).expanduser().resolve() if imgs_dir else paths[0].parent)
+    paths = [Path(path).resolve() for path in (args.coco_train, args.coco_val)]
+    imgs_dir = getattr(args, "data_dir", None)
+    imgs_dir = str(Path(imgs_dir).resolve() if imgs_dir else paths[0].parent)
     with paths[0].open(encoding="utf-8") as file:
         categories = sorted(json.load(file)["categories"], key=lambda category: category["id"])
     names = {category["id"] - 1: category["name"] for category in categories}

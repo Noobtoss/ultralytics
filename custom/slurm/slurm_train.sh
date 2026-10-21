@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=ultralytics # Kurzname des Jobs
-#SBATCH --array=4-9%3
+#SBATCH --array=4%3
 #SBATCH --output=logs/%A_%a.out
 #SBATCH --partition=p4,p6        # p1,p2,p3,p4,p5,p6
 #SBATCH --qos=gpuultimate
@@ -32,7 +32,10 @@ RUN_NAME="${RUN_NAME}_${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}"
 OUT_DIR="${ROOT}/runs/${RUN_NAME}"
 MODEL="${KV[model]:-custom/cfg/cls_feat_yolo11x.yaml}"
 CKPT="${KV[ckpt]:-checkpoints/yolo11x.pt}"
-DATA="${KV[data]:-datasets/default.yaml}"
+DATA_DIR="$ROOT/${KV[data_dir]:-../../data_nexus}"
+DATA="${KV[data]}"
+COCO_TRAIN="${KV[coco_train]}"
+COCO_TEST="${KV[coco_test]:-${KV[coco_val]}}"
 
 # ----- ENVIRONMENT SETUP -------------------------------------------
 module purge
@@ -54,11 +57,14 @@ export WANDB_CONFIG_DIR=$TMPDIR
 
 # ----- TRAINING ----------------------------------------------------
 python $ROOT/custom/src/train.py \
-       --run_name $RUN_NAME \
-       --save_dir $OUT_DIR \
-       --model    $ROOT/$MODEL \
-       --ckpt     $ROOT/$CKPT \
-       --data     $ROOT/$DATA  \
+       --run_name   "$RUN_NAME" \
+       --save_dir   "$OUT_DIR" \
+       --model      "$ROOT/$MODEL" \
+       --ckpt       "$ROOT/$CKPT" \
+       --data_dir   "$DATA_DIR" \
+       --data       "$DATA"  \
+       --coco_train "$COCO_TRAIN"  \
+       --coco_test  "$COCO_TEST"  \
        $PARAMS
 
 # ----- CLEANUP -----------------------------------------------------
