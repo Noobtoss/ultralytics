@@ -37,15 +37,13 @@ class COCODataset(YOLODataset):
         with open(self.json_file) as f:
             coco = json.load(f)
 
-        categories = {cat["id"]: i for i, cat in enumerate(sorted(coco["categories"], key=lambda c: c["id"]))}
+        categories = {cat["id"]: cat["id"] - 1 for cat in coco["categories"]}
 
-        # >>> MOD: reuse the training class mapping when metadata is supplied.
+        # >>> MOD: check that category IDs and names match the training metadata.
         names = self.data.get("coco_names", self.data.get("names"))
         if names is not None:
-            names = {name: index for index, name in names.items()}
-            if any(cat["name"] not in names for cat in coco["categories"]):
-                raise ValueError(f"{self.json_file}: categories do not match the training class names")
-            categories = {cat["id"]: names[cat["name"]] for cat in coco["categories"]}
+            if any(names.get(cat["id"] - 1) != cat["name"] for cat in coco["categories"]):
+                raise ValueError(f"{self.json_file}: category IDs and names do not match the training metadata")
         # <<< MOD
 
         img_to_anns = defaultdict(list)
@@ -122,7 +120,10 @@ def resolve_data(args):
     imgs_dir = str(Path(imgs_dir).expanduser().resolve() if imgs_dir else paths[0].parent)
     with paths[0].open(encoding="utf-8") as file:
         categories = sorted(json.load(file)["categories"], key=lambda category: category["id"])
-    names = {index: category["name"] for index, category in enumerate(categories)}
+    names = {category["id"] - 1: category["name"] for category in categories}
+    if min(names) < 0:
+        raise ValueError(f"{paths[0]}: COCO category IDs must be positive")
+    names = {i: names.get(i, f"unused_{i}") for i in range(max(names) + 1)}
     return dict(train=imgs_dir, val=imgs_dir, train_json=str(paths[0]), val_json=str(paths[1]),
                 names=names, coco_names=names, nc=len(names), channels=3)
 
