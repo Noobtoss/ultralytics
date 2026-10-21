@@ -17,6 +17,7 @@ sys.path.insert(0, site.getsitepackages()[0])  # index 0 — conda site-packages
 from ultralytics import YOLO, RTDETR
 from mods import DetectionTrainer, RTDETRTrainer
 from callbacks import eval_last, move_last_ckpt, wb_callbacks
+from mods.coco_dataset import resolve_data
 
 DEFAULT_ARGS = {
     "yolo26": Namespace(
@@ -24,7 +25,10 @@ DEFAULT_ARGS = {
             save_dir="/Users/noobtoss/code_nexus/ultralytics/runs/unnamed_run",
             model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feat_yolo26n.yaml",
             ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/yolo26n.pt",
-            data="/Users/noobtoss/code_nexus/ultralytics/datasets/semmel/05ACCV2026_local.yaml",
+            data_dir="/Users/noobtoss/data_nexus/",
+            # data="ultralytics/datasets/05ACCV2026_local.yaml",
+            coco_train="phd_experiments/06Aufsatz/annotation_train.json",
+            coco_test="phd_experiments/06Aufsatz/annotation_train.json",
             opts=["imgsz", "128",
                   "cls_feat_scheduler", "inverse_cos_decay",
                   "cls_feat_proj_head", "s",
@@ -36,7 +40,10 @@ DEFAULT_ARGS = {
             save_dir="/Users/noobtoss/code_nexus/ultralytics/runs/unnamed_run",
             model="/Users/noobtoss/code_nexus/ultralytics/custom/cfg/cls_feat_rtdetr-l.yaml",
             ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/rtdetr-l.pt",
-            data="/Users/noobtoss/code_nexus/ultralytics/datasets/semmel/05ACCV2026_local.yaml",
+            data_dir="/Users/noobtoss/data_nexus/",
+            # data="ultralytics/datasets/05ACCV2026_local.yaml",
+            coco_train="phd_experiments/06Aufsatz/annotation_train.json",
+            coco_test="phd_experiments/06Aufsatz/annotation_train.json",
             opts=["imgsz", "128",
                   "cls_feat_scheduler", "inverse_cos_decay",
                   "cls_feat_proj_head", "s",
@@ -115,31 +122,49 @@ def parse_args():
     parser.add_argument("--save_dir", type=str, help="save dir")
     parser.add_argument("--model", type=str, default=None, help="path to model")
     parser.add_argument("--ckpt", type=str, help="path to ckpt")
+    parser.add_argument("--data_dir", type=str, default=None, help="base for relative data and COCO annotation paths; also the COCO image directory")
     parser.add_argument("--data", type=str, help="path to data file")
+    parser.add_argument("--coco_train", type=str, help="coco train ann json")
+    parser.add_argument("--coco_val", "--coco_test", type=str, help="coco val ann json")
     parser.add_argument(
         "opts",
         help="Modify config options using the command-line",
         default=None,
         nargs=argparse.REMAINDER,
     )
-    return parser.parse_args()
+    args = parser.parse_args()
+    coco = any((args.coco_train, args.coco_val))
+    if bool(args.data) == coco or (coco and (not (args.coco_train and args.coco_val) or "data" in args.opts[::2])):
+        parser.error("use --data OR both --coco_train and --coco_val; don't mix data sources")
+    return args
 
 
 def parse_cfg(args: Namespace) -> Namespace:
+    args = Namespace(**{"data": None, **vars(args)})
+    if getattr(args, "data_dir", None):
+        data_dir = Path(args.data_dir)
+        for key in ("data", "coco_train", "coco_val", "coco_test"):
+            path = getattr(args, key, None)
+            if path:
+                setattr(args, key, str(data_dir / Path(path)))
+    args.coco_val = getattr(args, "coco_val", None) or getattr(args, "coco_test", None)
     cfg = DEFAULT_CFG
 
     cfg.train_cfg.name = args.run_name;  delattr(args, "run_name")
     cfg.train_cfg.save_dir = args.save_dir; delattr(args, "save_dir")
     cfg.model = args.model; delattr(args, "model")
     cfg.ckpt = args.ckpt; delattr(args, "ckpt")
-    cfg.train_cfg.data = args.data; delattr(args, "data")
 
     if args.opts:
         it = iter(args.opts)
         for k, v in zip(it, it):
             setattr(cfg.train_cfg, k, v)
+    cfg.train_cfg.data = resolve_data(args); delattr(args, "data")
     cfg.train_cfg.model_name = Path(getattr(cfg, 'ckpt', None) or getattr(cfg, 'model', None)).stem
-    cfg.train_cfg.dataset_name = Path(cfg.train_cfg.data).stem
+    if not getattr(args, "coco_train", None):
+        cfg.train_cfg.dataset_name = Path(cfg.train_cfg.data).stem
+    else:
+        cfg.train_cfg.dataset_name = Path(args.coco_train).resolve().parent.name
     return cfg
 
 

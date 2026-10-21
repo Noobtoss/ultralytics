@@ -1,16 +1,28 @@
 from pathlib import Path
 from typing import Any
+from unittest.mock import patch
 import numpy as np
+from ultralytics.engine import validator as validator_module
 from ultralytics.engine.validator import BaseValidator as _BaseValidator
 from ultralytics.models.yolo.detect import DetectionValidator as _DetectionValidator
 from ultralytics.utils import LOGGER
 from ultralytics.utils.metrics import DetMetrics
+from ultralytics.utils.patches import override_configs
+from .coco_dataset import build_coco_dataset
 
 
 class BaseValidator(_BaseValidator):
     def __init__(self, *args, **kwargs) -> None:
         LOGGER.warning("[Modded] BaseValidator")
         super().__init__(*args, **kwargs)
+
+    def __call__(self, trainer=None, model=None):
+        if trainer is not None or not isinstance(self.args.data, dict):
+            return super().__call__(trainer=trainer, model=model)
+        # Upstream standalone validation requires a YAML path; provide our config in memory.
+        with patch.object(validator_module, "check_det_dataset", return_value=self.args.data):
+            with override_configs(self.args, {"data": "coco.yaml"}):
+                return super().__call__(model=model)
 
 
 _DetectionValidator.__bases__ = (BaseValidator,)
@@ -23,6 +35,11 @@ class DetectionValidator(_DetectionValidator):
         self.metrics_agnostic = DetMetrics(names={0: "agnostic"})
         self.mAP_subsets = {k: v for k, v in (getattr(self.args, "mAP_subsets", None) or {}).items()}
 
+    def build_dataset(self, img_path, mode="val", batch=None):
+        if "train_json" in self.data:
+            return build_coco_dataset(self, img_path, mode, batch)
+        return super().build_dataset(img_path, mode, batch)
+
     def init_metrics(self, model) -> None:
         super().init_metrics(model)
 
@@ -30,7 +47,7 @@ class DetectionValidator(_DetectionValidator):
             all_classes = list(range(self.nc))
             self.mAP_subsets = {
                 "0p": all_classes[1:],
-                "22p": all_classes[21:],
+                # "22p": all_classes[21:],
             }
 
     def update_metrics(self, preds, batch):

@@ -1,6 +1,7 @@
 from copy import copy
 from ultralytics.utils import RANK, LOGGER
 from ultralytics.models.rtdetr.train import RTDETRTrainer as _RTDETRTrainer
+from .coco_dataset import build_coco_dataset
 
 from .rtdetr_detection_model import RTDETRDetectionModel
 from .rtdetr_validator import RTDETRValidator
@@ -12,6 +13,11 @@ class RTDETRTrainer(_RTDETRTrainer):
     def __init__(self, *args, **kwargs) -> None:
         LOGGER.warning("[Modded] RTDETRTrainer")
         super().__init__(*args, **kwargs)
+
+    def build_dataset(self, img_path, mode="train", batch=None):
+        if "train_json" in self.data:
+            return build_coco_dataset(self, img_path, mode, batch, rtdetr=True)
+        return super().build_dataset(img_path, mode, batch)
 
     def _setup_train(self):
         super()._setup_train()

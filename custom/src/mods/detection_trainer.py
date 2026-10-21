@@ -3,6 +3,7 @@ from ultralytics.engine.trainer import BaseTrainer as _BaseTrainer
 from ultralytics.models.yolo.detect import DetectionTrainer as _DetectionTrainer
 from ultralytics.utils import RANK, LOGGER
 from ultralytics.utils.torch_utils import unwrap_model
+from .coco_dataset import build_coco_dataset
 
 from .detection_model import DetectionModel
 from .detection_validator import DetectionValidator
@@ -15,6 +16,14 @@ class BaseTrainer(_BaseTrainer):
         LOGGER.warning("[Modded] BaseTrainer")
         super().__init__(*args, **kwargs)
 
+    def get_dataset(self):
+        if not isinstance(self.args.data, dict):
+            return super().get_dataset()
+        data = self.args.data.copy()
+        if self.args.single_cls:
+            data.update(names={0: "item"}, nc=1)
+        return data
+
 
 _DetectionTrainer.__bases__ = (BaseTrainer,)
 
@@ -23,6 +32,11 @@ class DetectionTrainer(_DetectionTrainer):
     def __init__(self, *args, **kwargs) -> None:
         LOGGER.warning("[Modded] DetectionTrainer")
         super().__init__(*args, **kwargs)
+
+    def build_dataset(self, img_path, mode="train", batch=None):
+        if "train_json" in self.data:
+            return build_coco_dataset(self, img_path, mode, batch)
+        return super().build_dataset(img_path, mode, batch)
 
     def _setup_train(self):
         super()._setup_train()
