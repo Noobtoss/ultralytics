@@ -27,8 +27,8 @@ DEFAULT_ARGS = {
             ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/yolo26n.pt",
             data_dir="/Users/noobtoss/data_nexus/",
             # data="ultralytics/datasets/05ACCV2026_local.yaml",
-            coco_train="phd_experiments/06Aufsatz/annotation_train.json",
-            coco_test="phd_experiments/06Aufsatz/annotation_train.json",
+            ann_train="phd_experiments/06Aufsatz/annotation_train.json",
+            ann_test="phd_experiments/06Aufsatz/annotation_test.json",
             opts=["imgsz", "128",
                   "cls_feat_scheduler", "inverse_cos_decay",
                   "cls_feat_proj_head", "s",
@@ -42,8 +42,8 @@ DEFAULT_ARGS = {
             ckpt="/Users/noobtoss/code_nexus/ultralytics/checkpoints/rtdetr-l.pt",
             data_dir="/Users/noobtoss/data_nexus/",
             # data="ultralytics/datasets/05ACCV2026_local.yaml",
-            coco_train="phd_experiments/06Aufsatz/annotation_train.json",
-            coco_test="phd_experiments/06Aufsatz/annotation_train.json",
+            ann_train="phd_experiments/06Aufsatz/annotation_train.json",
+            ann_test="phd_experiments/06Aufsatz/annotation_test.json",
             opts=["imgsz", "128",
                   "cls_feat_scheduler", "inverse_cos_decay",
                   "cls_feat_proj_head", "s",
@@ -124,8 +124,8 @@ def parse_args():
     parser.add_argument("--ckpt", type=str, help="path to ckpt")
     parser.add_argument("--data_dir", type=str, default=None, help="base for relative data and COCO annotation paths; also the COCO image directory")
     parser.add_argument("--data", type=str, help="path to data file")
-    parser.add_argument("--coco_train", type=str, help="coco train ann json")
-    parser.add_argument("--coco_val", "--coco_test", type=str, help="coco val ann json")
+    parser.add_argument("--ann_train", type=str, help="coco train ann json")
+    parser.add_argument("--ann_val", "--ann_test", type=str, help="coco val ann json")
     parser.add_argument(
         "opts",
         help="Modify config options using the command-line",
@@ -133,9 +133,9 @@ def parse_args():
         nargs=argparse.REMAINDER,
     )
     args = parser.parse_args()
-    coco = any((args.coco_train, args.coco_val))
-    if bool(args.data) == coco or (coco and (not (args.coco_train and args.coco_val) or "data" in args.opts[::2])):
-        parser.error("use --data OR both --coco_train and --coco_val; don't mix data sources")
+    coco = any((args.ann_train, args.ann_val))
+    if bool(args.data) == coco or (coco and (not (args.ann_train and args.ann_val) or "data" in args.opts[::2])):
+        parser.error("use --data OR both --ann_train and --ann_val; don't mix data sources")
     return args
 
 
@@ -143,11 +143,11 @@ def parse_cfg(args: Namespace) -> Namespace:
     args = Namespace(**{"data": None, **vars(args)})
     if getattr(args, "data_dir", None):
         data_dir = Path(args.data_dir)
-        for key in ("data", "coco_train", "coco_val", "coco_test"):
+        for key in ("data", "ann_train", "ann_val", "ann_test"):
             path = getattr(args, key, None)
             if path:
                 setattr(args, key, str(data_dir / Path(path)))
-    args.coco_val = getattr(args, "coco_val", None) or getattr(args, "coco_test", None)
+    args.ann_val = getattr(args, "ann_val", None) or getattr(args, "ann_test", None)
     cfg = DEFAULT_CFG
 
     cfg.train_cfg.name = args.run_name;  delattr(args, "run_name")
@@ -161,10 +161,10 @@ def parse_cfg(args: Namespace) -> Namespace:
             setattr(cfg.train_cfg, k, v)
     cfg.train_cfg.data = resolve_data(args); delattr(args, "data")
     cfg.train_cfg.model_name = Path(getattr(cfg, 'ckpt', None) or getattr(cfg, 'model', None)).stem
-    if not getattr(args, "coco_train", None):
+    if not getattr(args, "ann_train", None):
         cfg.train_cfg.dataset_name = Path(cfg.train_cfg.data).stem
     else:
-        cfg.train_cfg.dataset_name = Path(args.coco_train).resolve().parent.name
+        cfg.train_cfg.dataset_name = Path(args.ann_train).resolve().parent.name
     return cfg
 
 

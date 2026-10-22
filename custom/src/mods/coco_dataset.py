@@ -115,9 +115,9 @@ class COCORTDETRDataset(COCODataset, RTDETRDataset):
 
 def resolve_data(args):
     """Return the YAML path or an in-memory COCO dataset configuration."""
-    if not getattr(args, "coco_train", None):
+    if not getattr(args, "ann_train", None):
         return args.data
-    paths = [Path(path).resolve() for path in (args.coco_train, args.coco_val)]
+    paths = [Path(path).resolve() for path in (args.ann_train, args.ann_val)]
     imgs_dir = getattr(args, "data_dir", None)
     imgs_dir = str(Path(imgs_dir).resolve() if imgs_dir else paths[0].parent)
     with paths[0].open(encoding="utf-8") as file:

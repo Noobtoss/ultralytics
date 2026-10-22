@@ -35,8 +35,8 @@ MODEL="${KV[model]:-custom/cfg/cls_feat_yolo11x.yaml}"
 CKPT="${KV[ckpt]:-checkpoints/yolo11x.pt}"
 DATA_DIR="$ROOT/${KV[data_dir]:-../../data_nexus}"
 DATA="${KV[data]}"
-COCO_TRAIN="${KV[coco_train]}"
-COCO_TEST="${KV[coco_test]:-${KV[coco_val]}}"
+ANN_TRAIN="${KV[ann_train]}"
+ANN_TEST="${KV[ann_test]:-${KV[ann_val]}}"
 
 # ----- ENVIRONMENT SETUP -------------------------------------------
 unset SLURM_EXPORT_ENV
@@ -90,14 +90,14 @@ fi
 
 # ----- TRAINING ----------------------------------------------------
 python $ROOT/custom/src/train.py \
-       --run_name "$RUN_NAME" \
-       --save_dir "$OUT_DIR" \
-       --model    "$ROOT/$MODEL" \
-       --ckpt     "$ROOT/$CKPT" \
-       --data_dir "$DATA_DIR" \
-       --data     "$DATA"  \
-       --coco_train "$COCO_TRAIN" \
-       --coco_test  "$COCO_TEST" \
+       --run_name  "$RUN_NAME" \
+       --save_dir  "$OUT_DIR" \
+       --model     "$ROOT/$MODEL" \
+       --ckpt      "$ROOT/$CKPT" \
+       --data_dir  "$DATA_DIR" \
+       --data      "$DATA"  \
+       --ann_train "$ANN_TRAIN" \
+       --ann_test  "$ANN_TEST" \
        $PARAMS
 
 # ----- CLEANUP -----------------------------------------------------
