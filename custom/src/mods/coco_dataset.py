@@ -73,6 +73,8 @@ class COCODataset(YOLODataset):
             for ann in img_to_anns.get(img_info["id"], []):
                 if ann.get("iscrowd", False):
                     continue
+                if not ann.get("bbox", False):
+                    continue
                 box = np.array(ann["bbox"], dtype=np.float32)
                 box[:2] += box[2:] / 2
                 box[[0, 2]] /= w
