@@ -124,8 +124,8 @@ def parse_args():
     parser.add_argument("--ckpt", type=str, help="path to ckpt")
     parser.add_argument("--data_dir", type=str, default=None, help="base for relative data and COCO annotation paths; also the COCO image directory")
     parser.add_argument("--data", type=str, help="path to data file")
-    parser.add_argument("--ann_train", type=str, help="coco train ann json")
-    parser.add_argument("--ann_val", "--ann_test", type=str, help="coco val ann json")
+    parser.add_argument("--ann_train", type=str, help="train ann json")
+    parser.add_argument("--ann_val", "--ann_test", type=str, help="val ann json")
     parser.add_argument(
         "opts",
         help="Modify config options using the command-line",
