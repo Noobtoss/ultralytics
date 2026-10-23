@@ -14,17 +14,17 @@
 ROOT=/nfs/scratch/staff/schmittth/code_nexus/ultralytics
 
 # ----- GET ARGS ----------------------------------------------------
-PARAMS_FILE="$ROOT/custom/slurm/slurm_params.txt"
-PARAMS=$(grep -v '^[[:space:]]*#' "$PARAMS_FILE" | sed -n "$((SLURM_ARRAY_TASK_ID))p")
+ARGS_FILE="$ROOT/custom/slurm/slurm_args.txt"
+ARGS=$(grep -v '^[[:space:]]*#' "$ARGS_FILE" | sed -n "$((SLURM_ARRAY_TASK_ID))p")
 
 declare -A KV
-read -r -a ARR <<< "$PARAMS"
+read -r -a ARR <<< "$ARGS"
 for ((i=0; i<${#ARR[@]}; i+=2)); do
     key="${ARR[$i]}"
     value="${ARR[$i+1]}"
     KV["$key"]="$value"
 done
-[[ "$PARAMS" != *"seed"* ]] && PARAMS="$PARAMS seed ${SLURM_ARRAY_JOB_ID}"
+[[ "$ARGS" != *"seed"* ]] && ARGS="$ARGS seed ${SLURM_ARRAY_JOB_ID}"
 
 RUN_NAME="${KV[exp_name]:-unnamed_experiment}"
 RUN_NAME="${RUN_NAME}_${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}"
@@ -56,7 +56,7 @@ python $ROOT/custom/src/train.py \
        --model    $ROOT/$MODEL \
        --ckpt     $ROOT/$CKPT \
        --data     $ROOT/$DATA  \
-       $PARAMS
+       $ARGS
 
 # ----- CLEANUP -----------------------------------------------------
 KEEP_FILES=("metrics.csv" "results.csv" "last.pt")
