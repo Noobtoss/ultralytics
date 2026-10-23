@@ -1,0 +1,12 @@
+# Experiments YOLO11x - 06Aufsatz
+1    06Aufsatz
+2    06AufsatzCopyPaste
+3    06AufsatzCopyPasteExtended
+# Experiments class_sim
+4    05SAC2027_baseline
+5    05SAC2027_class_sim
+6    05SAC2027_class_sim_matrix
+7    05SAC2027Plus_baseline
+8    05SAC2027Plus_class_sim
+9    05SAC2027Plus_class_sim_matrix
+# Experiments End Current

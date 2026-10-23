@@ -12,10 +12,34 @@
 
 # ----- DIRS --------------------------------------------------------
 ROOT=/nfs/scratch/staff/schmittth/code_nexus/ultralytics
+export TMPDIR=$(mktemp -d "${TMPDIR:-/tmp}/ultralytics_${SLURM_JOB_ID}_XXXXXX")
+
+# ----- ENVIRONMENT SETUP -------------------------------------------
+module purge
+module load python/anaconda3
+module load cuda/cuda-11.8.0
+
+eval "$(conda shell.bash hook)"
+conda activate conda-ultralytics
+
+export PYTHONPATH="$ROOT/custom/src:$PYTHONPATH"
 
 # ----- GET ARGS ----------------------------------------------------
-ARGS_FILE="$ROOT/custom/slurm/slurm_args.txt"
-ARGS=$(grep -v '^[[:space:]]*#' "$ARGS_FILE" | sed -n "$((SLURM_ARRAY_TASK_ID))p")
+EXP_MAP_FILE="$ROOT/custom/slurm/experiments_map.txt"
+EXP_ARGS_FILE="$ROOT/custom/slurm/experiments.json"
+
+EXP_NAME=$(grep -v '^[[:space:]]*#' "$EXP_MAP_FILE" | awk -v id="$SLURM_ARRAY_TASK_ID" '$1 == id {print $2; exit}')
+if [[ -z "$EXP_NAME" ]]; then
+    echo "ERROR: no exp_name for task id $SLURM_ARRAY_TASK_ID in $EXP_MAP_FILE" >&2
+    exit 1
+fi
+
+ARGS=$(python -c '
+import json, sys
+exp = json.load(open(sys.argv[1]))[sys.argv[2]]
+print(" ".join(f"{k} {v}" for k, v in exp.items()))
+' "$EXP_ARGS_FILE" "$EXP_NAME") || { echo "ERROR: exp_name '$EXP_NAME' not found in $EXP_ARGS_FILE" >&2; exit 1; }
+ARGS="exp_name $EXP_NAME $ARGS"
 
 declare -A KV
 read -r -a ARR <<< "$ARGS"
@@ -31,35 +55,42 @@ RUN_NAME="${RUN_NAME}_${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}"
 OUT_DIR="${ROOT}/runs/${RUN_NAME}"
 MODEL="${KV[model]:-custom/cfg/cls_feat_yolo11x.yaml}"
 CKPT="${KV[ckpt]:-checkpoints/yolo11x.pt}"
-DATA="${KV[data]:-datasets/default.yaml}"
-
-# ----- ENVIRONMENT SETUP -------------------------------------------
-module purge
-module load python/anaconda3
-
-eval "$(conda shell.bash hook)"
-conda activate conda-ultralytics
-
-export PYTHONPATH="$ROOT/custom/src:$PYTHONPATH"
+DATA_DIR="$ROOT/${KV[data_dir]:-datasets}"
+DATA="${KV[data]}"
+ANN_TRAIN="${KV[ann_train]}"
+ANN_TEST="${KV[ann_test]:-${KV[ann_val]}}"
 
 # ----- WANDB -------------------------------------------------------
 yolo settings wandb=True
 export WANDB_API_KEY=95177947f5f36556806da90ea7a0bf93ed857d58
-export WANDB_DIR=/nfs/scratch/staff/schmittth/tmp
-export WANDB_CACHE_DIR=/nfs/scratch/staff/schmittth/tmp
-export WANDB_CONFIG_DIR=/nfs/scratch/staff/schmittth/tmp
+export WANDB_CACHE_DIR=$TMPDIR
+export WANDB_DATA_DIR=$TMPDIR
+export WANDB_DIR=$TMPDIR
+export WANDB_CONFIG_DIR=$TMPDIR
 
 # ----- TRAINING ----------------------------------------------------
 python $ROOT/custom/src/train.py \
-       --run_name $RUN_NAME \
-       --save_dir $OUT_DIR \
-       --model    $ROOT/$MODEL \
-       --ckpt     $ROOT/$CKPT \
-       --data     $ROOT/$DATA  \
+       --run_name   "$RUN_NAME" \
+       --save_dir   "$OUT_DIR" \
+       --model      "$ROOT/$MODEL" \
+       --ckpt       "$ROOT/$CKPT" \
+       --data_dir   "$DATA_DIR" \
+       --data       "$DATA"  \
+       --ann_train  "$ANN_TRAIN"  \
+       --ann_test   "$ANN_TEST"  \
        $ARGS
 
 # ----- CLEANUP -----------------------------------------------------
-KEEP_FILES=("metrics.csv" "results.csv" "last.pt")
+[[ -f "$OUT_DIR/last.pt" ]] && mv -f "$OUT_DIR/last.pt" "$OUT_DIR/${RUN_NAME}.pt"
+KEEP_FILES=("metrics.csv" "results.csv" "last.pt" "${RUN_NAME}.pt")
 
+for i in 1 2 3 4 5; do
+    wandb sync --sync-all && break
+    echo "sync attempt $i failed, retrying..."
+    sleep 20
+done
+
+rm -rf "$TMPDIR"
+rm -rf "$OUT_DIR/wandb"
 find "$OUT_DIR" -type f $(printf ' ! -name %s' "${KEEP_FILES[@]}") -delete
 find "$OUT_DIR" -type d -empty -delete

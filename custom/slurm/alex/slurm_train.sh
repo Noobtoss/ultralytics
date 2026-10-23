@@ -15,9 +15,34 @@
 ROOT="$WORK/code_nexus/ultralytics"
 JOB_DIR=$TMPDIR
 
+# ----- ENVIRONMENT SETUP -------------------------------------------
+unset SLURM_EXPORT_ENV
+
+module purge
+module load python/3.12-base
+module load cuda/12.8.1
+
+eval "$(conda shell.bash hook)"
+conda activate conda-ultralytics
+
+export PYTHONPATH="$ROOT/custom/src:$PYTHONPATH"
+
 # ----- GET ARGS ----------------------------------------------------
-ARGS_FILE="$ROOT/custom/slurm/alex/slurm_args.txt"
-ARGS=$(grep -v '^[[:space:]]*#' "$ARGS_FILE" | sed -n "$((SLURM_ARRAY_TASK_ID))p")
+EXP_MAP_FILE="$ROOT/custom/slurm/alex/experiments_map.txt"
+EXP_ARGS_FILE="$ROOT/custom/slurm/alex/experiments.json"
+
+EXP_NAME=$(grep -v '^[[:space:]]*#' "$EXP_MAP_FILE" | awk -v id="$SLURM_ARRAY_TASK_ID" '$1 == id {print $2; exit}')
+if [[ -z "$EXP_NAME" ]]; then
+    echo "ERROR: no exp_name for task id $SLURM_ARRAY_TASK_ID in $EXP_MAP_FILE" >&2
+    exit 1
+fi
+
+ARGS=$(python -c '
+import json, sys
+exp = json.load(open(sys.argv[1]))[sys.argv[2]]
+print(" ".join(f"{k} {v}" for k, v in exp.items()))
+' "$EXP_ARGS_FILE" "$EXP_NAME") || { echo "ERROR: exp_name '$EXP_NAME' not found in $EXP_ARGS_FILE" >&2; exit 1; }
+ARGS="exp_name $EXP_NAME $ARGS"
 
 declare -A KV
 read -r -a ARR <<< "$ARGS"
@@ -37,18 +62,6 @@ DATA_DIR="$ROOT/${KV[data_dir]:-../../data_nexus}"
 DATA="${KV[data]}"
 ANN_TRAIN="${KV[ann_train]}"
 ANN_TEST="${KV[ann_test]:-${KV[ann_val]}}"
-
-# ----- ENVIRONMENT SETUP -------------------------------------------
-unset SLURM_EXPORT_ENV
-
-module purge
-module load python/3.12-base
-module load cuda/12.8.1
-
-eval "$(conda shell.bash hook)"
-conda activate conda-ultralytics
-
-export PYTHONPATH="$ROOT/custom/src:$PYTHONPATH"
 
 # --- PROXY  --------------------------------------------------------
 export http_proxy=http://proxy:80
@@ -101,7 +114,8 @@ python $ROOT/custom/src/train.py \
        $ARGS
 
 # ----- CLEANUP -----------------------------------------------------
-KEEP_FILES=("metrics.csv" "results.csv" "last.pt")
+[[ -f "$OUT_DIR/last.pt" ]] && mv -f "$OUT_DIR/last.pt" "$OUT_DIR/${RUN_NAME}.pt"
+KEEP_FILES=("metrics.csv" "results.csv" "last.pt" "${RUN_NAME}.pt")
 
 for i in 1 2 3 4 5; do
     wandb sync --sync-all && break
