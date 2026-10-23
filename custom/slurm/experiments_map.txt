@@ -1,7 +1,4 @@
 # Experiments YOLO11x - 06Aufsatz
-1    06Aufsatz
-2    06AufsatzCopyPaste
-3    06AufsatzCopyPasteExtended
-4    06Aufsatz_coco
-5    06AufsatzCopyPaste_coco
-6    06AufsatzCopyPasteExtended_coco
+1    06Aufsatz_coco
+2    06AufsatzCopyPaste_coco
+3    06AufsatzCopyPasteExtended_coco
