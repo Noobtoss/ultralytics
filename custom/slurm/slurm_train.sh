@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=ultralytics # Kurzname des Jobs
-#SBATCH --array=1-3%3
+#SBATCH --array=4-7%4
 #SBATCH --output=logs/%A_%a.out
 #SBATCH --partition=p4,p6        # p1,p2,p3,p4,p5,p6
 #SBATCH --qos=gpuultimate
@@ -82,7 +82,7 @@ python $ROOT/custom/src/train.py \
 
 # ----- CLEANUP -----------------------------------------------------
 [[ -f "$OUT_DIR/last.pt" ]] && mv -f "$OUT_DIR/last.pt" "$OUT_DIR/${RUN_NAME}.pt"
-KEEP_FILES=("metrics.csv" "results.csv" "last.pt" "${RUN_NAME}.pt")
+KEEP_FILES=("args.yaml" "results.csv" "last.pt" "${RUN_NAME}.pt")
 
 for i in 1 2 3 4 5; do
     wandb sync --sync-all && break

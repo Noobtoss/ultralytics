@@ -16,23 +16,51 @@
   },
   "06Aufsatz_coco": {
     "ckpt": "checkpoints/yolo11x.pt",
-    "data_dir": "../../data_nexus",
+    "data_dir": "../../data_nexus/datasets",
     "ann_train": "phd_experiments/06Aufsatz/annotation_train.json",
     "ann_test": "phd_experiments/06Aufsatz/annotation_test.json",
     "epochs": 100
   },
   "06AufsatzCopyPaste_coco": {
     "ckpt": "checkpoints/yolo11x.pt",
-    "data_dir": "../../data_nexus",
+    "data_dir": "../../data_nexus/datasets",
     "ann_train": "phd_experiments/06AufsatzCopyPaste/annotation_train.json",
     "ann_test": "phd_experiments/06AufsatzCopyPaste/annotation_test.json",
     "epochs": 100
   },
   "06AufsatzCopyPasteExtended_coco": {
     "ckpt": "checkpoints/yolo11x.pt",
-    "data_dir": "../../data_nexus",
+    "data_dir": "../../data_nexus/datasets",
     "ann_train": "phd_experiments/06AufsatzCopyPasteExtended/annotation_train.json",
     "ann_test": "phd_experiments/06AufsatzCopyPasteExtended/annotation_test.json",
+    "epochs": 100
+  },
+  "04Bottom": {
+    "ckpt": "checkpoints/yolo11x.pt",
+    "data_dir": "../../data_nexus/datasets",
+    "ann_train": "phd_experiments/04Bottom/annotation_train.json",
+    "ann_val": "phd_experiments/04Bottom/annotation_val.json",
+    "epochs": 100
+  },
+  "04Top": {
+    "ckpt": "checkpoints/yolo11x.pt",
+    "data_dir": "../../data_nexus/datasets",
+    "ann_train": "phd_experiments/04Top/annotation_train.json",
+    "ann_val": "phd_experiments/04Top/annotation_val.json",
+    "epochs": 100
+  },
+  "04Mixed": {
+    "ckpt": "checkpoints/yolo11x.pt",
+    "data_dir": "../../data_nexus/datasets",
+    "ann_train": "phd_experiments/04Mixed/annotation_train.json",
+    "ann_val": "phd_experiments/04Mixed/annotation_val.json",
+    "epochs": 100
+  },
+  "04SeparateClasses": {
+    "ckpt": "checkpoints/yolo11x.pt",
+    "data_dir": "../../data_nexus/datasets",
+    "ann_train": "phd_experiments/04SeparateClasses/annotation_train.json",
+    "ann_val": "phd_experiments/04SeparateClasses/annotation_val.json",
     "epochs": 100
   }
 }

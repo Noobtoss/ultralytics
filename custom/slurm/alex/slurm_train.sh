@@ -115,7 +115,7 @@ python $ROOT/custom/src/train.py \
 
 # ----- CLEANUP -----------------------------------------------------
 [[ -f "$OUT_DIR/last.pt" ]] && mv -f "$OUT_DIR/last.pt" "$OUT_DIR/${RUN_NAME}.pt"
-KEEP_FILES=("metrics.csv" "results.csv" "last.pt" "${RUN_NAME}.pt")
+KEEP_FILES=("args.yaml" "results.csv" "last.pt" "${RUN_NAME}.pt")
 
 for i in 1 2 3 4 5; do
     wandb sync --sync-all && break
