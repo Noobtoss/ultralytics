@@ -2,7 +2,6 @@
 1    06Aufsatz_coco
 2    06AufsatzCopyPaste_coco
 3    06AufsatzCopyPasteExtended_coco
-4    04Bottom
-5    04Top
-6    04Mixed
-7    04SeparateClasses
+4    04
+5    04Mixed
+6    04SeparateClasses
