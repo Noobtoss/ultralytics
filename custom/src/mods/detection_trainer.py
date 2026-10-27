@@ -34,7 +34,7 @@ class DetectionTrainer(_DetectionTrainer):
         super().__init__(*args, **kwargs)
 
     def build_dataset(self, img_path, mode="train", batch=None):
-        if "train_json" in self.data:
+        if "ann_train" in self.data:
             return build_coco_dataset(self, img_path, mode, batch)
         return super().build_dataset(img_path, mode, batch)
 

@@ -14,6 +14,6 @@ class RTDETRValidator(_RTDETRValidator):
         super().__init__(*args, **kwargs)
 
     def build_dataset(self, img_path, mode="val", batch=None):
-        if "train_json" in self.data:
+        if "ann_train" in self.data:
             return build_coco_dataset(self, img_path, mode, batch, rtdetr=True)
         return super().build_dataset(img_path, mode, batch)

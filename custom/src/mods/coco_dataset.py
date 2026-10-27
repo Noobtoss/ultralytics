@@ -17,9 +17,9 @@ from ultralytics.utils.torch_utils import unwrap_model
 class COCODataset(YOLODataset):
     """Dataset that reads COCO JSON annotations directly without conversion to .txt files."""
 
-    def __init__(self, *args, json_file="", **kwargs):
+    def __init__(self, *args, ann_file="", **kwargs):
         """Initialize the dataset with a COCO JSON annotation file."""
-        self.json_file = json_file
+        self.ann_file = ann_file
         # >>> MOD
         super().__init__(*args, data=kwargs.pop("data", {"channels": 3}), **kwargs)
         # <<< MOD
@@ -34,7 +34,7 @@ class COCODataset(YOLODataset):
     def cache_labels(self, path=Path("./labels.cache")):
         """Parse COCO JSON and convert annotations to YOLO format in memory."""
         x = {"labels": []}
-        with open(self.json_file) as f:
+        with open(self.ann_file) as f:
             coco = json.load(f)
 
         categories = {cat["id"]: cat["id"] - 1 for cat in coco["categories"]}
@@ -43,7 +43,7 @@ class COCODataset(YOLODataset):
         names = self.data.get("coco_names", self.data.get("names"))
         if names is not None:
             if any(names.get(cat["id"] - 1) != cat["name"] for cat in coco["categories"]):
-                raise ValueError(f"{self.json_file}: category IDs and names do not match the training metadata")
+                raise ValueError(f"{self.ann_file}: category IDs and names do not match the training metadata")
         # <<< MOD
 
         img_to_anns = defaultdict(list)
@@ -65,7 +65,7 @@ class COCODataset(YOLODataset):
             im_file = Path(self.img_path) / img_info["file_name"]
             # >>> MOD
             if not im_file.is_file():
-                raise FileNotFoundError(f"{self.json_file}: image not found: {im_file}")
+                raise FileNotFoundError(f"{self.ann_file}: image not found: {im_file}")
             # <<< MOD
 
             self.im_files.append(str(im_file))
@@ -98,7 +98,7 @@ class COCODataset(YOLODataset):
             )
 
         if not x["labels"]:
-            raise ValueError(f"{self.json_file}: no images found")
+            raise ValueError(f"{self.ann_file}: no images found")
         # MOD: omit the hash and save_dataset_cache_file() to keep annotations in memory.
         return x
 
@@ -126,7 +126,7 @@ def resolve_data(args):
     if min(names) < 0:
         raise ValueError(f"{paths[0]}: COCO category IDs must be positive")
     names = {i: names.get(i, f"unused_{i}") for i in range(max(names) + 1)}
-    return dict(train=imgs_dir, val=imgs_dir, train_json=str(paths[0]), val_json=str(paths[1]),
+    return dict(train=imgs_dir, val=imgs_dir, ann_train=str(paths[0]), ann_val=str(paths[1]),
                 names=names, coco_names=names, nc=len(names), channels=3)
 
 
@@ -137,7 +137,7 @@ def build_coco_dataset(owner, img_path, mode="val", batch=None, rtdetr=False):
     dataset = COCORTDETRDataset if rtdetr else COCODataset
     return dataset(
         img_path=img_path,
-        json_file=owner.data[f"{mode}_json"],
+        ann_file=owner.data[f"ann_{mode}"],
         data=owner.data,
         imgsz=owner.args.imgsz,
         batch_size=batch,
