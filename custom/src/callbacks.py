@@ -38,6 +38,9 @@ def eval_last(trainer):
     if trainer.last.exists():
         LOGGER.info(f"\nValidating {trainer.last}...")
         metrics = trainer.validator(model=trainer.last)
+        metrics.pop("fitness", None)
+        if wb and wb.run:
+            wb.run.log(metrics, commit=True)
 
         for csv_path in [
             trainer.save_dir.parent / "results.csv",
