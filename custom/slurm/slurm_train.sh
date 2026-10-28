@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=ultralytics # Kurzname des Jobs
-#SBATCH --array=4-10%4
+#SBATCH --array=1-12%4
 #SBATCH --output=logs/%A_%a.out
 #SBATCH --partition=p4,p6        # p1,p2,p3,p4,p5,p6
 #SBATCH --qos=gpuultimate
