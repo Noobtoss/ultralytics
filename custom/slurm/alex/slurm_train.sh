@@ -60,8 +60,8 @@ MODEL="${KV[model]:-custom/cfg/cls_feat_yolo11x.yaml}"
 CKPT="${KV[ckpt]:-checkpoints/yolo11x.pt}"
 DATA_DIR="$ROOT/${KV[data_dir]:-../../data_hub}"
 DATA="${KV[data]}"
-ANN_TRAIN="${KV[ann_train]}"
-ANN_TEST="${KV[ann_test]:-${KV[ann_val]}}"
+TRAIN_ANN="${KV[train_ann]}"
+TEST_ANN="${KV[test_ann]:-${KV[val_ann]}}"
 
 # --- PROXY  --------------------------------------------------------
 export http_proxy=http://proxy:80
@@ -109,8 +109,8 @@ python $ROOT/custom/src/train.py \
        --ckpt      "$ROOT/$CKPT" \
        --data_dir  "$DATA_DIR" \
        --data      "$DATA"  \
-       --ann_train "$ANN_TRAIN" \
-       --ann_test  "$ANN_TEST" \
+       --train_ann "$TRAIN_ANN" \
+       --test_ann  "$TEST_ANN" \
        $ARGS
 
 # ----- CLEANUP -----------------------------------------------------

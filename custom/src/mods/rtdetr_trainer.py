@@ -15,7 +15,7 @@ class RTDETRTrainer(_RTDETRTrainer):
         super().__init__(*args, **kwargs)
 
     def build_dataset(self, img_path, mode="train", batch=None):
-        if "ann_train" in self.data:
+        if "train_ann" in self.data:
             return build_coco_dataset(self, img_path, mode, batch, rtdetr=True)
         return super().build_dataset(img_path, mode, batch)
 

@@ -36,7 +36,7 @@ class DetectionValidator(_DetectionValidator):
         self.mAP_subsets = {k: v for k, v in (getattr(self.args, "mAP_subsets", None) or {}).items()}
 
     def build_dataset(self, img_path, mode="val", batch=None):
-        if "ann_train" in self.data:
+        if "train_ann" in self.data:
             return build_coco_dataset(self, img_path, mode, batch)
         return super().build_dataset(img_path, mode, batch)
 

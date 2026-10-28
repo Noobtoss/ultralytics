@@ -115,18 +115,16 @@ class COCORTDETRDataset(COCODataset, RTDETRDataset):
 
 def resolve_data(args):
     """Return the YAML path or an in-memory COCO dataset configuration."""
-    if not getattr(args, "ann_train", None):
+    if not getattr(args, "train_ann", None):
         return args.data
-    paths = [Path(path).resolve() for path in (args.ann_train, args.ann_val)]
+    paths = [Path(path).resolve() for path in (args.train_ann, args.val_ann)]
     imgs_dir = getattr(args, "data_dir", None)
     imgs_dir = str(Path(imgs_dir).resolve() if imgs_dir else paths[0].parent)
     with paths[0].open(encoding="utf-8") as file:
         categories = sorted(json.load(file)["categories"], key=lambda category: category["id"])
     names = {category["id"] - 1: category["name"] for category in categories}
-    if min(names) < 0:
-        raise ValueError(f"{paths[0]}: COCO category IDs must be positive")
     names = {i: names.get(i, f"unused_{i}") for i in range(max(names) + 1)}
-    return dict(train=imgs_dir, val=imgs_dir, ann_train=str(paths[0]), ann_val=str(paths[1]),
+    return dict(train=imgs_dir, val=imgs_dir, train_ann=str(paths[0]), val_ann=str(paths[1]),
                 names=names, coco_names=names, nc=len(names), channels=3)
 
 
@@ -137,7 +135,7 @@ def build_coco_dataset(owner, img_path, mode="val", batch=None, rtdetr=False):
     dataset = COCORTDETRDataset if rtdetr else COCODataset
     return dataset(
         img_path=img_path,
-        ann_file=owner.data[f"ann_{mode}"],
+        ann_file=owner.data[f"{mode}_ann"],
         data=owner.data,
         imgsz=owner.args.imgsz,
         batch_size=batch,
