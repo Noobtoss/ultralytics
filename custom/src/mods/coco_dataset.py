@@ -117,14 +117,15 @@ def resolve_data(args):
     """Return the YAML path or an in-memory COCO dataset configuration."""
     if not getattr(args, "train_ann", None):
         return args.data
-    paths = [Path(path).resolve() for path in (args.train_ann, args.val_ann)]
+    train_ann = Path(args.train_ann).resolve()
+    val_ann = Path(args.val_ann).resolve()
     imgs_dir = getattr(args, "data_dir", None)
-    imgs_dir = str(Path(imgs_dir).resolve() if imgs_dir else paths[0].parent)
-    with paths[0].open(encoding="utf-8") as file:
+    imgs_dir = str(Path(imgs_dir).resolve() if imgs_dir else train_ann.parent)
+    with train_ann.open(encoding="utf-8") as file:
         categories = sorted(json.load(file)["categories"], key=lambda category: category["id"])
     names = {category["id"] - 1: category["name"] for category in categories}
     names = {i: names.get(i, f"unused_{i}") for i in range(max(names) + 1)}
-    return dict(train=imgs_dir, val=imgs_dir, train_ann=str(paths[0]), val_ann=str(paths[1]),
+    return dict(train=imgs_dir, val=imgs_dir, train_ann=str(train_ann), val_ann=str(val_ann),
                 names=names, coco_names=names, nc=len(names), channels=3)
 
 
