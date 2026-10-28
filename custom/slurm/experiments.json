@@ -16,21 +16,21 @@
   },
   "06Aufsatz_coco": {
     "ckpt": "checkpoints/yolo11x.pt",
-    "data_dir": "../../data_nexus/datasets",
+    "data_dir": "../../data_hub/datasets",
     "ann_train": "phd_experiments/06Aufsatz/annotation_train.json",
     "ann_test": "phd_experiments/06Aufsatz/annotation_test.json",
     "epochs": 100
   },
   "06AufsatzCopyPaste_coco": {
     "ckpt": "checkpoints/yolo11x.pt",
-    "data_dir": "../../data_nexus/datasets",
+    "data_dir": "../../data_hub/datasets",
     "ann_train": "phd_experiments/06AufsatzCopyPaste/annotation_train.json",
     "ann_test": "phd_experiments/06AufsatzCopyPaste/annotation_test.json",
     "epochs": 100
   },
   "06AufsatzCopyPasteExtended_coco": {
     "ckpt": "checkpoints/yolo11x.pt",
-    "data_dir": "../../data_nexus/datasets",
+    "data_dir": "../../data_hub/datasets",
     "ann_train": "phd_experiments/06AufsatzCopyPasteExtended/annotation_train.json",
     "ann_test": "phd_experiments/06AufsatzCopyPasteExtended/annotation_test.json",
     "epochs": 100
@@ -38,7 +38,7 @@
   "04": {
     "imgsz": 640,
     "ckpt": "checkpoints/yolo11x.pt",
-    "data_dir": "../../data_nexus/datasets",
+    "data_dir": "../../data_hub/datasets",
     "ann_train": "phd_experiments/04/annotation_train.json",
     "ann_val": "phd_experiments/04/annotation_val.json",
     "epochs": 100
@@ -46,7 +46,7 @@
   "04Mixed": {
     "imgsz": 640,
     "ckpt": "checkpoints/yolo11x.pt",
-    "data_dir": "../../data_nexus/datasets",
+    "data_dir": "../../data_hub/datasets",
     "ann_train": "phd_experiments/04Mixed/annotation_train.json",
     "ann_val": "phd_experiments/04Mixed/annotation_val.json",
     "epochs": 100
@@ -54,7 +54,7 @@
   "04Mixed50pctBottom": {
     "imgsz": 640,
     "ckpt": "checkpoints/yolo11x.pt",
-    "data_dir": "../../data_nexus/datasets",
+    "data_dir": "../../data_hub/datasets",
     "ann_train": "phd_experiments/04Mixed/annotation_train_50pctbottom.json",
     "ann_val": "phd_experiments/04Mixed/annotation_val.json",
     "epochs": 100
@@ -62,7 +62,7 @@
     "04Mixed20pctBottom": {
     "imgsz": 640,
     "ckpt": "checkpoints/yolo11x.pt",
-    "data_dir": "../../data_nexus/datasets",
+    "data_dir": "../../data_hub/datasets",
     "ann_train": "phd_experiments/04Mixed/annotation_train_20pctbottom.json",
     "ann_val": "phd_experiments/04Mixed/annotation_val.json",
     "epochs": 100
@@ -70,7 +70,7 @@
   "04Mixed10pctBottom": {
     "imgsz": 640,
     "ckpt": "checkpoints/yolo11x.pt",
-    "data_dir": "../../data_nexus/datasets",
+    "data_dir": "../../data_hub/datasets",
     "ann_train": "phd_experiments/04Mixed/annotation_train_10pctbottom.json",
     "ann_val": "phd_experiments/04Mixed/annotation_val.json",
     "epochs": 100
@@ -78,7 +78,7 @@
   "04SeparateClasses": {
     "imgsz": 640,
     "ckpt": "checkpoints/yolo11x.pt",
-    "data_dir": "../../data_nexus/datasets",
+    "data_dir": "../../data_hub/datasets",
     "ann_train": "phd_experiments/04SeparateClasses/annotation_train.json",
     "ann_val": "phd_experiments/04SeparateClasses/annotation_val.json",
     "epochs": 100
@@ -86,7 +86,7 @@
   "04SeparateClasses50pctBottom": {
     "imgsz": 640,
     "ckpt": "checkpoints/yolo11x.pt",
-    "data_dir": "../../data_nexus/datasets",
+    "data_dir": "../../data_hub/datasets",
     "ann_train": "phd_experiments/04SeparateClasses/annotation_train_50pctbottom.json",
     "ann_val": "phd_experiments/04SeparateClasses/annotation_val.json",
     "epochs": 100
@@ -94,7 +94,7 @@
   "04SeparateClasses20pctBottom": {
     "imgsz": 640,
     "ckpt": "checkpoints/yolo11x.pt",
-    "data_dir": "../../data_nexus/datasets",
+    "data_dir": "../../data_hub/datasets",
     "ann_train": "phd_experiments/04SeparateClasses/annotation_train_20pctbottom.json",
     "ann_val": "phd_experiments/04SeparateClasses/annotation_val.json",
     "epochs": 100
@@ -102,7 +102,7 @@
     "04SeparateClasses10pctBottom": {
     "imgsz": 640,
     "ckpt": "checkpoints/yolo11x.pt",
-    "data_dir": "../../data_nexus/datasets",
+    "data_dir": "../../data_hub/datasets",
     "ann_train": "phd_experiments/04SeparateClasses/annotation_train_10pctbottom.json",
     "ann_val": "phd_experiments/04SeparateClasses/annotation_val.json",
     "epochs": 100

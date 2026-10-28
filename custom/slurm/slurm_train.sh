@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=ultralytics # Kurzname des Jobs
-#SBATCH --array=1-12%4
+#SBATCH --array=4-12%4
 #SBATCH --output=logs/%A_%a.out
 #SBATCH --partition=p4,p6        # p1,p2,p3,p4,p5,p6
 #SBATCH --qos=gpuultimate
@@ -11,7 +11,7 @@
 #SBATCH --mem=64G                # RAM pro CPU Kern #20G #32G #64G
 
 # ----- DIRS --------------------------------------------------------
-ROOT=/nfs/scratch/staff/schmittth/code_nexus/ultralytics
+ROOT=/nfs/scratch/staff/schmittth/code_hub/ultralytics
 export TMPDIR=$(mktemp -d "${TMPDIR:-/tmp}/ultralytics_${SLURM_JOB_ID}_XXXXXX")
 
 # ----- ENVIRONMENT SETUP -------------------------------------------

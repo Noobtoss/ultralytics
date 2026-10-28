@@ -11,7 +11,7 @@
 #SBATCH --mem=32G                  # RAM pro CPU Kern #20G #32G #64G
 
 # ----- DIRS --------------------------------------------------------
-ROOT=/nfs/scratch/staff/schmittth/code_nexus/ultralytics
+ROOT=/nfs/scratch/staff/schmittth/code_hub/ultralytics
 export TMPDIR=$(mktemp -d "${TMPDIR:-/tmp}/ultralytics_${SLURM_JOB_ID}_XXXXXX")
 
 # ----- ENVIRONMENT SETUP -------------------------------------------

@@ -12,7 +12,7 @@
 #SBATCH --mail-user=thomas.schmitt@th-nuernberg.de
 
 # ----- DIRS --------------------------------------------------------
-ROOT="$WORK/code_nexus/ultralytics"
+ROOT="$WORK/code_hub/ultralytics"
 JOB_DIR=$TMPDIR
 
 # ----- ENVIRONMENT SETUP -------------------------------------------
@@ -58,7 +58,7 @@ RUN_NAME="${RUN_NAME}_${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}"
 OUT_DIR="${ROOT}/runs/${RUN_NAME}"
 MODEL="${KV[model]:-custom/cfg/cls_feat_yolo11x.yaml}"
 CKPT="${KV[ckpt]:-checkpoints/yolo11x.pt}"
-DATA_DIR="$ROOT/${KV[data_dir]:-../../data_nexus}"
+DATA_DIR="$ROOT/${KV[data_dir]:-../../data_hub}"
 DATA="${KV[data]}"
 ANN_TRAIN="${KV[ann_train]}"
 ANN_TEST="${KV[ann_test]:-${KV[ann_val]}}"
