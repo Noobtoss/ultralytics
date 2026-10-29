@@ -1,11 +1,8 @@
-"""Move seed runs into results/<experiment>/; use __main__ defaults without CLI arguments."""
-
 import argparse
 import re
 import shutil
 import sys
 from pathlib import Path
-
 import yaml
 
 
