@@ -28,7 +28,9 @@ CFG = Namespace(
     train_cfg=TRAIN_CFG
 )
 
-ALIASES = {}
+ALIASES = {
+    "max_epoch": "epochs",
+}
 
 VALUE_MAPPING = {}
 
