@@ -43,13 +43,13 @@ def merge_cfg(cfg: Namespace, args):
 
 def tag(cfg: Namespace):
     train_cfg = cfg.train_cfg
+    train_cfg.run_name = train_cfg.name
     train_cfg.model_name = Path(getattr(cfg, 'ckpt', None) or getattr(cfg, 'model', None)).stem
     train_ann = train_cfg.data.get("train_ann") if isinstance(train_cfg.data, dict) else None
     if not train_ann:
         train_cfg.dataset_name = Path(train_cfg.data).stem
     else:
         train_cfg.dataset_name = Path(train_ann).resolve().parent.name
-    train_cfg.run_name = train_cfg.name
 
 def build_cfg(args: Namespace) -> Namespace:
     args = Namespace(**{"data": None, **vars(args)})
