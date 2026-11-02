@@ -28,9 +28,9 @@ export PYTHONPATH="$ROOT/custom/src:$PYTHONPATH"
 EXP_MAP_FILE="$ROOT/custom/slurm/experiments_map.txt"
 EXP_ARGS_FILE="$ROOT/custom/slurm/experiments.json"
 
-EXP_NAME=$(grep -v '^[[:space:]]*#' "$EXP_MAP_FILE" | awk -v id="$SLURM_ARRAY_TASK_ID" '$1 == id {print $2; exit}')
-if [[ -z "$EXP_NAME" ]]; then
-    echo "ERROR: no exp_name for task id $SLURM_ARRAY_TASK_ID in $EXP_MAP_FILE" >&2
+RUN_NAME=$(grep -v '^[[:space:]]*#' "$EXP_MAP_FILE" | awk -v id="$SLURM_ARRAY_TASK_ID" '$1 == id {print $2; exit}')
+if [[ -z "$RUN_NAME" ]]; then
+    echo "ERROR: no run_name for task id $SLURM_ARRAY_TASK_ID in $EXP_MAP_FILE" >&2
     exit 1
 fi
 
@@ -38,8 +38,8 @@ ARGS=$(python -c '
 import json, sys
 exp = json.load(open(sys.argv[1]))[sys.argv[2]]
 print(" ".join(f"{k} {v}" for k, v in exp.items()))
-' "$EXP_ARGS_FILE" "$EXP_NAME") || { echo "ERROR: exp_name '$EXP_NAME' not found in $EXP_ARGS_FILE" >&2; exit 1; }
-ARGS="exp_name $EXP_NAME $ARGS"
+' "$EXP_ARGS_FILE" "$RUN_NAME") || { echo "ERROR: run_name '$RUN_NAME' not found in $EXP_ARGS_FILE" >&2; exit 1; }
+ARGS="run_name $RUN_NAME $ARGS"
 
 declare -A KV
 read -r -a ARR <<< "$ARGS"
@@ -50,7 +50,7 @@ for ((i=0; i<${#ARR[@]}; i+=2)); do
 done
 [[ "$ARGS" != *"seed"* ]] && ARGS="$ARGS seed ${SLURM_ARRAY_JOB_ID}"
 
-RUN_NAME="${KV[exp_name]:-unnamed_experiment}"
+RUN_NAME="${KV[run_name]:-unnamed_experiment}"
 RUN_NAME="${RUN_NAME}_${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}"
 OUT_DIR="${ROOT}/runs/${RUN_NAME}"
 MODEL="${KV[model]:-custom/cfg/cls_feat_yolo11x.yaml}"

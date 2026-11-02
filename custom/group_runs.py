@@ -11,7 +11,7 @@ from pathlib import Path
 import yaml
 
 
-IGNORED_ARGS = {"seed", "name", "save_dir"}
+IGNORED_ARGS = {"seed", "name", "run_name", "save_dir"}
 
 
 def read_args(args_path):

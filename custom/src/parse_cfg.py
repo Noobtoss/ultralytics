@@ -4,7 +4,7 @@ from pathlib import Path
 from mods.coco_dataset import resolve_data
 
 
-DEFAULT_TRAIN_CFG = Namespace(
+TRAIN_CFG = Namespace(
     data="",
     epochs=100,
     imgsz=1280,  # 640
@@ -16,16 +16,16 @@ DEFAULT_TRAIN_CFG = Namespace(
     box=7.5,
     cls=0.5,
     dfl=1.5,
-    class_weights=None,
-    cls_feat=0.09,  # 0.5,
-    cls_feat_loss="sup_con_loss",
+    # class_weights=None,
+    cls_feat=0,  # 0.5,
+    # cls_feat_loss="sup_con_loss",
     # cls_feat_proj_head="s",
     # cls_feat_proj_head_lr=0.001,
 )
 
-DEFAULT_CFG = Namespace(
+CFG = Namespace(
     ckpt="checkpoints/yolo11x.pt",  # "checkpoints/rtdetr-x.pt"
-    train_cfg=DEFAULT_TRAIN_CFG
+    train_cfg=TRAIN_CFG
 )
 
 ALIASES = {}
@@ -41,13 +41,14 @@ def merge_cfg(cfg: Namespace, args):
             setattr(cfg.train_cfg, target, mapped_value)
 
 def tag(cfg: Namespace):
-    cfg.train_cfg.model_name = Path(getattr(cfg, 'ckpt', None) or getattr(cfg, 'model', None)).stem
-    train_ann = cfg.train_cfg.data.get("train_ann") if isinstance(cfg.train_cfg.data, dict) else None
+    train_cfg = cfg.train_cfg
+    train_cfg.model_name = Path(getattr(cfg, 'ckpt', None) or getattr(cfg, 'model', None)).stem
+    train_ann = train_cfg.data.get("train_ann") if isinstance(train_cfg.data, dict) else None
     if not train_ann:
-        cfg.train_cfg.dataset_name = Path(cfg.train_cfg.data).stem
+        train_cfg.dataset_name = Path(train_cfg.data).stem
     else:
-        cfg.train_cfg.dataset_name = Path(train_ann).resolve().parent.name
-    return cfg
+        train_cfg.dataset_name = Path(train_ann).resolve().parent.name
+    train_cfg.run_name = train_cfg.name
 
 def parse_cfg(args: Namespace) -> Namespace:
     args = Namespace(**{"data": None, **vars(args)})
@@ -58,7 +59,7 @@ def parse_cfg(args: Namespace) -> Namespace:
             if path:
                 setattr(args, key, str(data_dir / Path(path)))
     args.val_ann = getattr(args, "val_ann", None) or getattr(args, "test_ann", None)
-    cfg = DEFAULT_CFG
+    cfg = CFG
 
     cfg.train_cfg.name = args.run_name;  delattr(args, "run_name")
     cfg.train_cfg.save_dir = args.save_dir; delattr(args, "save_dir")
