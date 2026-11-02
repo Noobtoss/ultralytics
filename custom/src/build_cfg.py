@@ -50,6 +50,7 @@ def tag(cfg: Namespace):
         train_cfg.dataset_name = Path(train_cfg.data).stem
     else:
         train_cfg.dataset_name = Path(train_ann).resolve().parent.name
+    train_cfg.max_epoch = train_cfg.epochs
 
 def build_cfg(args: Namespace) -> Namespace:
     args = Namespace(**{"data": None, **vars(args)})
