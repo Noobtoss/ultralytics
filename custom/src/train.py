@@ -17,7 +17,7 @@ sys.path.insert(0, site.getsitepackages()[0])  # index 0 — conda site-packages
 from ultralytics import YOLO, RTDETR
 from mods import DetectionTrainer, RTDETRTrainer
 from callbacks import eval_last, move_last_ckpt, wb_callbacks
-from mods.coco_dataset import resolve_data
+from parse_cfg import parse_cfg
 
 DEFAULT_ARGS = {
     "yolo26": Namespace(
@@ -51,30 +51,6 @@ DEFAULT_ARGS = {
                   "epochs", "14"],
     ),
 }
-
-DEFAULT_TRAIN_CFG = Namespace(
-    data="",
-    epochs=100,
-    imgsz=1280,  # 640
-    seed=88888,
-    batch=8,
-    single_cls=False,
-    project="runs",
-    name="",
-    box=7.5,
-    cls=0.5,
-    dfl=1.5,
-    class_weights=None,
-    cls_feat=0.09,  # 0.5,
-    cls_feat_loss="sup_con_loss",
-    # cls_feat_proj_head="s",
-    # cls_feat_proj_head_lr=0.001,
-)
-
-DEFAULT_CFG = Namespace(
-    ckpt="checkpoints/yolo11x.pt",  # "checkpoints/rtdetr-x.pt"
-    train_cfg=DEFAULT_TRAIN_CFG
-)
 
 
 def train_yolo(cfg: Namespace):
@@ -137,35 +113,6 @@ def parse_args():
     if bool(args.data) == coco or (coco and (not (args.train_ann and args.val_ann) or "data" in args.opts[::2])):
         parser.error("use --data OR both --train_ann and --val_ann; don't mix data sources")
     return args
-
-
-def parse_cfg(args: Namespace) -> Namespace:
-    args = Namespace(**{"data": None, **vars(args)})
-    if getattr(args, "data_dir", None):
-        data_dir = Path(args.data_dir)
-        for key in ("data", "train_ann", "val_ann", "test_ann"):
-            path = getattr(args, key, None)
-            if path:
-                setattr(args, key, str(data_dir / Path(path)))
-    args.val_ann = getattr(args, "val_ann", None) or getattr(args, "test_ann", None)
-    cfg = DEFAULT_CFG
-
-    cfg.train_cfg.name = args.run_name;  delattr(args, "run_name")
-    cfg.train_cfg.save_dir = args.save_dir; delattr(args, "save_dir")
-    cfg.model = args.model; delattr(args, "model")
-    cfg.ckpt = args.ckpt; delattr(args, "ckpt")
-
-    if args.opts:
-        it = iter(args.opts)
-        for k, v in zip(it, it):
-            setattr(cfg.train_cfg, k, v)
-    cfg.train_cfg.data = resolve_data(args); delattr(args, "data")
-    cfg.train_cfg.model_name = Path(getattr(cfg, 'ckpt', None) or getattr(cfg, 'model', None)).stem
-    if not getattr(args, "train_ann", None):
-        cfg.train_cfg.dataset_name = Path(cfg.train_cfg.data).stem
-    else:
-        cfg.train_cfg.dataset_name = Path(args.train_ann).resolve().parent.name
-    return cfg
 
 
 def main():
