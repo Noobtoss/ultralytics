@@ -36,7 +36,8 @@ VALUE_MAPPING = {}
 def merge_cfg(cfg: Namespace, args):
     it = iter(args.opts)
     for key, value in zip(it, it):
-        for target in ALIASES.get(key, (key,)):
+        targets = ALIASES.get(key, (key,))
+        for target in (targets,) if isinstance(targets, str) else targets:
             mapped_value = VALUE_MAPPING[target](value) if target in VALUE_MAPPING else value
             setattr(cfg.train_cfg, target, mapped_value)
 
