@@ -221,7 +221,7 @@ def parse_index(index: int) -> dict[str, Any]:
     return cfg_dict
 
 
-def parse_cfg(cfg_dict: dict[str, Any]) -> Namespace:
+def build_cfg(cfg_dict: dict[str, Any]) -> Namespace:
     cfg = argparse.Namespace()
     model = cfg_dict.pop("model")
     data = cfg_dict["data"]
@@ -241,7 +241,7 @@ def parse_cfg(cfg_dict: dict[str, Any]) -> Namespace:
 def main():
     args = parse_args()
     cfg_dict = parse_index(args.index)
-    cfg = parse_cfg(cfg_dict)
+    cfg = build_cfg(cfg_dict)
     training(cfg)
     evaluation(cfg)
 

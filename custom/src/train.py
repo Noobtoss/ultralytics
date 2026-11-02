@@ -17,7 +17,7 @@ sys.path.insert(0, site.getsitepackages()[0])  # index 0 — conda site-packages
 from ultralytics import YOLO, RTDETR
 from mods import DetectionTrainer, RTDETRTrainer
 from callbacks import eval_last, move_last_ckpt, wb_callbacks
-from parse_cfg import parse_cfg
+from build_cfg import build_cfg
 
 DEFAULT_ARGS = {
     "yolo26": Namespace(
@@ -122,7 +122,7 @@ def main():
         warnings.warn("⚠️ Running with hardcoded test args")
         args = DEFAULT_ARGS["rtdetr"]
 
-    cfg = parse_cfg(args)
+    cfg = build_cfg(args)
     train(cfg)
     # get_eval_metrics(cfg)
 

@@ -50,7 +50,7 @@ def tag(cfg: Namespace):
         train_cfg.dataset_name = Path(train_ann).resolve().parent.name
     train_cfg.run_name = train_cfg.name
 
-def parse_cfg(args: Namespace) -> Namespace:
+def build_cfg(args: Namespace) -> Namespace:
     args = Namespace(**{"data": None, **vars(args)})
     if getattr(args, "data_dir", None):
         data_dir = Path(args.data_dir)
