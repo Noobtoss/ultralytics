@@ -38,6 +38,8 @@ VALUE_MAPPING = {}
 def merge_cfg(cfg: Namespace, args):
     it = iter(args.opts)
     for key, value in zip(it, it):
+        if isinstance(value, str) and value == "None":
+            value = None
         targets = ALIASES.get(key, (key,))
         for target in (targets,) if isinstance(targets, str) else targets:
             mapped_value = VALUE_MAPPING[target](value) if target in VALUE_MAPPING else value
@@ -71,6 +73,8 @@ def build_cfg(args: Namespace) -> Namespace:
     cfg.ckpt = args.ckpt; delattr(args, "ckpt")
     if args.opts:
         merge_cfg(cfg, args)
+    if cfg.train_cfg.cls_feat is None:
+        cfg.train_cfg.cls_feat_loss = None
     cfg.train_cfg.data = resolve_data(args); delattr(args, "data")
     tag(cfg)
     return cfg
