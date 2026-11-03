@@ -70,5 +70,53 @@
     "train_ann": "phd_experiments/04SeparateClasses/annotation_train_10pctbottom.json",
     "val_ann": "phd_experiments/04SeparateClasses/annotation_val.json",
     "epochs": 100
+  },
+  "test_yolo_cls_feat_loss_none": {
+    "model": "custom/cfg/cls_feat_yolo11x.yaml",
+    "ckpt": "checkpoints/yolo11x.pt",
+    "data_dir": "../../data_hub/datasets",
+    "epochs": 10,
+    "imgsz": 640,
+    "batch": 4,
+    "cls_feat": 0.1,
+    "cls_feat_loss": null,
+    "train_ann": "phd_experiments/04/annotation_train.json",
+    "val_ann": "phd_experiments/04/annotation_val.json"
+  },
+  "test_yolo_cls_feat_none": {
+    "model": "custom/cfg/cls_feat_yolo11x.yaml",
+    "ckpt": "checkpoints/yolo11x.pt",
+    "data_dir": "../../data_hub/datasets",
+    "epochs": 10,
+    "imgsz": 640,
+    "batch": 4,
+    "cls_feat_loss": "sup_con_loss",
+    "cls_feat": null,
+    "train_ann": "phd_experiments/04/annotation_train.json",
+    "val_ann": "phd_experiments/04/annotation_val.json"
+  },
+  "test_rtdetr_cls_feat_loss_none": {
+    "model": "custom/cfg/cls_feat_rtdetr-x.yaml",
+    "ckpt": "checkpoints/rtdetr-x.pt",
+    "data_dir": "../../data_hub/datasets",
+    "epochs": 10,
+    "imgsz": 640,
+    "batch": 4,
+    "cls_feat": 0.1,
+    "cls_feat_loss": null,
+    "train_ann": "phd_experiments/04/annotation_train.json",
+    "val_ann": "phd_experiments/04/annotation_val.json"
+  },
+  "test_rtdetr_cls_feat_none": {
+    "model": "custom/cfg/cls_feat_rtdetr-x.yaml",
+    "ckpt": "checkpoints/rtdetr-x.pt",
+    "data_dir": "../../data_hub/datasets",
+    "epochs": 10,
+    "imgsz": 640,
+    "batch": 4,
+    "cls_feat_loss": "sup_con_loss",
+    "cls_feat": null,
+    "train_ann": "phd_experiments/04/annotation_train.json",
+    "val_ann": "phd_experiments/04/annotation_val.json"
   }
 }

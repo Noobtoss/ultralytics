@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=ultralytics # Kurzname des Jobs
-#SBATCH --array=1-9%3
+#SBATCH --array=10-13%3
 #SBATCH --output=logs/%A_%a.out
 #SBATCH --partition=p4,p6        # p1,p2,p3,p4,p5,p6
 #SBATCH --qos=gpuultimate
@@ -39,7 +39,6 @@ import json, sys
 exp = json.load(open(sys.argv[1]))[sys.argv[2]]
 print(" ".join(f"{k} {v}" for k, v in exp.items()))
 ' "$EXP_ARGS_FILE" "$RUN_NAME") || { echo "ERROR: run_name '$RUN_NAME' not found in $EXP_ARGS_FILE" >&2; exit 1; }
-ARGS="run_name $RUN_NAME $ARGS"
 
 declare -A KV
 read -r -a ARR <<< "$ARGS"
@@ -50,7 +49,6 @@ for ((i=0; i<${#ARR[@]}; i+=2)); do
 done
 [[ "$ARGS" != *"seed"* ]] && ARGS="$ARGS seed ${SLURM_ARRAY_JOB_ID}"
 
-RUN_NAME="${KV[run_name]:-unnamed_experiment}"
 RUN_NAME="${RUN_NAME}_${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}"
 OUT_DIR="${ROOT}/runs/${RUN_NAME}"
 MODEL="${KV[model]:-custom/cfg/cls_feat_yolo11x.yaml}"
@@ -81,8 +79,7 @@ python $ROOT/custom/src/train.py \
        $ARGS
 
 # ----- CLEANUP -----------------------------------------------------
-[[ -f "$OUT_DIR/last.pt" ]] && mv -f "$OUT_DIR/last.pt" "$OUT_DIR/${RUN_NAME}.pt"
-KEEP_FILES=("args.yaml" "results.csv" "last.pt" "${RUN_NAME}.pt")
+KEEP_FILES=("args.yaml" "results.csv" "last.pt")
 
 for i in 1 2 3 4 5; do
     wandb sync --sync-all && break

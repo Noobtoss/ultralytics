@@ -8,3 +8,8 @@
 7    04SeparateClasses50pctBottom
 8    04SeparateClasses20pctBottom
 9    04SeparateClasses10pctBottom
+# None behavior tests (10 epochs)
+10   test_yolo_cls_feat_loss_none
+11   test_yolo_cls_feat_none
+12   test_rtdetr_cls_feat_loss_none
+13   test_rtdetr_cls_feat_none
