@@ -13,16 +13,20 @@ class v8DetectionLoss(_v8DetectionLoss):
         LOGGER.warning("[Modded] v8DetectionLoss")
         super().__init__(model, *args, **kwargs)
 
-        self.hyp.cls_feat = getattr(self.hyp, "cls_feat", 0)
-        kwargs = {
-            k.removeprefix("cls_feat_"): v
-            for k, v in vars(self.hyp).items()
-            if k.startswith("cls_feat_")
-        }
-        LOGGER.warning(kwargs)
         self.bce_loss = ClassLossWeighted(**class_weights[getattr(model.args, "class_weights", None)]).to(self.device)
-        self.cls_feat_loss = ClsFeatLoss(**kwargs).to(self.device)
-        self.cls_feat_proj_head = getattr(model, "cls_feat_proj_head", None)
+
+        self.cls_feat_loss = None
+        self.cls_feat_proj_head = None
+        if getattr(self.hyp, "cls_feat_loss", None) is not None:
+            self.hyp.cls_feat = getattr(self.hyp, "cls_feat", 0)
+            kwargs = {
+                k.removeprefix("cls_feat_"): v
+                for k, v in vars(self.hyp).items()
+                if k.startswith("cls_feat_")
+            }
+            LOGGER.warning(kwargs)
+            self.cls_feat_loss = ClsFeatLoss(**kwargs).to(self.device)
+            self.cls_feat_proj_head = getattr(model, "cls_feat_proj_head", None)
 
     def get_assigned_targets_and_loss(self, preds: dict[str, torch.Tensor], batch: dict[str, any]) -> tuple:
         """Calculate the sum of the loss for box, cls and dfl multiplied by batch size and return foreground mask and
@@ -74,7 +78,7 @@ class v8DetectionLoss(_v8DetectionLoss):
         loss[1] = class_loss.sum() / target_scores_sum
         # <<< MOD
         # >>> MOD
-        if fg_mask.sum():
+        if self.cls_feat_loss is not None and fg_mask.sum():
             cls_feats = cls_feats[fg_mask]
             # Exclude foreground matches whose class target scores are all zero.
             nonzero_iou_mask = target_scores[fg_mask].any(dim=-1)

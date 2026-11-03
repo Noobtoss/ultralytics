@@ -75,6 +75,7 @@ def build_cfg(args: Namespace) -> Namespace:
         merge_cfg(cfg, args)
     if cfg.train_cfg.cls_feat is None:
         cfg.train_cfg.cls_feat_loss = None
+        cfg.train_cfg.cls_feat_scheduler = None
     cfg.train_cfg.data = resolve_data(args); delattr(args, "data")
     tag(cfg)
     return cfg

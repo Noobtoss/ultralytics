@@ -28,28 +28,33 @@ class DETRLoss(_DETRLoss):
         super().__init__(nc, loss_gain, aux_loss, use_fl, use_vfl, use_uni_match, uni_match_ind, gamma, alpha)
         self.device = next(model.parameters()).device  # parent leaves self.device=None; set it before .to()
         hyp = model.args  # hyperparameters
-        self.loss_gain["cls_feat"] = getattr(hyp, "cls_feat", 0)
-        kwargs = {
-            k.removeprefix("cls_feat_"): v
-            for k, v in vars(hyp).items()
-            if k.startswith("cls_feat_")
-        }
-        LOGGER.warning(kwargs)
+
         weights = class_weights[getattr(model.args, "class_weights", None)]
         self.bce_loss = ClassLossWeighted(**weights)
         self.fl = FocalLossWeighted(gamma, alpha, **weights) if use_fl else None
         self.vfl = VarifocalLossWeighted(gamma, alpha, **weights) if use_vfl else None
 
-        self.cls_feat_loss = ClsFeatLoss(**kwargs).to(self.device)
-        n = getattr(hyp, "cls_feat_dec_layers", None)
-        # self.cls_feat_dec_layers = range(6 - n, 6) if n is not None else range(1, 6)  # hard encoding 6 is bad
-        num_decoder_layers = model.model[-1].num_decoder_layers
-        if n is None:
-            n = num_decoder_layers
-        if isinstance(n, bool) or not isinstance(n, int) or not 1 <= n <= num_decoder_layers:
-            raise ValueError(f"cls_feat_dec_layers must be an integer between 1 and {num_decoder_layers}, got {n!r}")
-        self.cls_feat_dec_layers = range(num_decoder_layers - n, num_decoder_layers)
-        self.cls_feat_proj_head = getattr(model, "cls_feat_proj_head", None)
+        self.cls_feat_loss = None
+        self.cls_feat_proj_head = None
+        self.cls_feat_dec_layers = range(0)
+        if getattr(hyp, "cls_feat_loss", None) is not None:
+            self.loss_gain["cls_feat"] = getattr(hyp, "cls_feat", 0)
+            kwargs = {
+                k.removeprefix("cls_feat_"): v
+                for k, v in vars(hyp).items()
+                if k.startswith("cls_feat_")
+            }
+            LOGGER.warning(kwargs)
+            self.cls_feat_loss = ClsFeatLoss(**kwargs).to(self.device)
+            n = getattr(hyp, "cls_feat_dec_layers", None)
+            # self.cls_feat_dec_layers = range(6 - n, 6) if n is not None else range(1, 6)  # hard encoding 6 is bad
+            num_decoder_layers = model.model[-1].num_decoder_layers
+            if n is None:
+                n = num_decoder_layers
+            if isinstance(n, bool) or not isinstance(n, int) or not 1 <= n <= num_decoder_layers:
+                raise ValueError(f"cls_feat_dec_layers must be an integer between 1 and {num_decoder_layers}, got {n!r}")
+            self.cls_feat_dec_layers = range(num_decoder_layers - n, num_decoder_layers)
+            self.cls_feat_proj_head = getattr(model, "cls_feat_proj_head", None)
 
     def _get_loss_class(
         self, pred_scores: torch.Tensor, targets: torch.Tensor, gt_scores: torch.Tensor, num_gts: int, postfix: str = ""
@@ -192,10 +197,15 @@ class DETRLoss(_DETRLoss):
             **self._get_loss_class(pred_scores, targets, gt_scores, len(gt_bboxes), postfix),
             **self._get_loss_bbox(pred_bboxes, gt_bboxes, postfix),
         }
-        if cls_feats is not None:
+        if self.cls_feat_loss is not None and cls_feats is not None:
             loss.update(
                 self._get_loss_cls_feat(cls_feats, pred_scores.detach(), targets, gt_scores, len(gt_bboxes), postfix)
             )
+        else:
+            loss.update({
+                f"loss_cls_feat{postfix}": pred_scores.new_zeros(()),
+                f"logging_loss_cls_feat{postfix}": pred_scores.new_zeros(()),
+            })
         return loss
         # <<< MOD
 

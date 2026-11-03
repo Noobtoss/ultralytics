@@ -23,7 +23,7 @@ class NormalizeEmbeddingsWrapper(nn.Module):
 class FeatLossFactory:
     @staticmethod
     def get(loss: str = None, **kwargs):
-        if loss is None or loss == "None":
+        if loss is None:
             return None
         elif loss == "sup_con_loss":
             # https://kevinmusgrave.github.io/pytorch-metric-learning/losses/#supconloss
@@ -69,7 +69,7 @@ class ConfWeight:
 class WeightFactory:
     @staticmethod
     def get(weight: str = None, **kwargs):
-        if weight is None or weight == "None":
+        if weight is None:
             return None
         elif weight == "conf":
             return ConfWeight()
@@ -136,7 +136,7 @@ class RandMaskBalanced:
 class MaskFactory:
     @staticmethod
     def get(mask: str = None, **kwargs):
-        if mask is None or mask == "None":
+        if mask is None:
             return None
         elif mask == "conf":
             return ConfMask(**kwargs)

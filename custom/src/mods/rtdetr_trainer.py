@@ -23,7 +23,7 @@ class RTDETRTrainer(_RTDETRTrainer):
         super()._setup_train()
         if getattr(self.model, "criterion", None) is None:  # Default done in BaseModel forward
             self.model.criterion = self.model.init_criterion()
-        if hasattr(self.args, "cls_feat_scheduler"):
+        if getattr(self.args, "cls_feat_scheduler", None) is not None:
             self.add_callback("on_train_epoch_start", ClsFeatScheduler(self).on_train_epoch_start)
             self.add_callback("on_train_epoch_end", ClsFeatScheduler(self).on_train_epoch_end)
 
