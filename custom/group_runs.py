@@ -94,7 +94,6 @@ def tag_exps(exp_dir):
         target.parent.mkdir(parents=True, exist_ok=True)
         print(f"Moving {exp} -> {target}")
         shutil.move(str(exp), target)
-        (target / "ultralytics").touch()
 
 
 def parse_args():
