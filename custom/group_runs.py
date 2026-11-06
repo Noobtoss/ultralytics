@@ -74,13 +74,36 @@ def group_runs(runs_dir, target_dir=None):
                 transfer(str(source), target / name)
 
 
+def tag_exps(exp_dir):
+    exp_dir = Path(exp_dir).resolve()
+    if not exp_dir.is_dir():
+        return
+    for exp in sorted(exp_dir.iterdir()):
+        args_path = exp / "args.yaml"
+        if not exp.is_dir() or not args_path.is_file():
+            continue
+        model_name = str(read_args(args_path).get("model_name", "")).lower()
+        match = re.search(r"yolo\d+|rtdetr", model_name)
+        if not match:
+            print(f"Warning: skipping {exp}: unsupported model_name: {model_name}")
+            continue
+        target = exp_dir / match[0] / exp.name
+        if target.exists() or target.is_symlink():
+            print(f"Skipping {exp}: destination already in use: {target}")
+            continue
+        target.parent.mkdir(parents=True, exist_ok=True)
+        print(f"Moving {exp} -> {target}")
+        shutil.move(str(exp), target)
+        (target / "ultralytics").touch()
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--runs_dir", type=Path,
                         default=Path(__file__).resolve().parents[1] / "runs",
                         help="Directory containing the individual run folders")
     parser.add_argument("--target_dir", type=Path,
-                        default=Path(__file__).resolve().parents[1] / "results",
+                        default=Path(__file__).resolve().parents[3] / "data_hub/results",
                         help="Output directory; defaults to the repository's results folder")
     return parser.parse_args()
 
@@ -91,6 +114,7 @@ if __name__ == "__main__":
     else:
         args = argparse.Namespace(
             runs_dir=Path(__file__).resolve().parents[1] / "runs",
-            target_dir=None,
+            target_dir=Path(__file__).resolve().parents[3] / "data_hub/results",
         )
-    group_runs(args.runs_dir, target_dir=args.target_dir)
+    group_runs(args.runs_dir, args.target_dir)
+    tag_exps(args.target_dir)
