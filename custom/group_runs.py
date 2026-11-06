@@ -116,4 +116,5 @@ if __name__ == "__main__":
             target_dir=Path(__file__).resolve().parents[3] / "data_hub/results",
         )
     group_runs(args.runs_dir, args.target_dir)
-    tag_runs(args.target_dir)
+    if args.runs_dir.parent != args.target_dir.parent:
+        tag_runs(args.target_dir)
