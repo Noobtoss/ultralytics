@@ -26,8 +26,7 @@ except (ImportError, AssertionError):
     wb = None
 
 # must happen before: from ultralytics.utils.callbacks.wb import _plot_curve, _log_plots
-
-SETTINGS["wandb"] = False
+dict.__setitem__(SETTINGS, "wandb", False)  # Disable locally without saving shared settings.
 VERBOSE = 0
 
 from ultralytics.utils.torch_utils import model_info_for_loggers
