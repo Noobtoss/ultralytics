@@ -21,7 +21,7 @@ def read_args(args_path):
     return {key: value for key, value in args.items() if key not in IGNORED_ARGS}
 
 
-def group_runs(runs_dir, target_dir=None):
+def group_runs(runs_dir, target_dir=None, valid_only=True):
     runs_dir = Path(runs_dir).resolve()
     target_dir = Path(target_dir).resolve() if target_dir is not None else runs_dir.parent / "results"
     if not runs_dir.is_dir():
@@ -29,6 +29,8 @@ def group_runs(runs_dir, target_dir=None):
 
     groups = {}
     for run in sorted(runs_dir.iterdir()):
+        if valid_only and not (run / "TRAIN_SUCCESS").is_file():
+            continue
         match = re.fullmatch(r"(.+)_\d+_\d+", run.name)
         if run.is_dir() and match:
             groups.setdefault(match[1], []).append(run)
@@ -37,6 +39,7 @@ def group_runs(runs_dir, target_dir=None):
 
     # Validate every group before moving anything.
     plans = []
+    completed = []
     for group, runs in groups.items():
         target = target_dir / group
         reference_path = target / "args.yaml" if target.exists() or target.is_symlink() else None
@@ -61,6 +64,8 @@ def group_runs(runs_dir, target_dir=None):
                     print(f"Skipping {checkpoint}: destination name already in use: {name}")
                     continue
                 moves[name] = checkpoint
+            if all(checkpoint in moves.values() for checkpoint in checkpoints):
+                completed.append(run)
         if moves:
             plans.append((target, {"args.yaml": reference_path, **moves}))
 
@@ -72,6 +77,9 @@ def group_runs(runs_dir, target_dir=None):
                 print(f"  {source} -> {name}")
                 transfer = shutil.copy2 if name == "args.yaml" else shutil.move
                 transfer(str(source), target / name)
+
+    for run in completed:
+        (run / "TRAIN_SUCCESS").unlink(missing_ok=True)
 
 
 def tag_runs(target_dir):
@@ -98,13 +106,22 @@ def tag_runs(target_dir):
 
 def parse_args():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--runs_dir", type=Path,
+    parser.add_argument("--runs_dir",
+                        type=Path,
                         default=Path(__file__).resolve().parents[1] / "runs",
                         help="Directory containing the individual run folders")
-    parser.add_argument("--target_dir", type=Path,
+    parser.add_argument("--target_dir",
+                        type=Path,
                         default=Path(__file__).resolve().parents[3] / "data_hub/results",
                         help="Output directory; defaults to the repository's results folder")
-    return parser.parse_args()
+    parser.add_argument("--valid-only",
+                        type=str.lower,
+                        choices=("true", "false"),
+                        default="true",
+                        help="Only group runs containing TRAIN_SUCCESS (default: true)")
+    args = parser.parse_args()
+    args.valid_only = args.valid_only == "true"
+    return args
 
 
 if __name__ == "__main__":
@@ -114,7 +131,8 @@ if __name__ == "__main__":
         args = argparse.Namespace(
             runs_dir=Path(__file__).resolve().parents[1] / "runs",
             target_dir=Path(__file__).resolve().parents[3] / "data_hub/results",
+            valid_only=True,
         )
-    group_runs(args.runs_dir, args.target_dir)
+    group_runs(args.runs_dir, args.target_dir, args.valid_only)
     if args.runs_dir.parent != args.target_dir.parent:
         tag_runs(args.target_dir)
