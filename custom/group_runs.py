@@ -21,7 +21,7 @@ def read_args(args_path):
     return {key: value for key, value in args.items() if key not in IGNORED_ARGS}
 
 
-def group_runs(runs_dir, target_dir=None, valid_only=True):
+def group_runs(runs_dir, target_dir=None, valid_only=True, tag_runs=False):
     runs_dir = Path(runs_dir).resolve()
     target_dir = Path(target_dir).resolve() if target_dir is not None else runs_dir.parent / "results"
     if not runs_dir.is_dir():
@@ -42,8 +42,7 @@ def group_runs(runs_dir, target_dir=None, valid_only=True):
     completed = []
     for group, runs in groups.items():
         target = target_dir / group
-        reference_path = target / "args.yaml" if target.exists() or target.is_symlink() else None
-        reference = read_args(reference_path) if reference_path else None
+        reference = None
         moves = {}
         for run in runs:
             args_path = run / "args.yaml"
@@ -53,8 +52,16 @@ def group_runs(runs_dir, target_dir=None, valid_only=True):
                 continue
             args = read_args(args_path)
             if reference is None:
-                reference, reference_path = args, args_path
-            elif args != reference:
+                if tag_runs:
+                    model_name = str(args.get("model_name", "")).lower()
+                    match = re.search(r"yolo\d+|rtdetr", model_name)
+                    if match:
+                        target = target_dir / match[0] / group
+                    else:
+                        print(f"Warning: leaving {target} untagged: unsupported model_name: {model_name}")
+                reference_path = target / "args.yaml" if target.exists() or target.is_symlink() else args_path
+                reference = read_args(reference_path)
+            if args != reference:
                 raise ValueError(f"Arguments differ: {reference_path} vs {args_path}")
 
             for checkpoint in checkpoints:
@@ -80,28 +87,6 @@ def group_runs(runs_dir, target_dir=None, valid_only=True):
 
     for run in completed:
         (run / "TRAIN_SUCCESS").unlink(missing_ok=True)
-
-
-def tag_runs(target_dir):
-    target_dir = Path(target_dir).resolve()
-    if not target_dir.is_dir():
-        return
-    for exp in sorted(target_dir.iterdir()):
-        args_path = exp / "args.yaml"
-        if not exp.is_dir() or not args_path.is_file():
-            continue
-        model_name = str(read_args(args_path).get("model_name", "")).lower()
-        match = re.search(r"yolo\d+|rtdetr", model_name)
-        if not match:
-            print(f"Warning: skipping {exp}: unsupported model_name: {model_name}")
-            continue
-        target = target_dir / match[0] / exp.name
-        if target.exists() or target.is_symlink():
-            print(f"Skipping {exp}: destination already in use: {target}")
-            continue
-        target.parent.mkdir(parents=True, exist_ok=True)
-        print(f"Moving {exp} -> {target}")
-        shutil.move(str(exp), target)
 
 
 def parse_args():
@@ -133,6 +118,4 @@ if __name__ == "__main__":
             target_dir=Path(__file__).resolve().parents[3] / "data_hub/results",
             valid_only=True,
         )
-    group_runs(args.runs_dir, args.target_dir, args.valid_only)
-    if args.runs_dir.parent != args.target_dir.parent:
-        tag_runs(args.target_dir)
+    group_runs(args.runs_dir, args.target_dir, args.valid_only, tag_runs=args.runs_dir.parent != args.target_dir.parent)
