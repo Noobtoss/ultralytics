@@ -1,4 +1,4 @@
-# Experiments YOLO11x - 06Aufsatz
+# Experiments YOLO11x - 04
 1    04
 2    04_scl06_head_m
 3    04Mixed
@@ -9,3 +9,4 @@
 8    04SeparateClasses50pctBottom
 9    04SeparateClasses20pctBottom
 10   04SeparateClasses10pctBottom
+# Experiments End Current

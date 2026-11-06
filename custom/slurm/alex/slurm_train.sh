@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=ultralytics  # Name shown in squeue
-#SBATCH --array=4-9%6
+#SBATCH --array=1-2%6
 #SBATCH --output=logs/%A_%a.out  # Log file: %A=jobID, %a=array task index
 #SBATCH --gres=gpu:a40:1     # Request 1x A40 GPUs
 #SBATCH --partition=a40      # Submit to the a40 node partition
@@ -110,17 +110,27 @@ python $ROOT/custom/src/train.py \
        --train_ann "$TRAIN_ANN" \
        --test_ann  "$TEST_ANN" \
        $ARGS
+TRAIN_STATUS=$?
 
 # ----- CLEANUP -----------------------------------------------------
 KEEP_FILES=("args.yaml" "results.csv" "last.pt")
 
 for i in 1 2 3 4 5; do
-    wandb sync --sync-all && break
+    [ -d "$TMPDIR/wandb/latest-run" ] || break
+    if wandb sync --include-online "$TMPDIR/wandb/latest-run"; then
+        WANDB_SYNC_STATUS=0
+        break
+    fi
     echo "sync attempt $i failed, retrying..."
-    sleep 20
+    sleep 30
 done
 
 rm -rf "$TMPDIR"
 rm -rf "$OUT_DIR/wandb"
 find "$OUT_DIR" -type f $(printf ' ! -name %s' "${KEEP_FILES[@]}") -delete
 find "$OUT_DIR" -type d -empty -delete
+
+if [ "$TRAIN_STATUS" -eq 0 ]; then
+    touch "$OUT_DIR/TRAIN_SUCCESS"
+fi
+exit "$TRAIN_STATUS"
