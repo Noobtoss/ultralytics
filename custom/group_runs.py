@@ -74,11 +74,11 @@ def group_runs(runs_dir, target_dir=None):
                 transfer(str(source), target / name)
 
 
-def tag_exps(exp_dir):
-    exp_dir = Path(exp_dir).resolve()
-    if not exp_dir.is_dir():
+def tag_runs(target_dir):
+    target_dir = Path(target_dir).resolve()
+    if not target_dir.is_dir():
         return
-    for exp in sorted(exp_dir.iterdir()):
+    for exp in sorted(target_dir.iterdir()):
         args_path = exp / "args.yaml"
         if not exp.is_dir() or not args_path.is_file():
             continue
@@ -87,7 +87,7 @@ def tag_exps(exp_dir):
         if not match:
             print(f"Warning: skipping {exp}: unsupported model_name: {model_name}")
             continue
-        target = exp_dir / match[0] / exp.name
+        target = target_dir / match[0] / exp.name
         if target.exists() or target.is_symlink():
             print(f"Skipping {exp}: destination already in use: {target}")
             continue
@@ -116,4 +116,4 @@ if __name__ == "__main__":
             target_dir=Path(__file__).resolve().parents[3] / "data_hub/results",
         )
     group_runs(args.runs_dir, args.target_dir)
-    tag_exps(args.target_dir)
+    tag_runs(args.target_dir)
