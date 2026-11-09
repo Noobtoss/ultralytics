@@ -19,24 +19,6 @@
     "cls_feat_proj_head": "m",
     "epochs": 100
   },
-  "06Aufsatz": {
-    "ckpt": "checkpoints/yolo11x.pt",
-    "data_dir": "datasets_tar",
-    "data": "06Aufsatz.yaml",
-    "epochs": 100
-  },
-  "06AufsatzCopyPaste": {
-    "ckpt": "checkpoints/yolo11x.pt",
-    "data_dir": "datasets_tar",
-    "data": "06AufsatzCopyPaste.yaml",
-    "epochs": 100
-  },
-  "06AufsatzCopyPasteExtended": {
-    "ckpt": "checkpoints/yolo11x.pt",
-    "data_dir": "datasets_tar",
-    "data": "06AufsatzCopyPasteExtended.yaml",
-    "epochs": 100
-  },
   "05SAC2027_baseline": {
     "ckpt": "checkpoints/yolo11x.pt",
     "data_dir": "datasets_tar",
