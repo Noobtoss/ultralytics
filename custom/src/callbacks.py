@@ -1,13 +1,8 @@
 import csv
-import json
 import os
 import shutil
 import site
 import sys
-from unittest.mock import patch
-from pathlib import Path
-from pycocotools.coco import COCO
-from pycocotools.cocoeval import COCOeval
 
 # When running with a local ultralytics/ directory present, Python would normally
 # pick up the local folder instead of the conda-installed package. We fix this by
@@ -34,43 +29,20 @@ except (ImportError, AssertionError):
 dict.__setitem__(SETTINGS, "wandb", False)  # Disable locally without saving shared settings.
 VERBOSE = 0
 
+from get_coco_ap import get_coco_ap
+
 from ultralytics.utils.torch_utils import model_info_for_loggers
 from ultralytics.utils.callbacks.wb import _plot_curve, _log_plots
-
-
-def get_coco_ap(trainer):
-    # Export predictions without running Ultralytics' built-in COCO evaluation.
-    with patch.object(trainer.validator.args, "save_json", True), patch.object(
-        trainer.validator, "eval_json", lambda stats: stats
-    ):
-        trainer.validator(model=trainer.last)
-    preds_path = trainer.save_dir / "preds.json"
-    with open(preds_path, "w", encoding="utf-8") as f:
-        json.dump(trainer.validator.jdict, f)
-    LOGGER.info(f"Predictions saved to {preds_path}")
-
-    coco_gt = COCO(str(trainer.data["val_ann"]))
-    with open(preds_path, encoding="utf-8") as f:
-        preds = json.load(f)
-    image_ids = {Path(im["file_name"]).name: im["id"] for im in coco_gt.dataset["images"]}
-    if len(image_ids) != len(coco_gt.dataset["images"]):
-        raise ValueError("Annotation image filenames must have unique basenames.")
-    for pred in preds:
-        pred["image_id"] = image_ids[Path(pred["file_name"]).name]
-
-    coco_gt.dataset.setdefault("info", {})
-    coco_dt = coco_gt.loadRes(preds)
-    evaluator = COCOeval(coco_gt, coco_dt, "bbox")
-    evaluator.evaluate()
-    evaluator.accumulate()
-    evaluator.summarize()
-    return {"eval/mAP50-95": float(evaluator.stats[0]), "eval/mAP50": float(evaluator.stats[1])}
 
 
 def eval_last(trainer):
     if trainer.last.exists():
         LOGGER.info(f"\nValidating {trainer.last}...")
         metrics = trainer.validator(model=trainer.last)
+        LOGGER.info(
+            "Recomputing AP with pycocotools for consistent comparison with other object detection frameworks "
+            "that use COCO evaluation by default."
+        )
         metrics.update(get_coco_ap(trainer))
         metrics.pop("fitness", None)
         if wb and wb.run:
