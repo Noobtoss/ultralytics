@@ -5,6 +5,9 @@ import shutil
 import site
 import sys
 from unittest.mock import patch
+from pathlib import Path
+from pycocotools.coco import COCO
+from pycocotools.cocoeval import COCOeval
 
 # When running with a local ultralytics/ directory present, Python would normally
 # pick up the local folder instead of the conda-installed package. We fix this by
@@ -36,11 +39,6 @@ from ultralytics.utils.callbacks.wb import _plot_curve, _log_plots
 
 
 def get_coco_ap(trainer):
-    from pathlib import Path
-
-    from pycocotools.coco import COCO
-    from pycocotools.cocoeval import COCOeval
-
     # Export predictions without running Ultralytics' built-in COCO evaluation.
     with patch.object(trainer.validator.args, "save_json", True), patch.object(
         trainer.validator, "eval_json", lambda stats: stats
