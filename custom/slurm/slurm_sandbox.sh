@@ -79,6 +79,7 @@ python $ROOT/custom/src/train.py \
        $ARGS
 
 # ----- CLEANUP -----------------------------------------------------
+# Accepted risk: cleanup deletes local W&B recovery data even if every sync attempt fails.
 KEEP_FILES=("args.yaml" "results.csv" "last.pt")
 
 for i in 1 2 3 4 5; do
