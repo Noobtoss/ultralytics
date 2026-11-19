@@ -25,14 +25,16 @@ conda activate conda-ultralytics
 export PYTHONPATH="$ROOT/custom/src:$PYTHONPATH"
 
 # ----- GET ARGS ----------------------------------------------------
-EXP_MAP_FILE="$ROOT/custom/slurm/experiments_map.txt"
 EXP_ARGS_FILE="$ROOT/custom/slurm/experiments.json"
 
-RUN_NAME=$(grep -v '^[[:space:]]*#' "$EXP_MAP_FILE" | awk -v id="$SLURM_ARRAY_TASK_ID" '$1 == id {print $2; exit}')
-if [[ -z "$RUN_NAME" ]]; then
-    echo "ERROR: no run_name for task id $SLURM_ARRAY_TASK_ID in $EXP_MAP_FILE" >&2
-    exit 1
-fi
+RUN_NAME=$(python -c '
+import json, sys
+experiments = json.load(open(sys.argv[1]))
+task_id = int(sys.argv[2])
+if not 1 <= task_id <= len(experiments):
+    sys.exit(f"ERROR: task id {task_id} is outside 1-{len(experiments)}")
+print(list(experiments)[task_id - 1])
+' "$EXP_ARGS_FILE" "$SLURM_ARRAY_TASK_ID") || exit 1
 
 ARGS=$(python -c '
 import json, sys
@@ -47,6 +49,8 @@ for ((i=0; i<${#ARR[@]}; i+=2)); do
     value="${ARR[$i+1]}"
     KV["$key"]="$value"
 done
+
+# ----- SET ARGS ----------------------------------------------------
 [[ "$ARGS" != *"seed"* ]] && ARGS="$ARGS seed ${SLURM_ARRAY_JOB_ID}"
 
 RUN_NAME="${RUN_NAME}_${SLURM_ARRAY_JOB_ID}_${SLURM_ARRAY_TASK_ID}"
@@ -60,7 +64,8 @@ TEST_ANN="${KV[test_ann]:-${KV[val_ann]}}"
 
 # ----- WANDB -------------------------------------------------------
 yolo settings wandb=True
-export WANDB_API_KEY=95177947f5f36556806da90ea7a0bf93ed857d58
+# export WANDB_API_KEY=95177947f5f36556806da90ea7a0bf93ed857d58
+export WANDB_API_KEY=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
 export WANDB_CACHE_DIR=$TMPDIR
 export WANDB_DATA_DIR=$TMPDIR
 export WANDB_DIR=$TMPDIR
