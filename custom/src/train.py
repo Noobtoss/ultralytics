@@ -55,7 +55,9 @@ DEFAULT_ARGS = {
 
 def train_yolo(cfg: Namespace):
     if cfg.model is not None:
-        model = YOLO(cfg.model).load(cfg.ckpt)
+        model = YOLO(cfg.model)
+        if cfg.ckpt is not None:
+            model.load(cfg.ckpt)
     else:
         model = YOLO(cfg.ckpt)
     model.add_callback("on_train_end", eval_last)
@@ -67,7 +69,9 @@ def train_yolo(cfg: Namespace):
 
 def train_rtdetr(cfg: Namespace):
     if cfg.model is not None:
-        model = RTDETR(cfg.model).load(cfg.ckpt)
+        model = RTDETR(cfg.model)
+        if cfg.ckpt is not None:
+            model.load(cfg.ckpt)
     else:
         model = RTDETR(cfg.ckpt)
     model.add_callback("on_train_end", eval_last)

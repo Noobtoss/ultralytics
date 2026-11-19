@@ -24,6 +24,29 @@ class BaseTrainer(_BaseTrainer):
             data.update(names={0: "item"}, nc=1)
         return data
 
+    def build_optimizer(self, model, name="auto", lr=0.001, momentum=0.9, decay=1e-5, iterations=1e5):
+        optimizer = super().build_optimizer(model, name=name, lr=lr, momentum=momentum, decay=decay,
+                                            iterations=iterations)
+        cls_feat_proj_head_params = [
+            v for k, v in unwrap_model(model).named_parameters()
+            if v.requires_grad and k.startswith("cls_feat_proj_head")
+        ]
+
+        if cls_feat_proj_head_params:
+            lr = getattr(self.args, "cls_feat_proj_head_lr", None) or optimizer.param_groups[0]['lr']
+
+            cls_feat_proj_head_ids = {id(p) for p in cls_feat_proj_head_params}
+            for group in optimizer.param_groups:
+                group['params'] = [p for p in group['params'] if id(p) not in cls_feat_proj_head_ids]
+            optimizer.add_param_group({
+                "params": cls_feat_proj_head_params,
+                "lr": lr,
+                "initial_lr": lr,
+            })
+            LOGGER.warning(f"[Modded] Moved cls_feat_proj_head to new group lr={lr}")
+
+        return optimizer
+
 
 _DetectionTrainer.__bases__ = (BaseTrainer,)
 
@@ -68,26 +91,3 @@ class DetectionTrainer(_DetectionTrainer):
         return DetectionValidator(
             self.test_loader, save_dir=self.save_dir, args=copy(self.args), _callbacks=self.callbacks
         )
-
-    def build_optimizer(self, model, name="auto", lr=0.001, momentum=0.9, decay=1e-5, iterations=1e5):
-        optimizer = super().build_optimizer(model, name=name, lr=lr, momentum=momentum, decay=decay,
-                                            iterations=iterations)
-        cls_feat_proj_head_params = [
-            v for k, v in unwrap_model(model).named_parameters()
-            if v.requires_grad and k.startswith("cls_feat_proj_head")
-        ]
-
-        if cls_feat_proj_head_params:
-            lr = getattr(self.args, "cls_feat_proj_head_lr", None) or optimizer.param_groups[0]['lr']
-
-            cls_feat_proj_head_ids = {id(p) for p in cls_feat_proj_head_params}
-            for group in optimizer.param_groups:
-                group['params'] = [p for p in group['params'] if id(p) not in cls_feat_proj_head_ids]
-            optimizer.add_param_group({
-                "params": cls_feat_proj_head_params,
-                "lr": lr,
-                "initial_lr": lr,
-            })
-            LOGGER.warning(f"[Modded] Moved cls_feat_proj_head to new group lr={lr}")
-
-        return optimizer
