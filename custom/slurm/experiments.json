@@ -6,7 +6,7 @@
     "train_ann": "experiments/07Demo/annotation_train.json",
     "val_ann": "experiments/07Demo/annotation_test.json",
     "cls_feat": null,
-    "epochs": 100
+    "epochs": 50
   },
   "07DemoSuperCat": {
     "imgsz": 1280,
@@ -15,7 +15,7 @@
     "train_ann": "experiments/07DemoSuperCat/annotation_train.json",
     "val_ann": "experiments/07DemoSuperCat/annotation_test.json",
     "cls_feat": null,
-    "epochs": 100
+    "epochs": 50
   },
   "04": {
     "imgsz": 640,
