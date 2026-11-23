@@ -24,12 +24,10 @@ class ClassLossWeighted(nn.Module):
         if self.class_weights_matrix is not None:
             self.class_weights_matrix = self.class_weights_matrix.to(device=pred_scores.device)
             labels = target_scores.argmax(dim=-1)
-            weight_per_sample = self.class_weights_matrix[labels]
-            weight_per_sample = torch.where(
-                target_scores.any(dim=-1, keepdim=True),
-                weight_per_sample,
-                torch.ones_like(weight_per_sample),
-            )
+            labels = labels.masked_fill(~target_scores.any(dim=-1), -1)
+            valid = labels >= 0
+            weight_per_sample = self.class_weights_matrix.new_ones(pred_scores.shape)
+            weight_per_sample[valid] = self.class_weights_matrix[labels[valid]]
             loss = loss * weight_per_sample
         return loss
 
@@ -56,13 +54,11 @@ class VarifocalLossWeighted(VarifocalLoss):
                 loss = loss * self.class_weights
             if self.class_weights_matrix is not None:
                 self.class_weights_matrix = self.class_weights_matrix.to(device=pred_score.device)
-                gt_cls = label.argmax(dim=-1)
-                weight_per_sample = self.class_weights_matrix[gt_cls]
-                weight_per_sample = torch.where(
-                    label.any(dim=-1, keepdim=True),
-                    weight_per_sample,
-                    torch.ones_like(weight_per_sample),
-                )
+                labels = label.argmax(dim=-1)
+                labels = labels.masked_fill(~label.any(dim=-1), -1)
+                valid = labels >= 0
+                weight_per_sample = self.class_weights_matrix.new_ones(pred_score.shape)
+                weight_per_sample[valid] = self.class_weights_matrix[labels[valid]]
                 loss = loss * weight_per_sample
             loss = loss.mean(1).sum()
             # <<< MOD
@@ -101,13 +97,11 @@ class FocalLossWeighted(FocalLoss):
             loss = loss * self.class_weights
         if self.class_weights_matrix is not None:
             self.class_weights_matrix = self.class_weights_matrix.to(device=pred.device)
-            gt_cls = label.argmax(dim=-1)
-            weight_per_sample = self.class_weights_matrix[gt_cls]
-            weight_per_sample = torch.where(
-                label.any(dim=-1, keepdim=True),
-                weight_per_sample,
-                torch.ones_like(weight_per_sample),
-            )
+            labels = label.argmax(dim=-1)
+            labels = labels.masked_fill(~label.any(dim=-1), -1)
+            valid = labels >= 0
+            weight_per_sample = self.class_weights_matrix.new_ones(pred.shape)
+            weight_per_sample[valid] = self.class_weights_matrix[labels[valid]]
             loss = loss * weight_per_sample
         # <<< MOD
         return loss.mean(1).sum()
