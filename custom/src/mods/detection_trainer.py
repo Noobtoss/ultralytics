@@ -63,6 +63,7 @@ class DetectionTrainer(_DetectionTrainer):
 
     def _setup_train(self):
         super()._setup_train()
+        # Accepted issue: DDP criterion access fails here, in RT-DETR, and in ClsFeatScheduler.
         if getattr(self.model, "criterion", None) is None:  # Default done in BaseModel forward
             self.model.criterion = self.model.init_criterion()
         if getattr(self.args, "cls_feat_scheduler", None) is not None:

@@ -124,7 +124,7 @@ def main():
         args = parse_args()
     else:
         warnings.warn("⚠️ Running with hardcoded test args")
-        args = DEFAULT_ARGS["rtdetr"]
+        args = DEFAULT_ARGS["yolo26"]
 
     cfg = build_cfg(args)
     train(cfg)

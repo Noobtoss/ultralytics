@@ -50,6 +50,8 @@ def _write_coco_gt(validator, directory):
 def get_coco_ap(trainer):
     with TemporaryDirectory(dir=trainer.save_dir) as tmp:
         preds_path = _write_coco_preds(trainer, Path(tmp))
+        if not preds_path.exists() or json.loads(preds_path.read_text(encoding="utf-8")) == []:
+            return {"eval/mAP50-95": 0.0, "eval/mAP50": 0.0}
         gt_path = _write_coco_gt(trainer.validator, Path(tmp))
         coco_gt = COCO(str(gt_path))
         coco_dt = coco_gt.loadRes(str(preds_path))
