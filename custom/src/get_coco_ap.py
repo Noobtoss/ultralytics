@@ -7,11 +7,27 @@ from pycocotools.coco import COCO
 from pycocotools.cocoeval import COCOeval
 
 
+def _image_id(im_file):
+    """Unique image ID: the full path. Must be used on both GT and prediction side."""
+    return str(im_file)
+
+
 def _write_coco_preds(trainer, directory):
     validator = trainer.validator
-    with patch.object(validator, "save_dir", directory), patch.object(
-        validator.args, "save_json", True
-    ), patch.object(validator, "eval_json", lambda stats: stats):
+    orig = validator.pred_to_json
+
+    def pred_to_json(predn, second):
+        n = len(validator.jdict)
+        orig(predn, second)
+        # newer Ultralytics passes pbatch (dict), older versions pass the filename
+        im_file = second["im_file"] if isinstance(second, dict) else second
+        for d in validator.jdict[n:]:
+            d["image_id"] = _image_id(im_file)
+
+    with patch.object(validator, "save_dir", directory), \
+         patch.object(validator.args, "save_json", True), \
+         patch.object(validator, "eval_json", lambda stats: stats), \
+         patch.object(validator, "pred_to_json", pred_to_json):
         validator(model=trainer.last)
     return directory / "predictions.json"
 
@@ -25,8 +41,7 @@ def _write_coco_gt(validator, directory):
     for index, label in enumerate(dataset.labels):
         # Rectangular batching removes "shape" from the stored labels.
         _, (height, width), _ = dataset.load_image(index)
-        stem = Path(label["im_file"]).stem
-        image_id = int(stem) if stem.isnumeric() else stem
+        image_id = _image_id(label["im_file"])
         gt["images"].append({
             "id": image_id, "file_name": label["im_file"], "height": height, "width": width,
         })
@@ -41,7 +56,7 @@ def _write_coco_gt(validator, directory):
                 "area": w * h, "iscrowd": 0,
             })
     if len({im["id"] for im in gt["images"]}) != len(gt["images"]):
-        raise ValueError("Validation images must have unique filename stems.")
+        raise ValueError("Validation images must have unique paths.")
     path = directory / "gt.json"
     path.write_text(json.dumps(gt), encoding="utf-8")
     return path
